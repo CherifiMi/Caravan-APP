@@ -15,6 +15,6 @@ class LoginViewModel @Inject constructor(): ViewModel() {
     val password = mutableStateOf("")
 
     fun Login(){
-        Log.d("TESTGMAIL", email.value + password.value)
+        Log.d("TESTGMAIL", email.value + " " + password.value)
     }
 }

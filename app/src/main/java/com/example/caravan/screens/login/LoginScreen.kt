@@ -1,11 +1,8 @@
 package com.example.caravan.screens.login
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Button
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
@@ -22,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.caravan.R
 import com.example.caravan.components.MyButton
+import com.example.caravan.components.MyTextField
 import com.example.caravan.ui.theme.GoogleBlue
 import com.example.caravan.ui.theme.PinkRed
 import com.example.caravan.ui.theme.Typography
@@ -62,35 +60,9 @@ fun LoginScreen(
                 color = Color.Black
             )
 
+            MyTextField(viewModel.email, "Email")
 
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .padding(bottom = 16.dp, top = 0.dp),
-                value = viewModel.email.value,
-                label = { Text("Email") },
-                singleLine = true,
-                onValueChange = {
-                    viewModel.email.value = it
-                }
-            )
-
-
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .padding(bottom = 16.dp, top = 0.dp),
-                value = viewModel.password.value,
-                label = { Text("Password") },
-                singleLine = true,
-                visualTransformation = PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                onValueChange = {
-                    viewModel.password.value = it
-                }
-            )
+            MyTextField(viewModel.password, "Password")
 
             MyButton(
                 text = "Continue with Email",
@@ -117,6 +89,7 @@ fun LoginScreen(
             )
 
         }
+
         //____
         Column(
             Modifier
