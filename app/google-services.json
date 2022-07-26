@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1011750889077",
+    "project_id": "caravan-8ae92",
+    "storage_bucket": "caravan-8ae92.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1011750889077:android:72f9130c9a1d2400ef7a3c",
+        "android_client_info": {
+          "package_name": "com.example.caravan"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1011750889077-9abbelbop4j9eakjlu0d2fdcacfciqt9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqvA1n2hGZyvXRUm2JsCZu7VmRT2lcFm0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1011750889077-9abbelbop4j9eakjlu0d2fdcacfciqt9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

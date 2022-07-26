@@ -3,13 +3,14 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'com.google.gms.google-services'
 }
 
 android {
     compileSdk 32
 
     defaultConfig {
-        applicationId "com.example.pizzaapp"
+        applicationId "com.example.caravan"
         minSdk 21
         targetSdk 32
         versionCode 1
@@ -93,4 +94,8 @@ dependencies {
     // splash screen
     implementation 'androidx.core:core-splashscreen:1.0.0-rc01'
 
+
+    // Firebase Authentication
+    implementation platform('com.google.firebase:firebase-bom:30.3.1')
+    implementation 'com.google.firebase:firebase-auth-ktx'
 }
