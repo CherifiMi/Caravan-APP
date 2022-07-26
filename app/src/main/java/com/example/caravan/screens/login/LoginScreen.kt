@@ -60,9 +60,9 @@ fun LoginScreen(
                 color = Color.Black
             )
 
-            MyTextField(viewModel.email, "Email")
+            MyTextField(viewModel.email, "Email", isEM = true)
 
-            MyTextField(viewModel.password, "Password")
+            MyTextField(viewModel.password, "Password", isPW = true)
 
             MyButton(
                 text = "Continue with Email",

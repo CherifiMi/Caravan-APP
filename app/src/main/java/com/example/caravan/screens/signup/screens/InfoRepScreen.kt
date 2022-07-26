@@ -40,8 +40,8 @@ fun InfoRepScreen(
                 style = Typography.h1
             )
 
-            MyTextField(state = viewModel.gmail, s = "Email")
-            MyTextField(state = viewModel.password, s = "Password")
+            MyTextField(state = viewModel.gmail, s = "Email", isEM = true)
+            MyTextField(state = viewModel.password, s = "Password", isPW = true)
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -53,7 +53,7 @@ fun InfoRepScreen(
 
             MyTextField(state = viewModel.first_name, s = "First Name")
             MyTextField(state = viewModel.last_name, s = "Last Name")
-            MyTextField(state = viewModel.phone, s = "Phone Number")
+            MyTextField(state = viewModel.phone, s = "Phone Number", isNum = true)
 
 
             Spacer(modifier = Modifier.height(32.dp))

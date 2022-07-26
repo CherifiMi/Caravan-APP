@@ -47,8 +47,8 @@ fun InfoSellerScreen(
                 style = Typography.h1
             )
 
-            MyTextField(state = viewModel.gmail, s = "Email")
-            MyTextField(state = viewModel.password, s = "Password")
+            MyTextField(state = viewModel.gmail, s = "Email", isEM = true)
+            MyTextField(state = viewModel.password, s = "Password", isPW = true)
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -62,12 +62,12 @@ fun InfoSellerScreen(
             MyTextField(state = viewModel.last_name, s = "Last Name")
             MyTextField(state = viewModel.brand_name, s = "Brand Name")
             SelletTypeSelecter(viewModel)
-            MyTextField(state = viewModel.phone, s = "Phone Number")
+            MyTextField(state = viewModel.phone, s = "Phone Number", isNum = true)
 
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            MyButton(text = "Create my accont") {
+            MyButton(text = "Create my account") {
 
             }
 
