@@ -7,7 +7,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-
 class LoginViewModel @Inject constructor(): ViewModel() {
     val email = mutableStateOf("")
     val password = mutableStateOf("")
@@ -15,4 +14,5 @@ class LoginViewModel @Inject constructor(): ViewModel() {
     fun Login(){
         Log.d("TESTGMAIL", email.value + " " + password.value)
     }
+
 }

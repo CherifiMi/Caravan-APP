@@ -39,6 +39,7 @@ fun InfoSellerScreen(
             )
         })
 
+
         Column(Modifier.verticalScroll(rememberScrollState())) {
 
             Text(
