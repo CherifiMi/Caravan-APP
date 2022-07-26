@@ -15,6 +15,9 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.caravan.screens.MainViewModel
 import com.example.caravan.screens.login.LoginScreen
 import com.example.caravan.screens.signup.SelectUserScreen
+import com.example.caravan.screens.signup.screens.InfoBuyerScreen
+import com.example.caravan.screens.signup.screens.InfoRepScreen
+import com.example.caravan.screens.signup.screens.InfoSellerScreen
 import com.example.caravan.ui.theme.CaravanTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -35,7 +38,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ){
-                    SelectUserScreen()
+                    InfoRepScreen()
                 }
             }
         }

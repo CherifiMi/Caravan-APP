@@ -18,6 +18,8 @@ data class Buyer(
     val owner: String,
     @SerializedName("phone")
     val phone: String
+
+
 )
 
 class BuyersList : ArrayList<Buyer>()
