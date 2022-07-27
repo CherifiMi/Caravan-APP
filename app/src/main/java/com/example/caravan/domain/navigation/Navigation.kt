@@ -21,14 +21,15 @@ fun Navigation(
 
     NavHost(
         navController,
-        startDestination = when(viewModel.firstScreen){
+        startDestination =
+        when(viewModel.firstScreen){
             "login" -> Screens.Login.route
             "wait" -> Screens.Wait.route
             "buyer" -> Screens.InfoBuyer.route
             "seller" -> Screens.InfoSeller.route
             "rep" -> Screens.InfoRep.route
             "nonet" -> Screens.Wait.route
-            else -> Screens.Login.route
+            else -> Screens.Wait.route
         }
     ){
 

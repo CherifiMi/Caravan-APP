@@ -3,6 +3,7 @@ package com.example.caravan.data.repository
 import com.example.caravan.data.remote.CaravanApi
 import com.example.caravan.domain.model.Buyer
 import com.example.caravan.domain.model.BuyersList
+import com.example.caravan.domain.model.Id
 import com.example.caravan.domain.model.UserType
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -18,7 +19,7 @@ class CaravanRepository @Inject constructor(private val caravanApi: CaravanApi){
         return  caravanApi.postNewBuyer(buyer)
     }
 
-    suspend fun getUserType(): UserType{
-        return caravanApi.getUserType()
+    suspend fun getUserType(id: Id): UserType{
+        return caravanApi.getUserType(id)
     }
 }

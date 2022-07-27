@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.caravan.data.repository.AccountService
 import com.example.caravan.data.util.Result
+import com.example.caravan.domain.model.Id
+import com.example.caravan.domain.model.UserType
 import com.example.caravan.domain.use_cases.GetBuyersUseCase
 import com.example.caravan.domain.use_cases.GetUserTypeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,67 +28,79 @@ class MainViewModel @Inject constructor(
     private val getBuyersUseCase: GetBuyersUseCase,
     private val getUserTypeUseCase: GetUserTypeUseCase,
     private val accountService: AccountService
-): ViewModel(){
+) : ViewModel() {
 
 
-    private val _spalsh = MutableStateFlow(false)
+    private val _spalsh = MutableStateFlow(true)
     val spalsh = _spalsh.asStateFlow()
 
 
-    fun onSplashScreen(){
-        viewModelScope.launch {
-            getUserType()
-            getIsUserActivated()
-            startScreen()
-        }
-        _spalsh.value = true
+    fun onSplashScreen() {
+
+        getUserType()
+        getIsUserActivated()
+        startScreen()
+
+        _spalsh.value = false
     }
 
     private var isActivated = false
-    private var userType = "buyer"
+    private var userType = "rep"
 
     var firstScreen = "login"
 
-    fun startScreen(){
-        if (true /*net*/){
-            if (!accountService.hasUser()){
+    fun startScreen() {
+        if (true /*net*/) {
+            if (!accountService.hasUser()) {
                 firstScreen = "login"
-            }else{
-                if (!isActivated){
+            } else {
+                if (!isActivated) {
                     firstScreen = "wait"
-                }else{
+                } else {
                     firstScreen = userType
                 }
             }
-        }else{
+        } else {
             firstScreen = "nonet"
         }
     }
 
-    fun getUserType(){
-        viewModelScope.launch(Dispatchers.Main) {
-            userType = getUserTypeUseCase().type
-        }
+    fun getIsUserActivated() {
+        //when(userType){
+        //    "buyer"->{
+        //        // TODO: get buyer by auth key
+        //    }
+        //    "seller"->{
+        //        // TODO: get seller by auth key
+        //    }
+        //    else->{
+        //        // TODO: get rep by auth key
+        //    }
+        //}
 
+        isActivated = false
     }
 
-    fun getIsUserActivated(){
-        when(userType){
-            "buyer"->{
-                // TODO: get buyer by auth key
-            }
-            "seller"->{
-                // TODO: get seller by auth key
-            }
-            else->{
-                // TODO: get rep by auth key
-            }
-        }
+    fun getUserType() {
 
-        isActivated = true
+        getUserTypeUseCase(Id(id = accountService.getUserId())).onEach {
+            when (it) {
+                is Result.Loading -> {
+                    Log.d("TESTAPI", "loading")
+                }
+                is Result.Success -> {
+                    userType = it.data?.type ?: ""
+                    Log.d("TESTAPI", it.data.toString())
+                }
+                is Result.Error -> {
+                    Log.d("TESTAPI", it.message.toString())
+                }
+
+            }
+        }.launchIn(viewModelScope)
     }
 
-    fun testCall(){
+    fun testCall() {
         getBuyersUseCase().onEach {
             when (it) {
                 is Result.Loading -> {
