@@ -1,6 +1,7 @@
 package com.example.caravan.di
 
 import com.example.caravan.data.remote.CaravanApi
+import com.example.caravan.data.repository.AccountService
 import com.example.caravan.data.repository.CaravanRepository
 import com.example.caravan.data.util.Constants.Companion.BASE_URL
 import dagger.Module
@@ -30,5 +31,11 @@ object AppModule {
     @Singleton
     fun provideRepository(api: CaravanApi): CaravanRepository {
         return CaravanRepository(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAccountService(): AccountService {
+        return AccountService()
     }
 }
