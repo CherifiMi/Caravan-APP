@@ -16,7 +16,6 @@ import com.example.caravan.components.MyTextField
 import com.example.caravan.ui.signup.SignUpViewModel
 import com.example.caravan.theme.Typography
 import com.example.pizzaorderapp.navigation.Screens
-import okhttp3.internal.wait
 
 @Composable
 fun InfoBuyerScreen(
@@ -43,7 +42,7 @@ fun InfoBuyerScreen(
                 style = Typography.h1
             )
 
-            MyTextField(state = viewModel.gmail, s = "Email", isEM = true)
+            MyTextField(state = viewModel.email, s = "Email", isEM = true)
             MyTextField(state = viewModel.password, s = "Password", isPW = true)
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -64,12 +63,11 @@ fun InfoBuyerScreen(
             Spacer(modifier = Modifier.height(32.dp))
             
             MyButton(text = "Create my accont") {
-                navController.navigate(Screens.Wait.route)
+                viewModel.CreateNewUser()
+                //navController.navigate(Screens.Wait.route)
             }
             
             Spacer(modifier = Modifier.height(280.dp))
         }
-        
-
     }
 }

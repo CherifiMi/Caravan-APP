@@ -10,6 +10,7 @@ import com.example.caravan.data.repository.AccountService
 import com.example.caravan.data.util.Result
 import com.example.caravan.domain.use_cases.GetBuyersUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,7 +23,6 @@ class MainViewModel @Inject constructor(
     private val getBuyersUseCase: GetBuyersUseCase,
     private val accountService: AccountService
 ): ViewModel(){
-
 
     val hasUser = accountService.hasUser()
 

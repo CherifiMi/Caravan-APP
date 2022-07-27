@@ -8,6 +8,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.caravan.data.repository.AccountService
 import com.example.caravan.data.util.Constants.Companion.MIN_PASS_LENGTH
 import com.example.caravan.data.util.Constants.Companion.PASS_PATTERN
+import com.example.caravan.domain.ext.isValidEmail
+import com.example.caravan.domain.ext.isValidPassword
+import com.example.caravan.domain.ext.onError
+import com.example.caravan.domain.ext.showErrorExceptionHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
@@ -25,27 +29,20 @@ class LoginViewModel @Inject constructor(
     val password = mutableStateOf("")
 
     fun Login(){
-        Log.d("TESTGMAIL", email.value + " " + password.value)
+        Log.d("LOGINTEST", email.value + " " + password.value)
     }
 
     fun getuser(){
         Log.d("LOGINTEST",accountService.getUserId())
-        //accountService.signOut()
+        accountService.signOut()
         //accountService.hasUser()
     }
 
 
-    private fun String.isValidEmail(): Boolean {
-        return this.isNotBlank() && Patterns.EMAIL_ADDRESS.matcher(this).matches()
-    }
 
-    private fun onError(error: Throwable) {
-        Log.d("LOGINTEST", error.toString())
-    }
 
-    private val showErrorExceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        onError(throwable)
-    }
+
+
 
     private fun linkWithEmail() {
         viewModelScope.launch(showErrorExceptionHandler) {
@@ -55,11 +52,7 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun String.isValidPassword(): Boolean {
-        return this.isNotBlank()
-                && this.length >= MIN_PASS_LENGTH
-                && Pattern.compile(PASS_PATTERN).matcher(this).matches()
-    }
+
 
     fun onSignInClick() {
         if (!email.value.isValidEmail()) {

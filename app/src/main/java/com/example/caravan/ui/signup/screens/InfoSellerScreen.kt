@@ -51,7 +51,7 @@ fun InfoSellerScreen(
                 style = Typography.h1
             )
 
-            MyTextField(state = viewModel.gmail, s = "Email", isEM = true)
+            MyTextField(state = viewModel.email, s = "Email", isEM = true)
             MyTextField(state = viewModel.password, s = "Password", isPW = true)
 
             Spacer(modifier = Modifier.height(16.dp))
