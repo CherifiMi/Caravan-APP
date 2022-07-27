@@ -1,4 +1,4 @@
-package com.example.caravan.ui.theme
+package com.example.caravan.theme
 
 import androidx.compose.ui.graphics.Color
 
