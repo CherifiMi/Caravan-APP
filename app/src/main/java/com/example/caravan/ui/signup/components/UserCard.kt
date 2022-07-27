@@ -1,27 +1,23 @@
-package com.example.caravan.screens.signup.components
+package com.example.caravan.ui.signup.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.material.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.caravan.R
-import com.example.caravan.ui.theme.LightGrey
-import com.example.caravan.ui.theme.PinkRed
-import com.example.caravan.ui.theme.Typography
+import com.example.caravan.theme.LightGrey
+import com.example.caravan.theme.PinkRed
+import com.example.caravan.theme.Typography
 
 @Composable
 fun UserCard(painterResource: Painter, s: String, i: Int, state: MutableState<Int>) {

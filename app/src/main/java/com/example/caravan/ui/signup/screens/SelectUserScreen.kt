@@ -1,4 +1,4 @@
-package com.example.caravan.screens.signup
+package com.example.caravan.ui.signup.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,15 +12,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.example.caravan.R
 import com.example.caravan.components.MyButton
-import com.example.caravan.screens.signup.components.UserCard
-import com.example.caravan.ui.theme.LightGrey
-import com.example.caravan.ui.theme.PinkRed
-import com.example.caravan.ui.theme.Typography
+import com.example.caravan.ui.signup.components.UserCard
+import com.example.caravan.theme.LightGrey
+import com.example.caravan.theme.PinkRed
+import com.example.caravan.theme.Typography
+import com.example.caravan.ui.signup.SignUpViewModel
+import com.example.pizzaorderapp.navigation.Screens
 
 @Composable
 fun SelectUserScreen(
+    navController: NavHostController,
     viewModel: SignUpViewModel = hiltViewModel()
 ) {
     Column(
@@ -93,18 +97,23 @@ fun SelectUserScreen(
                     }
                 }"
             ) {
-
+                when (viewModel.selected_type.value)
+                {
+                    1 -> navController.navigate(Screens.InfoBuyer.route)
+                    2 -> navController.navigate(Screens.InfoSeller.route)
+                    else -> navController.navigate(Screens.InfoRep.route)
+                }
             }
             Row(Modifier.padding(top = 8.dp)) {
                 Text(
-                    text = "Do you have an accont?",
+                    text = "Do you have an account?",
                     color = LightGrey,
                     style = Typography.h3
                 )
                 Text(
                     modifier = Modifier
                         .clickable {
-
+                            navController.navigate(Screens.Login.route)
                         },
                     text = "Login",
                     color = PinkRed,

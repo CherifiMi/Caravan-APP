@@ -4,29 +4,30 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Box
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.constraintlayout.compose.ExperimentalMotionApi
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.example.caravan.screens.MainViewModel
-import com.example.caravan.screens.login.LoginScreen
-import com.example.caravan.screens.signup.SelectUserScreen
-import com.example.caravan.screens.signup.screens.InfoBuyerScreen
-import com.example.caravan.screens.signup.screens.InfoRepScreen
-import com.example.caravan.screens.signup.screens.InfoSellerScreen
-import com.example.caravan.screens.signup.screens.WaitForAdminScreen
-import com.example.caravan.ui.theme.CaravanTheme
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.caravan.theme.CaravanTheme
+import com.example.pizzaorderapp.navigation.Navigation
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
+    lateinit var navController: NavHostController
 
+    @ExperimentalMotionApi
+    @ExperimentalMaterialApi
+    @ExperimentalAnimationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen().apply {
@@ -39,10 +40,14 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ){
-                    InfoSellerScreen()
+                    Scaffold(){
+
+                        navController = rememberNavController()
+                        Navigation(navController, viewModel)
+                    }
+
                 }
             }
         }
     }
 }
-

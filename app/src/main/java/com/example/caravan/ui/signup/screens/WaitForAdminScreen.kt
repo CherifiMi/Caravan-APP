@@ -1,4 +1,4 @@
-package com.example.caravan.screens.signup.screens
+package com.example.caravan.ui.signup.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -13,11 +13,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.caravan.R
-import com.example.caravan.ui.theme.Typography
+import com.example.caravan.theme.Typography
 
 @Composable
-fun WaitForAdminScreen() {
+fun WaitForAdminScreen(
+    navController: NavHostController,
+) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         TopAppBar(title = {
             Text(

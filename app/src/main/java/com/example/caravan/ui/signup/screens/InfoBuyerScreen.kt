@@ -1,7 +1,5 @@
-package com.example.caravan.screens.signup.screens
+package com.example.caravan.ui.signup.screens
 
-import androidx.compose.foundation.gestures.rememberScrollableState
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -12,13 +10,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.example.caravan.components.MyButton
 import com.example.caravan.components.MyTextField
-import com.example.caravan.screens.signup.SignUpViewModel
-import com.example.caravan.ui.theme.Typography
+import com.example.caravan.ui.signup.SignUpViewModel
+import com.example.caravan.theme.Typography
+import com.example.pizzaorderapp.navigation.Screens
+import okhttp3.internal.wait
 
 @Composable
 fun InfoBuyerScreen(
+    navController: NavHostController,
     viewModel: SignUpViewModel = hiltViewModel()
 ) {
 
@@ -62,7 +64,7 @@ fun InfoBuyerScreen(
             Spacer(modifier = Modifier.height(32.dp))
             
             MyButton(text = "Create my accont") {
-                
+                navController.navigate(Screens.Wait.route)
             }
             
             Spacer(modifier = Modifier.height(280.dp))

@@ -1,9 +1,8 @@
-package com.example.caravan.screens.login
+package com.example.caravan.ui.login
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
@@ -12,21 +11,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.example.caravan.R
 import com.example.caravan.components.MyButton
 import com.example.caravan.components.MyTextField
-import com.example.caravan.ui.theme.GoogleBlue
-import com.example.caravan.ui.theme.PinkRed
-import com.example.caravan.ui.theme.Typography
+import com.example.caravan.theme.GoogleBlue
+import com.example.caravan.theme.PinkRed
+import com.example.caravan.theme.Typography
+import com.example.pizzaorderapp.navigation.Screens
 
 
 @Composable
 fun LoginScreen(
+    navController: NavHostController,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     Column(
@@ -68,8 +68,10 @@ fun LoginScreen(
                 text = "Continue with Email",
                 text_color = Color.White,
                 btn_color = PinkRed,
-                fanction = { viewModel.Login() }
-            )
+            ){
+                Log.d("LOGINTEST", "start")
+                viewModel.onSignInClick()
+            }
 
             Image(
                 modifier = Modifier
@@ -85,8 +87,7 @@ fun LoginScreen(
                 text = "Continue with Google",
                 text_color = Color.White,
                 btn_color = GoogleBlue,
-                fanction = { viewModel.Login() }
-            )
+            ){ viewModel.getuser()}
 
         }
 
@@ -112,8 +113,9 @@ fun LoginScreen(
                 text_color = PinkRed,
                 btn_color = Color.White,
                 has_border = true,
-                fanction = { viewModel.Login() }
-            )
+            ){
+                navController.navigate(Screens.SelectUserType.route)
+            }
 
             Spacer(modifier = Modifier.height(72.dp))
         }

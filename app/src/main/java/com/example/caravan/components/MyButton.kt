@@ -2,20 +2,18 @@ package com.example.caravan.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
-import androidx.compose.material.ButtonColors
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.caravan.ui.theme.PinkRed
-import com.example.caravan.ui.theme.Typography
+import com.example.caravan.theme.PinkRed
+import com.example.caravan.theme.Typography
 
 @Composable
 fun MyButton(
@@ -23,7 +21,7 @@ fun MyButton(
     text_color: Color = Color.White,
     btn_color: Color = PinkRed,
     has_border: Boolean = false,
-    fanction: () -> Unit
+    onClick: ()-> Unit
 ) {
     Button(
         modifier = Modifier
@@ -37,7 +35,7 @@ fun MyButton(
             .background(color = PinkRed, shape = RoundedCornerShape(100.dp)),
         colors = ButtonDefaults.buttonColors(backgroundColor = btn_color),
         shape = RoundedCornerShape(100.dp),
-        onClick = { fanction() }
+        onClick = onClick
     ) {
         Text(
             modifier = Modifier.padding(vertical = 4.dp),

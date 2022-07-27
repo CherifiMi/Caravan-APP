@@ -1,4 +1,4 @@
-package com.example.caravan.screens.signup.screens
+package com.example.caravan.ui.signup.screens
 
 
 import androidx.compose.foundation.layout.*
@@ -11,13 +11,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.example.caravan.components.MyButton
 import com.example.caravan.components.MyTextField
-import com.example.caravan.screens.signup.SignUpViewModel
-import com.example.caravan.ui.theme.Typography
+import com.example.caravan.ui.signup.SignUpViewModel
+import com.example.caravan.theme.Typography
+import com.example.pizzaorderapp.navigation.Screens
 
 @Composable
 fun InfoRepScreen(
+    navController: NavHostController,
     viewModel: SignUpViewModel = hiltViewModel()
 ) {
 
@@ -59,7 +62,7 @@ fun InfoRepScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             MyButton(text = "Create my account") {
-
+                navController.navigate(Screens.Wait.route)
             }
 
             Spacer(modifier = Modifier.height(280.dp))
