@@ -25,13 +25,19 @@ class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModels()
     lateinit var navController: NavHostController
 
+
     @ExperimentalMotionApi
     @ExperimentalMaterialApi
     @ExperimentalAnimationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        viewModel.onSplashScreen()
+
         installSplashScreen().apply {
-            //setKeepOnScreenCondition{viewModel.spalsh.value}
+            setKeepOnScreenCondition{
+                viewModel.spalsh.value
+            }
         }
 
         setContent {
@@ -41,7 +47,6 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ){
                     Scaffold(){
-
                         navController = rememberNavController()
                         Navigation(navController, viewModel)
                     }

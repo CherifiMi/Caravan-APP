@@ -19,7 +19,18 @@ fun Navigation(
     viewModel: MainViewModel,
 ){
 
-    NavHost(navController, startDestination = Screens.Login.route) {
+    NavHost(
+        navController,
+        startDestination = when(viewModel.firstScreen){
+            "login" -> Screens.Login.route
+            "wait" -> Screens.Wait.route
+            "buyer" -> Screens.InfoBuyer.route
+            "seller" -> Screens.InfoSeller.route
+            "rep" -> Screens.InfoRep.route
+            "nonet" -> Screens.Wait.route
+            else -> Screens.Login.route
+        }
+    ){
 
         composable(route = Screens.Login.route) {
             LoginScreen(navController = navController)

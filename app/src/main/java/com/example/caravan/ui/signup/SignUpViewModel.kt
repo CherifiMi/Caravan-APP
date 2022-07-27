@@ -83,7 +83,7 @@ class SignUpViewModel @Inject constructor(
                             autheId = accountService.getUserId(),
                             brand = brand_name.value,
                             isActive  = false,
-                            owner = "hello android",
+                            owner = "${first_name.value} ${last_name.value}",
                             phone = phone.value
                         )
                         try {
