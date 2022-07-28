@@ -41,6 +41,9 @@ class SignUpViewModel @Inject constructor(
     var address = mutableStateOf("")
     var phone = mutableStateOf("")
 
+    fun getUserId(): String {
+        return accountService.getUserId()
+    }
 
     fun CreateNewUser(i: Int, navController: NavHostController) {
 
