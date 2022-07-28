@@ -7,6 +7,7 @@ import com.example.caravan.domain.model.Id
 import com.example.caravan.domain.model.UserType
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
+import retrofit2.Response
 import retrofit2.Retrofit
 import javax.inject.Inject
 
@@ -19,7 +20,7 @@ class CaravanRepository @Inject constructor(private val caravanApi: CaravanApi){
         return  caravanApi.postNewBuyer(buyer)
     }
 
-    suspend fun getUserType(id: Id): UserType{
+    suspend fun getUserType(id: Id): UserType {
         return caravanApi.getUserType(id)
     }
 }

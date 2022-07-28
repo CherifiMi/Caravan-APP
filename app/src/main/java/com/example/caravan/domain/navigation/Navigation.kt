@@ -29,7 +29,7 @@ fun Navigation(
             "seller" -> Screens.InfoSeller.route
             "rep" -> Screens.InfoRep.route
             "nonet" -> Screens.Wait.route
-            else -> Screens.Wait.route
+            else -> Screens.SelectUserType.route
         }
     ){
 
