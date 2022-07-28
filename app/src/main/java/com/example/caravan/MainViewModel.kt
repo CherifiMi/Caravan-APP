@@ -21,13 +21,15 @@ class MainViewModel @Inject constructor(
     private val accountService: AccountService
 ) : ViewModel() {
 
-
+    //__________________________values
     private val _spalsh = MutableStateFlow(true)
     val spalsh = _spalsh.asStateFlow()
 
     val there_is_net = true
     var firstScreen = ""
 
+
+    //___________________________functions
     fun onSplashScreen() {
 
         if (there_is_net) {
