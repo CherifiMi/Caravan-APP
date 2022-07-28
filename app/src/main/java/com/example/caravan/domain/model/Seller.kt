@@ -9,17 +9,17 @@ data class Seller(
     @SerializedName("brand")
     val brand: String,
     @SerializedName("id")
-    val id: String,
+    val id: String?,
     @SerializedName("isActive")
     val isActive: Boolean,
     @SerializedName("ordersId")
-    val ordersId: List<String>,
+    val ordersId: List<String>?,
     @SerializedName("owner")
     val owner: String,
     @SerializedName("phone")
     val phone: String,
     @SerializedName("productsId")
-    val productsId: List<String>,
+    val productsId: List<String>?,
     @SerializedName("type")
     val type: String
 )

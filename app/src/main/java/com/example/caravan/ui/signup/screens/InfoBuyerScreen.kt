@@ -62,9 +62,9 @@ fun InfoBuyerScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
             
-            MyButton(text = "Create my accont") {
+            MyButton(text = "Create my account") {
                 viewModel.CreateNewUser()
-                //navController.navigate(Screens.Wait.route)
+                navController.navigate(Screens.Wait.route)
             }
             
             Spacer(modifier = Modifier.height(280.dp))
