@@ -41,38 +41,29 @@ class SignUpViewModel @Inject constructor(
     var phone = mutableStateOf("")
 
 
-    fun CreateNewUser() {
+    fun CreateNewUser(i: Int) {
+
+        val isBuyerDataValid =
+            i == 1 && first_name.value.isNotEmpty() && last_name.value.isNotEmpty() && brand_name.value.isNotEmpty() && address.value.isNotEmpty() && phone.value.isNotEmpty()
+
+        val isSellerDataValid =
+            i == 2 && first_name.value.isNotEmpty() && last_name.value.isNotEmpty() && brand_name.value.isNotEmpty() &&  phone.value.isNotEmpty() && selectedText.value.isNotEmpty()
+
+        val isRepDataValid =
+            i == 3 && first_name.value.isNotEmpty() && last_name.value.isNotEmpty() && phone.value.isNotEmpty()
 
         if (
-            when (selected_type.value) {
-                1 -> {
-                    first_name.value.isEmpty() ||
-                            last_name.value.isEmpty() ||
-                            brand_name.value.isEmpty() ||
-                            address.value.isEmpty() ||
-                            phone.value.isEmpty()
-                }
-                2 -> {
-                    first_name.value.isEmpty() ||
-                            last_name.value.isEmpty() ||
-                            brand_name.value.isEmpty() ||
-                            address.value.isEmpty() ||
-                            phone.value.isEmpty() ||
-                            selectedText.value.isEmpty()
-                }
-                else -> {
-                    first_name.value.isEmpty() ||
-                            last_name.value.isEmpty() ||
-                            phone.value.isEmpty()
-                }
-            }
-        ) {
+           !isBuyerDataValid && !isSellerDataValid && !isRepDataValid
+        ){
             Log.d("TESTGMAIL", "please fill all data")
+            return
         }
+
         if (!email.value.isValidEmail()) {
             Log.d("TESTGMAIL", "email_error")
             return
         }
+
         if (!password.value.isValidPassword()) {
             Log.d("TESTGMAIL", "password_error")
             return

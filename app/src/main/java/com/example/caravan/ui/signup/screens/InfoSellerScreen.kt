@@ -23,7 +23,6 @@ import com.example.caravan.components.MyButton
 import com.example.caravan.components.MyTextField
 import com.example.caravan.ui.signup.SignUpViewModel
 import com.example.caravan.theme.Typography
-import com.example.pizzaorderapp.navigation.Screens
 
 @Composable
 fun InfoSellerScreen(
@@ -72,7 +71,7 @@ fun InfoSellerScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             MyButton(text = "Create my account") {
-                navController.navigate(Screens.Wait.route)
+                viewModel.CreateNewUser(2)
             }
 
             Spacer(modifier = Modifier.height(280.dp))

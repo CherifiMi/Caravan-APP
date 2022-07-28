@@ -18,6 +18,7 @@ import com.example.caravan.R
 import com.example.caravan.theme.LightGrey
 import com.example.caravan.theme.PinkRed
 import com.example.caravan.theme.Typography
+import com.example.caravan.ui.signup.SignUpViewModel
 
 @Composable
 fun UserCard(painterResource: Painter, s: String, i: Int, state: MutableState<Int>) {
@@ -35,7 +36,7 @@ fun UserCard(painterResource: Painter, s: String, i: Int, state: MutableState<In
                 shape = RoundedCornerShape(6.dp),
                 width = 2.dp
             )
-            .clickable { state.value = i },
+            .clickable { state.value = i},
         contentAlignment = Alignment.TopEnd
     ) {
         Image(
