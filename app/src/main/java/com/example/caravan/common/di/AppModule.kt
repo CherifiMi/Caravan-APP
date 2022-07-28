@@ -1,6 +1,5 @@
-package com.example.caravan.di
+package com.example.caravan.common.di
 
-import android.util.JsonReader
 import com.example.caravan.data.remote.CaravanApi
 import com.example.caravan.data.repository.AccountService
 import com.example.caravan.data.repository.CaravanRepository

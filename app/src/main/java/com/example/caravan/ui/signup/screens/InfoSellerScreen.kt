@@ -71,7 +71,7 @@ fun InfoSellerScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             MyButton(text = "Create my account") {
-                viewModel.CreateNewUser(2)
+                viewModel.CreateNewUser(2, navController)
             }
 
             Spacer(modifier = Modifier.height(280.dp))

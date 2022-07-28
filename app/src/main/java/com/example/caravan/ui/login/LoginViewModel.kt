@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import com.example.caravan.R
 import com.example.caravan.data.repository.AccountService
 import com.example.caravan.common.ext.isValidEmail
@@ -11,8 +12,9 @@ import com.example.caravan.common.ext.isValidPassword
 import com.example.caravan.common.ext.onError
 import com.example.caravan.common.ext.showErrorExceptionHandler
 import com.example.caravan.common.snackbar.SnackbarManager
+import com.example.caravan.domain.navigation.Screens
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import javax.inject.Inject
 import com.example.caravan.R.string as AppText
 
@@ -20,19 +22,18 @@ import com.example.caravan.R.string as AppText
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val accountService: AccountService
-): ViewModel() {
+) : ViewModel() {
 
 
     val email = mutableStateOf("")
     val password = mutableStateOf("")
 
-
-    fun getuser(){
+    fun getuser() {
         accountService.signOut()
     }
 
 
-    fun onSignInClick() {
+    fun onSignInClick(navController: NavHostController) {
         if (!email.value.isValidEmail()) {
             SnackbarManager.showMessage(AppText.email_error)
             return
@@ -45,7 +46,19 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch(showErrorExceptionHandler) {
             accountService.authenticate(email.value, password.value) { error ->
                 if (error == null) {
-                    linkWithEmail()
+
+                    viewModelScope.launch(Dispatchers.IO) {
+                        var x = async { linkWithEmail() }
+                        x.await()
+                        launch(Dispatchers.Main) {
+                            navController.navigate(Screens.Main.route) {
+                                launchSingleTop = true
+                                popUpTo(0) { inclusive = true }
+                            }
+                        }
+                    }
+
+
                 } else onError(error)
             }
         }

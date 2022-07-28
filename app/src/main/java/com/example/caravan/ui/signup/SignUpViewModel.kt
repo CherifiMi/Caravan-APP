@@ -1,16 +1,16 @@
 package com.example.caravan.ui.signup
 
-import android.util.Log
-import androidx.annotation.StringRes
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import com.example.caravan.data.repository.AccountService
 import com.example.caravan.common.ext.*
 import com.example.caravan.common.snackbar.SnackbarManager
 import com.example.caravan.domain.model.Buyer
 import com.example.caravan.domain.model.Rep
 import com.example.caravan.domain.model.Seller
+import com.example.caravan.domain.navigation.Screens
 import com.example.caravan.domain.use_cases.PostNewBuyerUseCase
 import com.example.caravan.domain.use_cases.PostNewRepUseCase
 import com.example.caravan.domain.use_cases.PostNewSellerUseCase
@@ -42,20 +42,22 @@ class SignUpViewModel @Inject constructor(
     var phone = mutableStateOf("")
 
 
-    fun CreateNewUser(i: Int) {
+    fun CreateNewUser(i: Int, navController: NavHostController) {
+
+        selected_type.value = i
 
         val isBuyerDataValid =
             i == 1 && first_name.value.isNotEmpty() && last_name.value.isNotEmpty() && brand_name.value.isNotEmpty() && address.value.isNotEmpty() && phone.value.isNotEmpty()
 
         val isSellerDataValid =
-            i == 2 && first_name.value.isNotEmpty() && last_name.value.isNotEmpty() && brand_name.value.isNotEmpty() &&  phone.value.isNotEmpty() && selectedText.value.isNotEmpty()
+            i == 2 && first_name.value.isNotEmpty() && last_name.value.isNotEmpty() && brand_name.value.isNotEmpty() && phone.value.isNotEmpty() && selectedText.value.isNotEmpty()
 
         val isRepDataValid =
             i == 3 && first_name.value.isNotEmpty() && last_name.value.isNotEmpty() && phone.value.isNotEmpty()
 
         if (
-           !isBuyerDataValid && !isSellerDataValid && !isRepDataValid
-        ){
+            !isBuyerDataValid && !isSellerDataValid && !isRepDataValid
+        ) {
 
             SnackbarManager.showMessage(AppText.empty_data)
             return
@@ -75,63 +77,66 @@ class SignUpViewModel @Inject constructor(
         viewModelScope.launch(showErrorExceptionHandler) {
             accountService.createAccount(email.value, password.value) { error ->
                 if (error == null) {
-                    linkWithEmail()
+                    linkWithEmail(navController)
                 } else onError(error)
             }
         }
     }
 
-    private fun linkWithEmail() {
+    private fun linkWithEmail(navController: NavHostController) {
         viewModelScope.launch(showErrorExceptionHandler) {
             accountService.linkAccount(email.value, password.value) { error ->
-                if (error != null) {
 
-                    viewModelScope.launch {
-                        when (selected_type.value) {
-                            1 -> postNewBuyerUseCase(
-                                Buyer(
-                                    id = null,
-                                    address = address.value,
-                                    autheId = accountService.getUserId(),
-                                    brand = brand_name.value,
-                                    isActive = false,
-                                    owner = "${first_name.value} ${last_name.value}",
-                                    phone = phone.value
-                                )
-                            )
-                            2 -> postNewSellerUseCase(
-                                Seller(
-                                    autheId = accountService.getUserId(),
-                                    brand = brand_name.value,
-                                    id = null,
-                                    isActive = false,
-                                    ordersId = null,
-                                    owner = "${first_name.value} ${last_name.value}",
-                                    phone = phone.value,
-                                    productsId = null,
-                                    type = selectedText.value
-                                )
-                            )
 
-                            3 -> postNewRepUseCase(
-                                Rep(
-                                    autheId = accountService.getUserId(),
-                                    id = null,
-                                    isActive = false,
-                                    myBuyers = null,
-                                    mySellers = null,
-                                    name = "${first_name.value} ${last_name.value}",
-                                    phone = phone.value,
-                                )
+                viewModelScope.launch {
+                    when (selected_type.value) {
+                        1 -> postNewBuyerUseCase(
+                            Buyer(
+                                id = null,
+                                address = address.value,
+                                autheId = accountService.getUserId(),
+                                brand = brand_name.value,
+                                isActive = false,
+                                owner = "${first_name.value} ${last_name.value}",
+                                phone = phone.value
                             )
-                        }
+                        )
+                        2 -> postNewSellerUseCase(
+                            Seller(
+                                autheId = accountService.getUserId(),
+                                brand = brand_name.value,
+                                id = null,
+                                isActive = false,
+                                ordersId = null,
+                                owner = "${first_name.value} ${last_name.value}",
+                                phone = phone.value,
+                                productsId = null,
+                                type = selectedText.value
+                            )
+                        )
 
-                        SnackbarManager.showMessage(AppText.account_created)
+                        3 -> postNewRepUseCase(
+                            Rep(
+                                autheId = accountService.getUserId(),
+                                id = null,
+                                isActive = false,
+                                myBuyers = null,
+                                mySellers = null,
+                                name = "${first_name.value} ${last_name.value}",
+                                phone = phone.value,
+                            )
+                        )
                     }
 
-                } else {
-                    SnackbarManager.showMessage(AppText.already_exist)
+                    SnackbarManager.showMessage(AppText.account_created)
+
+                    navController.navigate(Screens.Main.route) {
+                        launchSingleTop = true
+                        popUpTo(0) { inclusive = true }
+                    }
+
                 }
+
             }
         }
     }

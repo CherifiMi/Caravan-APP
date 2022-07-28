@@ -61,7 +61,7 @@ fun InfoRepScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             MyButton(text = "Create my account") {
-                viewModel.CreateNewUser(3)
+                viewModel.CreateNewUser(3, navController)
             }
 
             Spacer(modifier = Modifier.height(280.dp))

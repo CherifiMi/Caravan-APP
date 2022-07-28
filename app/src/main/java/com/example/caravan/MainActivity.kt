@@ -32,7 +32,6 @@ import kotlinx.coroutines.CoroutineScope
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
-    lateinit var navController: NavHostController
 
 
     @ExperimentalMotionApi
@@ -46,8 +45,6 @@ class MainActivity : ComponentActivity() {
                 viewModel.spalsh.value
             }
         }
-        viewModel.onSplashScreen()
-
 
 
         setContent {
@@ -56,43 +53,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ){
-                    val appState = rememberAppState()
-                    Scaffold(
-                        snackbarHost = {
-                            SnackbarHost(
-                                hostState = it,
-                                modifier = Modifier.padding(8.dp),
-                                snackbar = { snackbarData ->
-                                    Snackbar(snackbarData, contentColor = MaterialTheme.colors.onPrimary)
-                                }
-                            )
-                        },
-                        scaffoldState = appState.scaffoldState
-                    ){
-                        navController = rememberNavController()
-                        Navigation(navController, viewModel)
-                    }
-
+                    MainApp(viewModel)
                 }
             }
         }
     }
 }
 
-@Composable
-fun rememberAppState(
-    scaffoldState: ScaffoldState = rememberScaffoldState(),
-    navController: NavHostController = rememberNavController(),
-    snackbarManager: SnackbarManager = SnackbarManager,
-    resources: Resources = resources(),
-    coroutineScope: CoroutineScope = rememberCoroutineScope()
-) = remember(scaffoldState, navController, snackbarManager, resources, coroutineScope) {
-    CaravanAppState(scaffoldState, navController, snackbarManager, resources, coroutineScope)
-}
-
-@Composable
-@ReadOnlyComposable
-fun resources(): Resources {
-    LocalConfiguration.current
-    return LocalContext.current.resources
-}

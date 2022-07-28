@@ -1,6 +1,5 @@
 package com.example.caravan.ui.login
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
@@ -69,8 +68,8 @@ fun LoginScreen(
                 text_color = Color.White,
                 btn_color = PinkRed,
             ){
-                Log.d("LOGINTEST", "start")
-                viewModel.onSignInClick()
+                viewModel.onSignInClick(navController)
+
             }
 
             Image(
