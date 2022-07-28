@@ -1,7 +1,9 @@
-package com.example.caravan.domain.ext
+package com.example.caravan.common.ext
 
 import android.util.Log
 import android.util.Patterns
+import com.example.caravan.R
+import com.example.caravan.common.snackbar.SnackbarManager
 import kotlinx.coroutines.CoroutineExceptionHandler
 import java.util.regex.Pattern
 
@@ -15,7 +17,7 @@ val showErrorExceptionHandler = CoroutineExceptionHandler { _, throwable ->
 
 
 fun onError(error: Throwable) {
-    Log.d("LOGINTEST", error.toString())
+    SnackbarManager.showMessage(R.string.somthing_wrong)
 }
 
 fun String.isValidEmail(): Boolean {

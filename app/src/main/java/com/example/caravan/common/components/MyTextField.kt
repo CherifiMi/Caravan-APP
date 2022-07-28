@@ -1,4 +1,4 @@
-package com.example.caravan.components
+package com.example.caravan.common.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding

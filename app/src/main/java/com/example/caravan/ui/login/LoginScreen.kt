@@ -16,12 +16,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.caravan.R
-import com.example.caravan.components.MyButton
-import com.example.caravan.components.MyTextField
+import com.example.caravan.common.components.MyButton
+import com.example.caravan.common.components.MyTextField
 import com.example.caravan.theme.GoogleBlue
 import com.example.caravan.theme.PinkRed
 import com.example.caravan.theme.Typography
-import com.example.pizzaorderapp.navigation.Screens
+import com.example.caravan.domain.navigation.Screens
 
 
 @Composable

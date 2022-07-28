@@ -1,11 +1,13 @@
 package com.example.caravan.ui.signup
 
 import android.util.Log
+import androidx.annotation.StringRes
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.caravan.data.repository.AccountService
-import com.example.caravan.domain.ext.*
+import com.example.caravan.common.ext.*
+import com.example.caravan.common.snackbar.SnackbarManager
 import com.example.caravan.domain.model.Buyer
 import com.example.caravan.domain.model.Rep
 import com.example.caravan.domain.model.Seller
@@ -14,9 +16,8 @@ import com.example.caravan.domain.use_cases.PostNewRepUseCase
 import com.example.caravan.domain.use_cases.PostNewSellerUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import javax.inject.Inject
+import com.example.caravan.R.string as AppText
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
@@ -55,17 +56,18 @@ class SignUpViewModel @Inject constructor(
         if (
            !isBuyerDataValid && !isSellerDataValid && !isRepDataValid
         ){
-            Log.d("TESTGMAIL", "please fill all data")
+
+            SnackbarManager.showMessage(AppText.empty_data)
             return
         }
 
         if (!email.value.isValidEmail()) {
-            Log.d("TESTGMAIL", "email_error")
+            SnackbarManager.showMessage(AppText.email_error)
             return
         }
 
         if (!password.value.isValidPassword()) {
-            Log.d("TESTGMAIL", "password_error")
+            SnackbarManager.showMessage(AppText.password_error)
             return
         }
 
@@ -123,17 +125,12 @@ class SignUpViewModel @Inject constructor(
                                 )
                             )
                         }
-                        try {
 
-
-                        } catch (e: Exception) {
-                            Log.d("TESTGMAIL", e.toString())
-                        }
-                        Log.d("TESTGMAIL", error.message.toString())
+                        SnackbarManager.showMessage(AppText.account_created)
                     }
 
                 } else {
-                    Log.d("TESTGMAIL", "this account already exist")
+                    SnackbarManager.showMessage(AppText.already_exist)
                 }
             }
         }

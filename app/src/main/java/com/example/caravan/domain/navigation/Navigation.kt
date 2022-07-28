@@ -1,4 +1,4 @@
-package com.example.pizzaorderapp.navigation
+package com.example.caravan.domain.navigation
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.ExperimentalMaterialApi
@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.caravan.MainViewModel
+import com.example.caravan.domain.navigation.Screens
 import com.example.caravan.ui.login.LoginScreen
 import com.example.caravan.ui.signup.screens.*
 

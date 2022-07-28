@@ -1,4 +1,4 @@
-package com.example.caravan.components
+package com.example.caravan.common.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

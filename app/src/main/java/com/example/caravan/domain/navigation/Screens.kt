@@ -1,4 +1,4 @@
-package com.example.pizzaorderapp.navigation
+package com.example.caravan.domain.navigation
 
 
 sealed class Screens(val route: String) {
