@@ -18,6 +18,6 @@ fun RepHomeScreen(
     viewModel: SignUpViewModel = hiltViewModel()
 ) {
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(text = "Seller with id: ${viewModel.getUserId()}", style = Typography.h1, textAlign = TextAlign.Center)
+        Text(text = "Rep with id: ${viewModel.getUserId()}", style = Typography.h1, textAlign = TextAlign.Center)
     }
 }
