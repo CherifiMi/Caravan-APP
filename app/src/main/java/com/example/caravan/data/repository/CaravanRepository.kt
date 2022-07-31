@@ -28,4 +28,18 @@ class CaravanRepository @Inject constructor(private val caravanApi: CaravanApi){
     suspend fun getUserType(id: Id): UserType {
         return caravanApi.getUserType(id)
     }
+
+    suspend fun getAllSellerProducts(id: Id): ProductsList {
+        return caravanApi.getAllSellerProducts(id)
+    }
+
+    suspend fun createNewProduct(product: Product): ResponseBody{
+        return  caravanApi.createNewProduct(product)
+    }
+    suspend fun changeThisProduct(product: Product): ResponseBody{
+        return  caravanApi.changeThisProduct(product)
+    }
+    suspend fun deleteThisProduct(id: Id): ResponseBody{
+        return  caravanApi.deleteThisProduct(id)
+    }
 }
