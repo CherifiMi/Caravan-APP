@@ -1,16 +1,20 @@
 package com.example.caravan.data.repository
 
+import com.example.caravan.data.local.CaravanDao
 import com.example.caravan.data.remote.CaravanApi
 import com.example.caravan.domain.model.*
-import okhttp3.RequestBody
+import com.google.gson.Gson
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import okhttp3.ResponseBody
-import retrofit2.Response
-import retrofit2.Retrofit
 import javax.inject.Inject
 
-class CaravanRepository @Inject constructor(private val caravanApi: CaravanApi){
-    suspend fun getBuyers(): BuyersList{
-        return caravanApi.getBuyers()
+class CaravanRepository @Inject constructor(
+    private val caravanApi: CaravanApi,
+    private val dao: CaravanDao
+    ){
+    suspend fun getProducts(): ProductsList{
+        return caravanApi.getProducts()
     }
 
     suspend fun postNewBuyer(buyer: Buyer): ResponseBody{
@@ -41,5 +45,16 @@ class CaravanRepository @Inject constructor(private val caravanApi: CaravanApi){
     }
     suspend fun deleteThisProduct(id: Id): ResponseBody{
         return  caravanApi.deleteThisProduct(id)
+    }
+
+    //_________________________db
+
+    suspend fun saveProductList(productsList: ProductsList?){
+        dao.deleteAll()
+        val gson = Gson().toJson(productsList)
+        dao.saveAllProducts(ProductEntity(productList = gson))
+    }
+    suspend fun getSavedProductList(): ProductEntity {
+        return dao.getAllProducts()
     }
 }

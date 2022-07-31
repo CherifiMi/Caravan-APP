@@ -2,10 +2,7 @@ package com.example.caravan.common.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Text
@@ -20,10 +17,10 @@ import com.example.caravan.domain.model.Product
 @Composable
 fun MyProductItem(item: Product, function: () -> Unit) {
     Card(
+        shape = RoundedCornerShape(15.dp),
         elevation = 2.dp,
         modifier = Modifier
-            .background(shape = RoundedCornerShape(25.dp), color = Color.White)
-            .padding(5.dp)
+            .padding(8.dp)
             .clickable { function() }
     ) {
         Column() {
@@ -38,6 +35,7 @@ fun MyProductItem(item: Product, function: () -> Unit) {
             Text(text = item.newPrice.toString())
             Text(text = item.initPrice.toString())
             Text(text = item.minOrder)
+            Spacer(modifier = Modifier.padding(8.dp))
         }
     }
 

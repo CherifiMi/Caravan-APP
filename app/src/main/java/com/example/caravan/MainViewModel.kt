@@ -6,17 +6,14 @@ import androidx.lifecycle.viewModelScope
 import com.example.caravan.data.repository.AccountService
 import com.example.caravan.data.util.Result
 import com.example.caravan.domain.model.Id
-import com.example.caravan.domain.model.UserType
-import com.example.caravan.domain.use_cases.GetBuyersUseCase
+import com.example.caravan.domain.use_cases.GetProductsUseCase
 import com.example.caravan.domain.use_cases.GetUserTypeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val getBuyersUseCase: GetBuyersUseCase,
     private val getUserTypeUseCase: GetUserTypeUseCase,
     private val accountService: AccountService
 ) : ViewModel() {
@@ -81,23 +78,6 @@ class MainViewModel @Inject constructor(
         )
     }
 
-    fun testCall() {
-        getBuyersUseCase().onEach {
-            when (it) {
-                is Result.Loading -> {
-                    Log.d("TESTAPI", "loading")
-                }
-                is Result.Success -> {
-                    _spalsh.value = false
-                    Log.d("TESTAPI", it.data.toString())
-                }
-                is Result.Error -> {
-                    _spalsh.value = false
-                    Log.d("TESTAPI", it.message.toString())
-                }
 
-            }
-        }.launchIn(viewModelScope)
-    }
 
 }

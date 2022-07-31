@@ -8,9 +8,6 @@ import retrofit2.http.*
 
 interface CaravanApi {
 
-    @GET("buyers")
-    suspend fun getBuyers(): BuyersList
-
     @POST("buyers")
     suspend fun postNewBuyer(@Body buyer: Buyer): ResponseBody
 
@@ -23,8 +20,12 @@ interface CaravanApi {
     @POST("type")
     suspend fun getUserType(@Body id: Id): UserType
 
+
     @POST("product/all")
     suspend fun getAllSellerProducts(@Body id: Id): ProductsList
+
+    @GET("product")
+    suspend fun getProducts(): ProductsList
 
     @POST("product")
     suspend fun createNewProduct(@Body product: Product): ResponseBody

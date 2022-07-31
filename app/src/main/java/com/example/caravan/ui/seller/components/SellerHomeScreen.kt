@@ -84,7 +84,7 @@ fun ProductsListScreen(viewModel: SellerViewModel, navController: NavHostControl
 
         itemsIndexed(items = viewModel.myProducts ?: listOf() ) { index, item ->
             MyProductItem(item){
-                navController.navigate(Screens.ProductSeller.passItem(item = index.toString()))
+                //navController.navigate(Screens.ProductSeller.passItem(item = index.toString()))
             }
         }
     }

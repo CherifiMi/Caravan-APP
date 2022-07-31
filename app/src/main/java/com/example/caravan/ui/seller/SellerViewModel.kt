@@ -2,7 +2,6 @@ package com.example.caravan.ui.seller
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.caravan.R
@@ -11,17 +10,12 @@ import com.example.caravan.data.repository.AccountService
 import com.example.caravan.data.util.Result
 import com.example.caravan.domain.model.Id
 import com.example.caravan.domain.model.Product
-import com.example.caravan.domain.model.ProductsList
 import com.example.caravan.domain.use_cases.CreateNewProductUseCase
 import com.example.caravan.domain.use_cases.GetAllSellerProductsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import org.litote.kmongo.coroutine.coroutine
-import org.litote.kmongo.reactivestreams.KMongo
 import javax.inject.Inject
 
 @HiltViewModel

@@ -30,6 +30,7 @@ import androidx.navigation.compose.rememberNavController
 import com.amplifyframework.AmplifyException
 import com.amplifyframework.auth.cognito.AWSCognitoAuthPlugin
 import com.amplifyframework.core.Amplify
+import com.amplifyframework.storage.StorageException
 import com.amplifyframework.storage.s3.AWSS3StoragePlugin
 import com.example.caravan.common.CaravanAppState
 import com.example.caravan.common.snackbar.SnackbarManager
@@ -124,4 +125,5 @@ fun RequestContentPermission() {
         }
 
     }
+
 }
