@@ -32,6 +32,15 @@ class LoginViewModel @Inject constructor(
         accountService.signOut()
     }
 
+    fun signOut(navController: NavHostController){
+
+        accountService.signOut()
+
+        navController.navigate(Screens.Main.route) {
+            launchSingleTop = true
+            popUpTo(0) { inclusive = true }
+        }
+    }
 
     fun onSignInClick(navController: NavHostController) {
         if (!email.value.isValidEmail()) {
