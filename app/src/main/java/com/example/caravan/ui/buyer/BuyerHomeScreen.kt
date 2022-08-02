@@ -5,18 +5,14 @@ import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Backpack
-import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -25,22 +21,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.example.caravan.R
 import com.example.caravan.common.components.MyProductItem
+import com.example.caravan.domain.model.mokeCats
 import com.example.caravan.domain.navigation.Screens
 import com.example.caravan.theme.*
-import com.example.caravan.ui.seller.SellerViewModel
-import com.example.caravan.ui.signup.SignUpViewModel
 
 @Composable
 fun BuyerHomeScreen(
@@ -48,11 +39,13 @@ fun BuyerHomeScreen(
     viewModel: BuyerViewModel = hiltViewModel()
 ) {
 
-   viewModel.getProducts()
+    viewModel.getProducts()
 
     Log.d("DBTEST", viewModel.savedData[1].id)
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        TopAppBarHeader()
+        TopAppBarHeader() {
+            viewModel.signOut(navController)
+        }
         OurProductsWithSearch()
         Spacer(modifier = Modifier.padding(10.dp))
         ProductCategory()
@@ -63,43 +56,51 @@ fun BuyerHomeScreen(
 }
 
 @Composable
-fun TopAppBarHeader() {
-    Card(
-        shape = RoundedCornerShape(bottomEnd = 10.dp, bottomStart = 10.dp)
+fun TopAppBarHeader(function: () -> Unit) {
+
+    TopAppBar(
+        elevation = 2.dp,
+        modifier = Modifier.clip(RoundedCornerShape(bottomEnd = 15.dp, bottomStart = 15.dp))
     ) {
-        TopAppBar(
-            title = {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
+            ) {
+
+                IconButton(
+                    onClick = { function() }
                 ) {
-                    Row(verticalAlignment = Alignment.CenterVertically,) {
-                        IconButton(onClick = { }) {
-                            Icon(
-                                imageVector = Icons.Outlined.Menu,
-                                contentDescription = ""
-                            )
-                        }
-                        Text(
-                            text = "caravan",
-                            style = Typography.h1,
-                            textAlign = TextAlign.Start,
-                            color = Color.White
-                        )
-                    }
-
-
-                    IconButton(onClick = { }) {
-                        Icon(
-                            imageVector = Icons.Outlined.Backpack,
-                            contentDescription = ""
-                        )
-                    }
-
+                    Icon(
+                        imageVector = Icons.Outlined.Menu,
+                        contentDescription = ""
+                    )
                 }
-            })
+                Text(
+                    text = "caravan",
+                    style = Typography.h1,
+                    textAlign = TextAlign.Start,
+                    color = Color.White
+                )
+            }
+
+
+            IconButton(onClick = { }) {
+                Icon(
+                    modifier = Modifier.padding(12.dp),
+                    painter = painterResource(id = R.drawable.cart_emp),
+                    contentDescription = ""
+                )
+            }
+
+        }
     }
+
 }
 
 @Composable
@@ -134,7 +135,7 @@ fun OurProductsWithSearch() {
             },
             leadingIcon = {
                 Icon(
-                    modifier = Modifier.clickable{ },
+                    modifier = Modifier.clickable { },
                     imageVector = Icons.Filled.Search,
                     contentDescription = "",
                     tint = lightblack
@@ -167,70 +168,88 @@ fun OurProductsWithSearch() {
 
 @Composable
 fun ProductCategory() {
-    val itemList = listOf("Sneakers", "Jacket", "Watch", "Watch")
-    val categoryImagesList = listOf<Int>(
-        R.drawable.shoe_thumb_2,
-        R.drawable.jacket,
-        R.drawable.watch,
-        R.drawable.watch
-    )
-    LazyRow(
+    val itemList = mokeCats.catList
+
+    Row(
         modifier = Modifier
             .fillMaxWidth()
+            .horizontalScroll(
+                rememberScrollState()
+            )
     ) {
-        items(itemList.size) { item ->
-            Box(
+        Spacer(modifier = Modifier.padding(8.dp))
+
+        Card(
+            shape = RoundedCornerShape(10.dp),
+            modifier = Modifier
+                .wrapContentHeight()
+                .clip(RoundedCornerShape(10.dp))
+                .clickable { },
+            border = BorderStroke(2.dp, PinkRed)
+        ) {
+            Spacer(
                 modifier = Modifier
-                    .height(40.dp)
-                    .border(
-                        color = if (item == 0) orange else lightGray,
-                        width = 2.dp,
-                        shape = RoundedCornerShape(10.dp)
-                    )
+                    .padding(vertical = 8.dp)
+                    .size(24.dp)
+            )
+
+            Text(
+                modifier = Modifier.padding(16.dp, 8.dp),
+                text = "All",
+                style = Typography.h3
+            )
+        }
+
+        Spacer(modifier = Modifier.padding(8.dp))
+
+        for (i in itemList) {
+
+            Card(
+                shape = RoundedCornerShape(10.dp),
+                modifier = Modifier
+                    .wrapContentHeight()
+                    .clip(RoundedCornerShape(10.dp))
+                    .clickable { },
+                border = BorderStroke(2.dp, lightGray)
             ) {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 2.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
+                    horizontalArrangement = Arrangement.Start
                 ) {
-                    Image(
-                        painter = painterResource(categoryImagesList[item]),
-                        contentDescription = "",
-                        modifier = Modifier.size(30.dp, 30.dp)
+                    AsyncImage(
+                        modifier = Modifier
+                            .padding(start = 16.dp, top = 8.dp, bottom = 8.dp)
+                            .size(24.dp),
+                        model = i.picUrl,
+                        contentDescription = null
                     )
                     Text(
-                        modifier = Modifier
-                            .padding(
-                                start = 5.dp,
-                                end = 16.dp,
-                                top = 8.dp,
-                                bottom = 8.dp
-                            ),
-                        text = itemList[item],
-                        color = if (item == 0) lightblack else Color.LightGray
+                        modifier = Modifier.padding(16.dp, 8.dp),
+                        text = i.name,
+                        style = Typography.h3
                     )
                 }
-
             }
-            Spacer(modifier = Modifier.width(10.dp))
+
+            Spacer(modifier = Modifier.padding(8.dp))
         }
     }
+
 }
+
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ProductGrid(viewModel: BuyerViewModel, navController: NavHostController) {
     LazyVerticalGrid(
-        cells = GridCells.Fixed(2) ,
+        cells = GridCells.Fixed(2),
         verticalArrangement = Arrangement.Top,
         contentPadding = PaddingValues(8.dp)
     ) {
 
-        itemsIndexed(items = viewModel.savedData ?: listOf() ) { index, item ->
-            MyProductItem(item){
-                navController.navigate(Screens.ProductSeller.passItem(item = index.toString()))
+        itemsIndexed(items = viewModel.savedData ?: listOf()) { index, item ->
+            MyProductItem(item, true) {
+                //navController.navigate(Screens.ProductSeller.passItem(item = index.toString()))
             }
         }
     }
