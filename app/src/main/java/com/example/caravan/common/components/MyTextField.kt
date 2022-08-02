@@ -12,6 +12,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.example.caravan.theme.Typography
 
 
 @Composable
@@ -23,6 +24,7 @@ fun MyTextField(
     isEM: Boolean = false,
 ) {
     OutlinedTextField(
+        textStyle = Typography.h3,
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
