@@ -36,6 +36,7 @@ import com.example.caravan.common.CaravanAppState
 import com.example.caravan.common.snackbar.SnackbarManager
 import com.example.caravan.theme.CaravanTheme
 import com.example.caravan.domain.navigation.Navigation
+import com.example.caravan.ui.buyer.BuyerProductScreen
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 
@@ -63,9 +64,9 @@ class MainActivity : ComponentActivity() {
 
 
         installSplashScreen().apply {
-            setKeepOnScreenCondition{
-                viewModel.spalsh.value
-            }
+            //setKeepOnScreenCondition{
+            //    viewModel.spalsh.value
+            //}
         }
 
 
@@ -75,7 +76,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ){
-                    MainApp(viewModel)
+                    BuyerProductScreen()
+                    //MainApp(viewModel)
                 }
             }
         }
