@@ -1,17 +1,19 @@
 package com.example.caravan.ui.buyer
 
+import android.os.Bundle
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideIn
+import androidx.compose.animation.slideOut
 import androidx.compose.foundation.*
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.shape.ZeroCornerSize
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.icons.outlined.Favorite
-import androidx.compose.material.icons.outlined.KeyboardArrowLeft
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,372 +21,268 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
-import com.amplifyframework.util.UserAgent.string
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.example.caravan.R
+import com.example.caravan.common.components.MyButton
+import com.example.caravan.domain.model.Product
 import com.example.caravan.theme.*
 
 
 @Composable
-fun BuyerProductScreen() {
+fun BuyerProductScreen(
+    navController: NavHostController,
+    args: Bundle?,
+    viewModel: BuyerViewModel = hiltViewModel()
+) {
+
+    val currantItem = viewModel.getCurrentProduct(args?.getString("index") ?: "")
+
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        BottomLayer(currantItem, viewModel, navController)
+        TopLayer(currantItem, viewModel, navController)
+    }
+
+
+}
+
+@Composable
+fun TopLayer(currantItem: Product, viewModel: BuyerViewModel, navController: NavHostController) {
+
+
+    AnimatedVisibility(
+        modifier = Modifier.fillMaxSize(),
+        visible = viewModel.buyOrAddToCartSheet.value,
+        enter = slideIn(
+            initialOffset = { fullSize ->
+                IntOffset(0, fullSize.width / 2)
+            },
+            animationSpec = tween(durationMillis = 300, easing = LinearOutSlowInEasing)
+
+        ),
+        exit = slideOut(
+            targetOffset = { fullSize ->
+                IntOffset(0, fullSize.width / 2)
+            },
+            animationSpec = tween(durationMillis = 300)
+        ) + fadeOut()
+    ) {
+
+        Column(
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Box(
+                Modifier
+                    .weight(6f)
+                    .fillMaxWidth()
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) { viewModel.buyOrAddToCartSheet.value = false }
+            )
+
+            Card(
+                elevation = 10.dp,
+                backgroundColor = Color.White,
+                shape = RoundedCornerShape(25.dp, 25.dp, 0.dp, 0.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(2f)
+            ) {
+                Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.Bottom) {
+                    
+                    Row(Modifier.fillMaxWidth()) {
+                        Box(modifier = Modifier.weight(1f)){
+                            MyButton(
+                                text = "Buy Now",
+                                text_color = Color.White,
+                                btn_color = PinkRed,
+                                end = 8.dp
+                            ) {
+
+                            }
+                        }
+
+                        Box(modifier = Modifier.weight(1f)){
+
+                            MyButton(
+                                text = "Add to Cart",
+                                has_border = true,
+                                btn_color = Color.White,
+                                text_color = PinkRed,
+                                start = 8.dp
+                            ) {
+
+                            }
+                        }
+                    }
+                    Spacer(modifier = Modifier.padding(16.dp))
+                }
+
+            }
+        }
+
+    }
+}
+
+@Composable
+fun BottomLayer(currantItem: Product, viewModel: BuyerViewModel, navController: NavHostController) {
 
     Scaffold(
-        topBar = {
-            TopAppBarWithBack(
-                onBackClick = {
-
-                },
-            )
-        }, backgroundColor = lightgraybg,
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { },
-                backgroundColor = orange
+                modifier = Modifier.padding(16.dp),
+                onClick = {
+                    viewModel.buyOrAddToCartSheet.value = true
+                },
+                backgroundColor = PinkRed
             ) {
                 Icon(
-                    imageVector = Icons.Default.ShoppingCart,
+                    modifier = Modifier.size(24.dp),
+                    painter = painterResource(id = R.drawable.cart_full),
                     contentDescription = "Add To Cart",
                     tint = white
                 )
             }
-        },
+        }
+    ) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+        ) {
 
-        content = {
             Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
+                Modifier
+                    .fillMaxWidth()
+                    .height(320.dp)
+                    .background(Color.Black),
+                contentAlignment = Alignment.BottomCenter
             ) {
-                ConstraintLayout {
-                    val (imagesliderref, addtocartref) = createRefs()
-                    Box(modifier = Modifier
-                        .height(280.dp)
-                        .constrainAs(imagesliderref) {
-                            top.linkTo(imagesliderref.top)
-                            bottom.linkTo(imagesliderref.top)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                        }) {
-                        HeaderImagesSlider()
-                    }
-                    Surface(
-                        color = white,
-                        shape = RoundedCornerShape(40.dp)
-                            .copy(
-                                bottomStart = ZeroCornerSize,
-                                bottomEnd = ZeroCornerSize
-                            ),
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(top = 300.dp)
-                            .constrainAs(addtocartref) {
-                                bottom.linkTo(parent.bottom)
-                                start.linkTo(parent.start)
-                                end.linkTo(parent.end)
-                            }
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(30.dp)
-                        ) {
-                            ProductTitle()
-                            Spacer(modifier = Modifier.padding(10.dp))
-                            ProductAvailableSize()
-                            Spacer(modifier = Modifier.padding(10.dp))
-                            ProductItemColorWithDesc()
-                        }
-
-
-                    }
-
-                }
-
-            }
-        }
-    )
-}
-
-
-
-@Composable
-fun TopAppBarWithBack(onBackClick: () -> Unit) {
-    Row(
-        modifier = Modifier.fillMaxWidth()
-            .padding(30.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.Top
-    ) {
-        Card(
-            modifier = Modifier.width(50.dp),
-            shape = RoundedCornerShape(12.dp),
-            elevation = 5.dp
-        ) {
-            IconButton(onClick = { onBackClick() }) {
-                Icon(
-                    imageVector = Icons.Outlined.KeyboardArrowLeft,
-                    contentDescription = ""
+                AsyncImage(
+                    modifier = Modifier.fillMaxSize(),
+                    model = currantItem.imageUrls[viewModel.thisImage.value],
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop
                 )
-            }
-
-        }
-
-        Card(
-            modifier = Modifier.width(50.dp),
-            shape = RoundedCornerShape(12.dp),
-            elevation = 5.dp
-        ) {
-            IconButton(onClick = { }) {
-                Icon(
-                    imageVector = Icons.Outlined.Favorite,
-                    contentDescription = "",
-                    tint = orange
-                )
-            }
-
-        }
-    }
-}
-
-@Composable
-fun HeaderImagesSlider() {
-    val showThumbImagesList = listOf<Int>(
-        R.drawable.show_1,
-        R.drawable.shoe_thumb_1,
-        R.drawable.shoe_thumb_4,
-        R.drawable.shoe_thumb_3
-    )
-    Column(
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-    ) {
-        Image(
-            contentScale = ContentScale.Fit,
-            painter = painterResource(id = R.drawable.show_1),
-            contentDescription = "",
-            modifier = Modifier
-                .size(230.dp)
-        )
-
-        LazyRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            items(showThumbImagesList.size) { item ->
-                Box(
-                    modifier = Modifier
-                        .height(60.dp)
-                        .width(62.dp)
-                        .border(
-                            color = if (item == 0) orange else lightGray,
-                            width = 2.dp,
-                            shape = RoundedCornerShape(16.dp)
-                        )
-                        .clickable { }) {
-                    Image(
-                        painter = painterResource(showThumbImagesList[item]),
-                        contentDescription = "",
-                        modifier = Modifier
-                            .size(50.dp, 50.dp)
-                            .padding(
-                                start = 10.dp,
-                                end = 5.dp,
-                                top = 5.dp,
-                                bottom = 5.dp
-                            )
-                    )
-
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .padding(bottom = 16.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    ImagePickerCard(currantItem.imageUrls[0], 0, viewModel)
+                    ImagePickerCard(currantItem.imageUrls[1], 1, viewModel)
+                    ImagePickerCard(currantItem.imageUrls[2], 2, viewModel)
+                    ImagePickerCard(currantItem.imageUrls[3], 3, viewModel)
                 }
-                Spacer(modifier = Modifier.width(10.dp))
             }
-        }
-    }
-}
 
-@Composable
-fun ProductTitle() {
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Divider(
-            color = grey,
-            modifier = Modifier
-                .height(4.dp)
-                .width(40.dp)
-        )
-        Spacer(modifier = Modifier.padding(5.dp))
+            Card(
+                shape = RoundedCornerShape(100.dp),
+                backgroundColor = LightGrey,
+                modifier = Modifier
+                    .padding(150.dp, 16.dp)
+                    .fillMaxWidth()
+                    .height(4.dp)
+            ) {}
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
             Text(
-                text = "NIKE AIR MAX 200",
-                color = titleTextColor,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
+                modifier = Modifier.padding(horizontal = 16.dp),
+                text = currantItem.name + "Best Of Lalo Compilation | Better Call Saul\n",
+                style = TextStyle(
+                    fontFamily = Montserrat,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 24.sp
+                )
             )
 
-            Column(modifier = Modifier.wrapContentHeight()) {
+            Row(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .wrapContentHeight(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text(
-                    text = buildAnnotatedString {
-                        withStyle(
-                            style = SpanStyle(
-                                orange,
-                                fontWeight = FontWeight.Bold
-                            )
-                        ) {
-                            append("$ ")
-                        }
-                        withStyle(
-                            style = SpanStyle(
-                                titleTextColor
-                            )
-                        ) {
-                            append("240")
-                        }
-                    },
-                    style = MaterialTheme.typography.subtitle1,
-                    modifier = Modifier,
-                    fontSize = 16.sp
-
+                    text = "SR ",
+                    color = PinkRed,
+                    style = TextStyle(
+                        fontFamily = Montserrat,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 18.sp
+                    )
+                )
+                Text(
+                    text = currantItem.newPrice.toString() + ",00",
+                    style = TextStyle(
+                        fontFamily = Montserrat,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 24.sp
+                    )
                 )
 
-
+                Spacer(modifier = Modifier.padding(horizontal = 8.dp))
+                Text(
+                    text = "RS " + currantItem.initPrice.toString(),
+                    textDecoration = TextDecoration.LineThrough,
+                    style = Typography.h3,
+                    color = LightGrey
+                )
             }
+
+            Spacer(modifier = Modifier.padding(8.dp))
+
+            Text(
+                modifier = Modifier.padding(16.dp),
+                text = currantItem.content + stringResource(R.string.lorem_ipsem),
+                style = TextStyle(
+                    fontFamily = Montserrat,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 16.sp,
+                    lineHeight = 24.sp
+                )
+            )
+
         }
     }
 }
 
 @Composable
-fun ProductAvailableSize() {
-    val itemListavailablesize = listOf("US6", "US7", "US8", "US9")
-    Column(modifier = Modifier.fillMaxWidth()) {
+fun ImagePickerCard(url: String, i: Int, viewModel: BuyerViewModel) {
+    Spacer(modifier = Modifier.padding(2.dp))
 
-        Text(
-            text = "Available Sizes",
-            color = titleTextColor,
-            fontSize = 18.sp
-        )
-        Spacer(modifier = Modifier.padding(10.dp))
-
-        LazyRow(
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            items(itemListavailablesize.size) { item ->
-                Box(
-                    modifier = Modifier
-                        .height(40.dp)
-                        .width(70.dp)
-                        .border(
-                            color = if (item == 1) orange else lightGray,
-                            width = 2.dp,
-                            shape = RoundedCornerShape(10.dp)
-                        )
-                        .clickable { }) {
-                    Text(
-                        modifier = Modifier
-                            .padding(
-                                start = 20.dp,
-                                end = 16.dp,
-                                top = 10.dp,
-                                bottom = 8.dp
-                            ),
-                        text = itemListavailablesize[item],
-                        fontWeight = FontWeight.Bold,
-                        color = if (item == 1) titleTextColor else Color.LightGray
-                    )
-
-
-                }
-                Spacer(modifier = Modifier.width(10.dp))
+    Card(
+        elevation = 2.dp,
+        shape = RoundedCornerShape(15.dp),
+        border = BorderStroke(
+            width = 2.dp,
+            color = if (viewModel.thisImage.value == i) PinkRed else LightGrey
+        ),
+        modifier = Modifier
+            .size(width = 64.dp, height = 54.dp)
+            .clip(RoundedCornerShape(15.dp))
+            .clickable {
+                viewModel.thisImage.value = i
             }
-        }
-    }
-}
+    ) {
 
-@Composable
-fun ProductItemColorWithDesc() {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Text(
-            text = "Color",
-            color = titleTextColor,
-            fontSize = 18.sp
+        AsyncImage(
+            contentScale = ContentScale.Crop,
+            model = url,
+            contentDescription = null
         )
-        Spacer(modifier = Modifier.padding(10.dp))
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(30.dp)
-                    .clip(shape = CircleShape)
-                    .background(orange)
-                    .clickable { }
-            )
-            Box(
-                modifier = Modifier
-                    .size(30.dp)
-                    .clip(shape = CircleShape)
-                    .background(lightBlue)
-                    .clickable { }
-            )
-            Box(
-                modifier = Modifier
-                    .size(30.dp)
-                    .clip(shape = CircleShape)
-                    .background(black)
-                    .clickable { }
-            )
-            Box(
-                modifier = Modifier
-                    .size(30.dp)
-                    .clip(shape = CircleShape)
-                    .background(red)
-                    .clickable { }
-            )
-            Box(
-                modifier = Modifier
-                    .size(30.dp)
-                    .clip(shape = CircleShape)
-                    .background(skyBlue)
-                    .clickable { }
-            )
-        }
-        Spacer(modifier = Modifier.padding(10.dp))
-        Text(
-            text = "Description",
-            color = titleTextColor,
-            fontSize = 18.sp
-        )
-        Spacer(modifier = Modifier.padding(5.dp))
-        Text(
-            text = stringResource(id = com.example.caravan.R.string.product_text_description),
-            color = lightblack,
-            fontSize = 14.sp
-        )
     }
 
+    Spacer(modifier = Modifier.padding(2.dp))
 }
-
-
-
-
-

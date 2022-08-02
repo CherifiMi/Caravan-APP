@@ -12,6 +12,7 @@ import androidx.navigation.navArgument
 import com.example.caravan.MainApp
 import com.example.caravan.MainViewModel
 import com.example.caravan.ui.buyer.BuyerHomeScreen
+import com.example.caravan.ui.buyer.BuyerProductScreen
 import com.example.caravan.ui.errors.NoNetScreen
 import com.example.caravan.ui.errors.SomethingWrongScreen
 import com.example.caravan.ui.login.LoginScreen
@@ -71,6 +72,13 @@ fun Navigation(
 
         composable(route = Screens.HomeBuyer.route) {
             BuyerHomeScreen(navController = navController)
+        }
+        composable(
+            route = Screens.ProductBuyer.route,
+            arguments = listOf(navArgument(name = "index"){type = NavType.StringType})
+        ) {
+            var index = it.arguments
+            BuyerProductScreen(navController = navController, args = index)
         }
 
 

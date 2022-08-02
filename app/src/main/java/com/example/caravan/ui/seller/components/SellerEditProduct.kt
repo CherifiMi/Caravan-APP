@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.example.caravan.common.components.MyButton
 import com.example.caravan.common.components.MyTextField
 import com.example.caravan.domain.navigation.Screens
 import com.example.caravan.theme.LightGrey
@@ -72,6 +73,12 @@ fun SellerEditProduct(
         MyTextField(state = viewModel.minOrder, s = "Minimum Order Amount", isEM = true)
         MyTextField(state = viewModel.fPrice, s = "Original Price", isEM = true)
         MyTextField(state = viewModel.sPrice, s = "Discounted Price", isEM = true)
+        
+        Spacer(modifier = Modifier.padding(16.dp))
+        
+        MyButton(text = "Update Product") {
+            
+        }
     }
 
 }

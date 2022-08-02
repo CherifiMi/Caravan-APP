@@ -11,6 +11,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.caravan.theme.PinkRed
 import com.example.caravan.theme.Typography
@@ -21,12 +22,13 @@ fun MyButton(
     text_color: Color = Color.White,
     btn_color: Color = PinkRed,
     has_border: Boolean = false,
+    start: Dp = 16.dp, end: Dp = 16.dp,
     onClick: ()-> Unit
 ) {
     Button(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
+            .padding(start = start, end = end)
             .border(
                 width = if (has_border) 2.dp else 0.dp,
                 color =if (has_border) PinkRed else Color.Transparent ,

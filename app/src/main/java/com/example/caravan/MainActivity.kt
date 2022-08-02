@@ -64,9 +64,9 @@ class MainActivity : ComponentActivity() {
 
 
         installSplashScreen().apply {
-            //setKeepOnScreenCondition{
-            //    viewModel.spalsh.value
-            //}
+            setKeepOnScreenCondition{
+                viewModel.spalsh.value
+            }
         }
 
 
@@ -76,8 +76,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ){
-                    BuyerProductScreen()
-                    //MainApp(viewModel)
+                    MainApp(viewModel)
                 }
             }
         }

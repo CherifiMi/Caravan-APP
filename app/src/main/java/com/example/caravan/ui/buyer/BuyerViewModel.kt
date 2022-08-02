@@ -1,12 +1,15 @@
 package com.example.caravan.ui.buyer
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.example.caravan.data.repository.AccountService
 import com.example.caravan.data.repository.CaravanRepository
 import com.example.caravan.data.util.Result
+import com.example.caravan.domain.model.Product
+import com.example.caravan.domain.model.ProductEntity
 import com.example.caravan.domain.model.ProductsList
 import com.example.caravan.domain.navigation.Screens
 import com.example.caravan.domain.use_cases.GetProductsUseCase
@@ -27,7 +30,14 @@ class BuyerViewModel @Inject constructor(
     private val accountService: AccountService
 ) : ViewModel() {
 
-    fun signOut(navController: NavHostController){
+    //_____________________________value
+    val thisImage = mutableStateOf(0)
+    val buyOrAddToCartSheet = mutableStateOf(false)
+    val loading = mutableStateOf(true)
+
+
+    //_____________________________functions
+    fun signOut(navController: NavHostController) {
 
         accountService.signOut()
 
@@ -36,12 +46,6 @@ class BuyerViewModel @Inject constructor(
             popUpTo(0) { inclusive = true }
         }
     }
-
-    val savedData =
-        Gson().fromJson(
-            runBlocking (Dispatchers.IO){
-                repository.getSavedProductList()
-            }.productList, ProductsList::class.java)
 
 
     fun getProducts() {
@@ -54,14 +58,28 @@ class BuyerViewModel @Inject constructor(
                 }
                 is Result.Success -> {
                     repository.saveProductList(it.data)
+                    loading.value = true
                     Log.d("TESTAPI", it.data.toString())
                 }
                 is Result.Error -> {
+                    loading.value = true
                     Log.d("TESTAPI", it.message.toString())
                 }
 
             }
         }.launchIn(viewModelScope)
+    }
+
+    val savedData =
+        Gson().fromJson(
+            runBlocking(Dispatchers.IO) {
+                repository.getSavedProductList()
+            }.productList, ProductsList::class.java
+        )
+
+
+    fun getCurrentProduct(s: String): Product {
+        return savedData[s.toInt()]
     }
 
 }

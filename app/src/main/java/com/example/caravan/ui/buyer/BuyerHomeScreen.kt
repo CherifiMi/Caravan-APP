@@ -32,6 +32,7 @@ import com.example.caravan.common.components.MyProductItem
 import com.example.caravan.domain.model.mokeCats
 import com.example.caravan.domain.navigation.Screens
 import com.example.caravan.theme.*
+import kotlinx.coroutines.runBlocking
 
 @Composable
 fun BuyerHomeScreen(
@@ -39,9 +40,11 @@ fun BuyerHomeScreen(
     viewModel: BuyerViewModel = hiltViewModel()
 ) {
 
-    viewModel.getProducts()
+    runBlocking {
+        viewModel.getProducts()
+    }
+    Log.d("HELLO", viewModel.savedData.toString())
 
-    Log.d("DBTEST", viewModel.savedData[1].id)
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         TopAppBarHeader() {
             viewModel.signOut(navController)
@@ -249,7 +252,7 @@ fun ProductGrid(viewModel: BuyerViewModel, navController: NavHostController) {
 
         itemsIndexed(items = viewModel.savedData ?: listOf()) { index, item ->
             MyProductItem(item, true) {
-                //navController.navigate(Screens.ProductSeller.passItem(item = index.toString()))
+                navController.navigate(Screens.ProductBuyer.passItem(index = index.toString()))
             }
         }
     }
