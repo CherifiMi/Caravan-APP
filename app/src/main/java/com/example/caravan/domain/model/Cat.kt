@@ -14,7 +14,7 @@ val mokeCats = CatList(
         Cat(
             id = null,
             name = "Games",
-            subCats = listOf(),
+            subCats = listOf("mito", "phone", "mito2"),
             picUrl = "https://cdn-icons-png.flaticon.com/512/5260/5260498.png"
         ),
         Cat(

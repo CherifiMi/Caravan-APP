@@ -1,6 +1,7 @@
 package com.example.caravan.ui.buyer
 
 import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,15 +12,13 @@ import com.example.caravan.data.util.Result
 import com.example.caravan.domain.model.Product
 import com.example.caravan.domain.model.ProductEntity
 import com.example.caravan.domain.model.ProductsList
+import com.example.caravan.domain.model.mokeCats
 import com.example.caravan.domain.navigation.Screens
 import com.example.caravan.domain.use_cases.GetProductsUseCase
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
@@ -33,9 +32,17 @@ class BuyerViewModel @Inject constructor(
     //_____________________________value
     val thisImage = mutableStateOf(0)
     val buyOrAddToCartSheet = mutableStateOf(false)
-    val loading = mutableStateOf(true)
+    val loading = mutableStateOf(false)
 
+    val savedData =
+        Gson().fromJson(
+            runBlocking(Dispatchers.IO) {
+                repository.getSavedProductList()
+            }.productList, ProductsList::class.java
+        )
 
+    val x: MutableState<List<Product>> = mutableStateOf(savedData)
+    var selectedCat = mutableStateOf(-1)
     //_____________________________functions
     fun signOut(navController: NavHostController) {
 
@@ -45,6 +52,16 @@ class BuyerViewModel @Inject constructor(
             launchSingleTop = true
             popUpTo(0) { inclusive = true }
         }
+    }
+
+
+    fun getCurrentProduct(s: String): Product {
+        return savedData[s.toInt()]
+    }
+
+    fun resetUserList() {
+        selectedCat.value = -1
+        x.value = savedData
     }
 
 
@@ -58,6 +75,7 @@ class BuyerViewModel @Inject constructor(
                 }
                 is Result.Success -> {
                     repository.saveProductList(it.data)
+                    x.value = it.data!!
                     loading.value = true
                     Log.d("TESTAPI", it.data.toString())
                 }
@@ -70,16 +88,19 @@ class BuyerViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    val savedData =
-        Gson().fromJson(
-            runBlocking(Dispatchers.IO) {
-                repository.getSavedProductList()
-            }.productList, ProductsList::class.java
-        )
+    fun changeMyList() {
+        x.value = savedData
+            .filter { product: Product ->
+                var b = false
+                for (i in mokeCats.catList[selectedCat.value].subCats){
+                    if(product.cat.contains(i)){
+                        b = true
+                        break
+                    }
+                }
+                b
+            }
 
-
-    fun getCurrentProduct(s: String): Product {
-        return savedData[s.toInt()]
     }
 
 }

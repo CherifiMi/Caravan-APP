@@ -25,6 +25,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.caravan.R
@@ -32,6 +33,8 @@ import com.example.caravan.common.components.MyProductItem
 import com.example.caravan.domain.model.mokeCats
 import com.example.caravan.domain.navigation.Screens
 import com.example.caravan.theme.*
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 @Composable
@@ -43,15 +46,16 @@ fun BuyerHomeScreen(
     runBlocking {
         viewModel.getProducts()
     }
-    Log.d("HELLO", viewModel.savedData.toString())
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         TopAppBarHeader() {
-            viewModel.signOut(navController)
+            viewModel.changeMyList()
+            Log.d("HILLO", viewModel.x.toString())
+        //viewModel.signOut(navController)
         }
         OurProductsWithSearch()
         Spacer(modifier = Modifier.padding(10.dp))
-        ProductCategory()
+        ProductCategory(viewModel)
         Spacer(modifier = Modifier.padding(10.dp))
         ProductGrid(viewModel, navController)
     }
@@ -93,7 +97,7 @@ fun TopAppBarHeader(function: () -> Unit) {
             }
 
 
-            IconButton(onClick = { }) {
+            IconButton(onClick = {  }) {
                 Icon(
                     modifier = Modifier.padding(12.dp),
                     painter = painterResource(id = R.drawable.cart_emp),
@@ -154,7 +158,7 @@ fun OurProductsWithSearch() {
             elevation = 5.dp,
             shape = RoundedCornerShape(12.dp)
         ) {
-            IconButton(onClick = { }) {
+            IconButton(onClick = {}) {
                 Icon(
                     painter = painterResource(R.drawable.filter_list),
                     contentDescription = "Filter Icon",
@@ -170,7 +174,7 @@ fun OurProductsWithSearch() {
 }
 
 @Composable
-fun ProductCategory() {
+fun ProductCategory(viewModel: BuyerViewModel) {
     val itemList = mokeCats.catList
 
     Row(
@@ -187,8 +191,10 @@ fun ProductCategory() {
             modifier = Modifier
                 .wrapContentHeight()
                 .clip(RoundedCornerShape(10.dp))
-                .clickable { },
-            border = BorderStroke(2.dp, PinkRed)
+                .clickable {
+                           viewModel.resetUserList()
+                },
+            border = BorderStroke(2.dp, if (viewModel.selectedCat.value == -1) PinkRed else LightGrey)
         ) {
             Spacer(
                 modifier = Modifier
@@ -205,15 +211,18 @@ fun ProductCategory() {
 
         Spacer(modifier = Modifier.padding(8.dp))
 
-        for (i in itemList) {
+        itemList.forEachIndexed{index, i ->
 
             Card(
                 shape = RoundedCornerShape(10.dp),
                 modifier = Modifier
                     .wrapContentHeight()
                     .clip(RoundedCornerShape(10.dp))
-                    .clickable { },
-                border = BorderStroke(2.dp, lightGray)
+                    .clickable {
+                        viewModel.selectedCat.value = index
+                        viewModel.changeMyList()
+                    },
+                border = BorderStroke(2.dp, if (viewModel.selectedCat.value == index) PinkRed else LightGrey)
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -233,7 +242,6 @@ fun ProductCategory() {
                     )
                 }
             }
-
             Spacer(modifier = Modifier.padding(8.dp))
         }
     }
@@ -244,13 +252,16 @@ fun ProductCategory() {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ProductGrid(viewModel: BuyerViewModel, navController: NavHostController) {
+
+
+
     LazyVerticalGrid(
         cells = GridCells.Fixed(2),
         verticalArrangement = Arrangement.Top,
         contentPadding = PaddingValues(8.dp)
     ) {
 
-        itemsIndexed(items = viewModel.savedData ?: listOf()) { index, item ->
+        itemsIndexed(items = viewModel.x.value) { index, item ->
             MyProductItem(item, true) {
                 navController.navigate(Screens.ProductBuyer.passItem(index = index.toString()))
             }

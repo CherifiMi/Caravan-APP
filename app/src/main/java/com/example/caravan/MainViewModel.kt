@@ -108,12 +108,12 @@ class MainViewModel @Inject constructor(
     }
 
     fun getUserType(): String{
-        Log.d("TEST_SIGN", accountService.getUserId())
-        return getUserTypeUseCase(
-            Id(
-                id = accountService.getUserId()
-            )
-        )
+
+        try {
+            return getUserTypeUseCase(Id(id = accountService.getUserId()))
+        }catch (e: Exception){
+           return getUserType()
+        }
     }
 
 
