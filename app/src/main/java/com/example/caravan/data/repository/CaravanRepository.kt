@@ -1,5 +1,8 @@
 package com.example.caravan.data.repository
 
+import android.net.Uri
+import android.util.Log
+import com.amplifyframework.core.Amplify
 import com.example.caravan.data.local.CaravanDao
 import com.example.caravan.data.remote.CaravanApi
 import com.example.caravan.domain.model.*
@@ -57,4 +60,9 @@ class CaravanRepository @Inject constructor(
     suspend fun getSavedProductList(): ProductEntity {
         return dao.getAllProducts()
     }
+
+    //_________________________s3
+
+
+
 }

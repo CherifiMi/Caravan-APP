@@ -1,0 +1,21 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-caravan-dev-60631-authRole",
+      "UnauthRoleArn": "arn:aws:iam::574521588645:role/amplify-caravan-dev-60631-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::574521588645:role/amplify-caravan-dev-60631-authRole",
+      "Region": "eu-west-3",
+      "DeploymentBucketName": "amplify-caravan-dev-60631-deployment",
+      "UnauthRoleName": "amplify-caravan-dev-60631-unauthRole",
+      "StackName": "amplify-caravan-dev-60631",
+      "StackId": "arn:aws:cloudformation:eu-west-3:574521588645:stack/amplify-caravan-dev-60631/36795b30-13b3-11ed-bc5e-0a75599e5bb0",
+      "AmplifyAppId": "d1709tqpss3lev"
+    },
+    "categories": {
+      "auth": {
+        "caravan9683df0b": {},
+        "true": {}
+      }
+    }
+  }
+}
