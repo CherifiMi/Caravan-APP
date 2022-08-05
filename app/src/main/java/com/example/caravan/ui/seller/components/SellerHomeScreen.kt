@@ -1,7 +1,9 @@
 package com.example.caravan.ui.seller
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
@@ -26,6 +28,7 @@ import com.example.caravan.theme.PinkRed
 import com.example.caravan.theme.Typography
 import com.google.gson.Gson
 
+@RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun SellerHomeScreen(
@@ -34,7 +37,7 @@ fun SellerHomeScreen(
 ) {
 
 
-    viewModel.signOut(navController)
+    //viewModel.signOut(navController)
 
 
     Scaffold(
@@ -94,6 +97,7 @@ fun SellerHomeScreen(
     viewModel.getSellerProducts()
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ProductsListScreen(viewModel: SellerViewModel, navController: NavHostController) {

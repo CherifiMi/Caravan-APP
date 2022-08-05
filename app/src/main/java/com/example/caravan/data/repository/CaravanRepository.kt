@@ -61,8 +61,5 @@ class CaravanRepository @Inject constructor(
         return dao.getAllProducts()
     }
 
-    //_________________________s3
-
-
 
 }

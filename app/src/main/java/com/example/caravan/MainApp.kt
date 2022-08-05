@@ -1,6 +1,9 @@
 package com.example.caravan
 
+import android.content.ContentResolver
 import android.content.res.Resources
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
@@ -20,11 +23,12 @@ import com.example.caravan.common.snackbar.SnackbarManager
 import com.example.caravan.domain.navigation.Navigation
 import kotlinx.coroutines.CoroutineScope
 
+@RequiresApi(Build.VERSION_CODES.O)
 @ExperimentalMotionApi
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable
-fun MainApp(viewModel: MainViewModel) {
+fun MainApp(viewModel: MainViewModel, cn: ContentResolver) {
     lateinit var navController: NavHostController
     val appState = rememberAppState()
 
@@ -43,7 +47,7 @@ fun MainApp(viewModel: MainViewModel) {
         scaffoldState = appState.scaffoldState
     ){
         navController = rememberNavController()
-        Navigation(navController, viewModel)
+        Navigation(navController, viewModel, cn)
     }
 }
 

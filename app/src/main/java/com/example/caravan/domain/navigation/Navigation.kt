@@ -1,5 +1,8 @@
 package com.example.caravan.domain.navigation
 
+import android.content.ContentResolver
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
@@ -22,6 +25,7 @@ import com.example.caravan.ui.seller.components.SellerEditProduct
 import com.example.caravan.ui.signup.screens.*
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMotionApi::class)
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
@@ -29,6 +33,7 @@ import com.example.caravan.ui.signup.screens.*
 fun Navigation(
     navController: NavHostController,
     viewModel: MainViewModel,
+    cn: ContentResolver,
 ) {
 
     NavHost(
@@ -46,7 +51,7 @@ fun Navigation(
     ) {
 
         composable(route = Screens.Main.route) {
-            MainApp(viewModel)
+            MainApp(viewModel, cn)
         }
 
         composable(route = Screens.Login.route) {
@@ -90,7 +95,7 @@ fun Navigation(
             arguments = listOf(navArgument(name = "item"){type = NavType.StringType})
         ) {
             var item = it.arguments
-            SellerEditProduct(navController = navController, args = item)
+            SellerEditProduct(navController = navController, cn = cn, args = item)
         }
 
 
