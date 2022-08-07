@@ -39,7 +39,7 @@ class BuyerViewModel @Inject constructor(
         Gson().fromJson(
             runBlocking(Dispatchers.IO) {
 
-                    repository.getSavedProductList()
+                repository.getSavedProductList()
 
             }.productList, ProductsList::class.java
         )
@@ -82,11 +82,11 @@ class BuyerViewModel @Inject constructor(
     }
 
     fun changeMyList() {
-        x.value = savedData
-            .filter { product: Product ->
+        x.value =
+            savedData.filter { product: Product ->
                 var b = false
-                for (i in mokeCats.catList[selectedCat.value].subCats){
-                    if(product.cat.contains(i)){
+                for (i in mokeCats.catList[selectedCat.value].subCats) {
+                    if (product.cat.contains(i)) {
                         b = true
                         break
                     }
@@ -94,6 +94,23 @@ class BuyerViewModel @Inject constructor(
                 b
             }
 
+    }
+
+    fun selectedSubCat(item: String) {
+
+        x.value =
+            savedData.filter { product: Product ->
+                var b = false
+                for (i in product.cat) {
+                    if (item == i) {
+                        b = true
+                        break
+                    }
+                }
+                b
+            }
+
+        catsPopUp.value = false
     }
 
 }

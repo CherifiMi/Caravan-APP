@@ -63,12 +63,10 @@ fun SellerHomeScreen(
                     if (viewModel.myProducts.value.isNullOrEmpty()) {
 
                         Text(
-                            text = "no data",
+                            text = "there is no data",
                             style = Typography.h1,
                             textAlign = TextAlign.Center
                         )
-
-                        // TODO: go to you have no products
 
                     } else {
                         ProductsListScreen(viewModel, navController)

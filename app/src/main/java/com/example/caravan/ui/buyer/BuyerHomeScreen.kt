@@ -2,11 +2,13 @@ package com.example.caravan.ui.buyer
 
 
 import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.*
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -20,6 +22,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -42,24 +45,111 @@ fun BuyerHomeScreen(
         viewModel.getProducts()
     }
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        MyTopBar(isCartV = true, navController = navController) {
-            viewModel.changeMyList()
-            Log.d("HILLO", viewModel.x.toString())
-        //viewModel.signOut(navController)
+    Box(modifier = Modifier.fillMaxSize()) {
+
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            MyTopBar(isCartV = true, navController = navController) { viewModel.changeMyList() }
+            OurProductsWithSearch(viewModel)
+            Spacer(modifier = Modifier.padding(10.dp))
+            ProductCategory(viewModel)
+            Spacer(modifier = Modifier.padding(10.dp))
+            ProductGrid(viewModel, navController)
         }
-        OurProductsWithSearch()
-        Spacer(modifier = Modifier.padding(10.dp))
-        ProductCategory(viewModel)
-        Spacer(modifier = Modifier.padding(10.dp))
-        ProductGrid(viewModel, navController)
+
+        CatsPopUp(viewModel)
     }
 
 }
 
+@Composable
+fun CatsPopUp(viewModel: BuyerViewModel) {
+    AnimatedVisibility(
+        modifier = Modifier.fillMaxSize(),
+        visible = viewModel.catsPopUp.value,
+        enter = fadeIn(),
+        exit = fadeOut()
+    ) {
+        Box(
+            Modifier
+                .fillMaxSize()
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) {
+                    viewModel.catsPopUp.value = false
+                }) {
+
+            Card(
+                elevation = 10.dp,
+                shape = RoundedCornerShape(5),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(vertical = 200.dp, horizontal = 52.dp)
+            ) {
+                LazyColumn(
+                    Modifier
+                        .fillMaxSize()
+                ) {
+
+                    item {
+                        Text(
+                            modifier = Modifier.padding(16.dp),
+                            text = "Categories",
+                            style = Typography.h1
+                        )
+                    }
+
+                    items(mokeCats.catList) { item ->
+
+                        Text(
+                            modifier = Modifier.padding(start = 16.dp, bottom = 4.dp),
+                            text = item.name,
+                            style = Typography.h3
+                        )
+
+                        LazyRow() {
+                            item {
+                                Spacer(modifier = Modifier.width(8.dp))
+                            }
+                            items(items = item.subCats) { item ->
+
+                                Spacer(modifier = Modifier.width(8.dp))
+
+                                Card(
+                                    shape = RoundedCornerShape(10.dp),
+                                    modifier = Modifier
+                                        .wrapContentHeight()
+                                        .clip(RoundedCornerShape(10.dp))
+                                        .clickable {
+                                            viewModel.selectedSubCat(item)
+                                        },
+                                    backgroundColor = PinkRed
+                                ) {
+                                    Text(
+                                        modifier = Modifier.padding(16.dp, 8.dp),
+                                        text = item,
+                                        color = Color.White,
+                                        style = Typography.h4
+                                    )
+                                }
+
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
+
+                }
+
+            }
+
+        }
+    }
+}
+
 
 @Composable
-fun OurProductsWithSearch() {
+fun OurProductsWithSearch(viewModel: BuyerViewModel) {
     var search by remember { mutableStateOf("") }
 
     Row(
@@ -101,12 +191,15 @@ fun OurProductsWithSearch() {
         Card(
             modifier = Modifier
                 .width(64.dp)
-                .padding(start = 16.dp)
-                .clickable { },
+                .padding(start = 16.dp),
             elevation = 5.dp,
             shape = RoundedCornerShape(12.dp)
         ) {
-            IconButton(onClick = {}) {
+            IconButton(onClick = {
+                viewModel.catsPopUp.value = true
+                Log.d("BUYER", "cats btn clicked")
+            }
+            ) {
                 Icon(
                     painter = painterResource(R.drawable.filter_list),
                     contentDescription = "Filter Icon",
@@ -140,9 +233,12 @@ fun ProductCategory(viewModel: BuyerViewModel) {
                 .wrapContentHeight()
                 .clip(RoundedCornerShape(10.dp))
                 .clickable {
-                           viewModel.resetUserList()
+                    viewModel.resetUserList()
                 },
-            border = BorderStroke(2.dp, if (viewModel.selectedCat.value == -1) PinkRed else LightGrey)
+            border = BorderStroke(
+                2.dp,
+                if (viewModel.selectedCat.value == -1) PinkRed else LightGrey
+            )
         ) {
             Spacer(
                 modifier = Modifier
@@ -159,7 +255,7 @@ fun ProductCategory(viewModel: BuyerViewModel) {
 
         Spacer(modifier = Modifier.padding(8.dp))
 
-        itemList.forEachIndexed{index, i ->
+        itemList.forEachIndexed { index, i ->
 
             Card(
                 shape = RoundedCornerShape(10.dp),
@@ -170,7 +266,10 @@ fun ProductCategory(viewModel: BuyerViewModel) {
                         viewModel.selectedCat.value = index
                         viewModel.changeMyList()
                     },
-                border = BorderStroke(2.dp, if (viewModel.selectedCat.value == index) PinkRed else LightGrey)
+                border = BorderStroke(
+                    2.dp,
+                    if (viewModel.selectedCat.value == index) PinkRed else LightGrey
+                )
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -201,19 +300,29 @@ fun ProductCategory(viewModel: BuyerViewModel) {
 @Composable
 fun ProductGrid(viewModel: BuyerViewModel, navController: NavHostController) {
 
+    if (viewModel.x.value.size>0){
+        LazyVerticalGrid(
+            cells = GridCells.Fixed(2),
+            verticalArrangement = Arrangement.Top,
+            contentPadding = PaddingValues(8.dp)
+        ) {
 
-
-    LazyVerticalGrid(
-        cells = GridCells.Fixed(2),
-        verticalArrangement = Arrangement.Top,
-        contentPadding = PaddingValues(8.dp)
-    ) {
-
-        itemsIndexed(items = viewModel.x.value) { index, item ->
-            MyProductItem(item, true) {
-                navController.navigate(Screens.ProductBuyer.passItem(index = index.toString()))
+            itemsIndexed(items = viewModel.x.value) { index, item ->
+                MyProductItem(item, true) {
+                    navController.navigate(Screens.ProductBuyer.passItem(index = index.toString()))
+                }
             }
         }
     }
+    else{
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+            Text(
+                text = "there is no data",
+                style = Typography.h1,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+
 }
 
