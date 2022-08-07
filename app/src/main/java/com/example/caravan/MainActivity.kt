@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    fun configAWS() {
+    private fun configAWS() {
         try {
             Amplify.addPlugin(AWSCognitoAuthPlugin())
             Amplify.addPlugin(AWSS3StoragePlugin())

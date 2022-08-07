@@ -12,8 +12,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.Backpack
-import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,19 +20,16 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.caravan.R
 import com.example.caravan.common.components.MyProductItem
+import com.example.caravan.common.components.MyTopBar
 import com.example.caravan.domain.model.mokeCats
 import com.example.caravan.domain.navigation.Screens
 import com.example.caravan.theme.*
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 @Composable
@@ -48,7 +43,7 @@ fun BuyerHomeScreen(
     }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        TopAppBarHeader() {
+        MyTopBar(isCartV = true, navController = navController) {
             viewModel.changeMyList()
             Log.d("HILLO", viewModel.x.toString())
         //viewModel.signOut(navController)
@@ -62,53 +57,6 @@ fun BuyerHomeScreen(
 
 }
 
-@Composable
-fun TopAppBarHeader(function: () -> Unit) {
-
-    TopAppBar(
-        elevation = 2.dp,
-        modifier = Modifier.clip(RoundedCornerShape(bottomEnd = 15.dp, bottomStart = 15.dp))
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start
-            ) {
-
-                IconButton(
-                    onClick = { function() }
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Menu,
-                        contentDescription = ""
-                    )
-                }
-                Text(
-                    text = "caravan",
-                    style = Typography.h1,
-                    textAlign = TextAlign.Start,
-                    color = Color.White
-                )
-            }
-
-
-            IconButton(onClick = {  }) {
-                Icon(
-                    modifier = Modifier.padding(12.dp),
-                    painter = painterResource(id = R.drawable.cart_emp),
-                    contentDescription = ""
-                )
-            }
-
-        }
-    }
-
-}
 
 @Composable
 fun OurProductsWithSearch() {

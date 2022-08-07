@@ -2,13 +2,10 @@ package com.example.caravan.ui.seller
 
 import android.annotation.SuppressLint
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -23,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.caravan.common.components.MyProductItem
+import com.example.caravan.common.components.MyTopBar
 import com.example.caravan.domain.navigation.Screens
 import com.example.caravan.theme.PinkRed
 import com.example.caravan.theme.Typography
@@ -36,29 +34,17 @@ fun SellerHomeScreen(
     viewModel: SellerViewModel = hiltViewModel()
 ) {
 
-
-    //viewModel.signOut(navController)
-
-
     Scaffold(
         topBar =
-        {
-            TopAppBar(title = {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = "caravan",
-                    style = Typography.h1,
-                    textAlign = TextAlign.Center,
-                    color = Color.White
-                )
-            })
-        },
+        { MyTopBar(navController) },
         floatingActionButton =
         {
             FloatingActionButton(
                 modifier = Modifier.padding(16.dp),
                 backgroundColor = PinkRed,
-                onClick = { /*TODO*/ }
+                onClick = {
+                    navController.navigate(Screens.ProductSeller.passItem(item = (-1).toString()))
+                }
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = null, tint = Color.White)
             }
@@ -74,7 +60,7 @@ fun SellerHomeScreen(
                 )
 
                 if (!viewModel.loading.value) {
-                    if (viewModel.myProducts.isNullOrEmpty()) {
+                    if (viewModel.myProducts.value.isNullOrEmpty()) {
 
                         Text(
                             text = "no data",
@@ -101,13 +87,23 @@ fun SellerHomeScreen(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ProductsListScreen(viewModel: SellerViewModel, navController: NavHostController) {
+
+
     LazyVerticalGrid(
         cells = GridCells.Fixed(2),
         verticalArrangement = Arrangement.Top,
         contentPadding = PaddingValues(10.dp)
     ) {
 
-        itemsIndexed(items = viewModel.myProducts ?: listOf()) { index, item ->
+        item (span = { GridItemSpan(2) }){
+            Text(
+                modifier = Modifier.padding(16.dp),
+                text = "You have ${viewModel.myProducts.value?.size} product",
+                style = Typography.h1
+            )
+        }
+
+        itemsIndexed(items = viewModel.myProducts.value ?: listOf()) { index, item ->
             MyProductItem(item) {
                 navController.navigate(Screens.ProductSeller.passItem(item = index.toString()))
             }

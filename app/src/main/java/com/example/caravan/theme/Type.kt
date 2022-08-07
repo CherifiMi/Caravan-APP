@@ -47,6 +47,12 @@ val Typography = Typography(
         fontSize = 14.sp,
         letterSpacing = 1.sp
     ),
+    h4 = TextStyle(
+        fontFamily = Montserrat,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 12.sp,
+        letterSpacing = 1.sp
+    ),
     h6 = TextStyle(
         fontFamily = Montserrat,
         fontWeight = FontWeight.Medium,

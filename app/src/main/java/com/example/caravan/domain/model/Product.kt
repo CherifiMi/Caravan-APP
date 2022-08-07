@@ -11,7 +11,7 @@ data class Product(
     @SerializedName("content")
     val content: String,
     @SerializedName("id")
-    val id: String,
+    val id: String?,
     @SerializedName("imageUrls")
     val imageUrls: List<String>,
     @SerializedName("initPrice")

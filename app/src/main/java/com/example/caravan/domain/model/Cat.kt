@@ -20,25 +20,25 @@ val mokeCats = CatList(
         Cat(
             id = null,
             name = "Home",
-            subCats = listOf(),
+            subCats = listOf("ew", "qe", "hilllad"),
             picUrl = "https://cdn-icons-png.flaticon.com/512/1299/1299961.png"
         ),
         Cat(
             id = null,
             name = "Electronics",
-            subCats = listOf(),
+            subCats = listOf("rc", "js", "c#") ,
             picUrl = "https://cdn-icons-png.flaticon.com/512/4752/4752790.png"
         ),
         Cat(
             id = null,
             name = "Books",
-            subCats = listOf(),
+            subCats = listOf("manga", "anime"),
             picUrl = "https://cdn-icons-png.flaticon.com/512/3296/3296160.png"
         ),
         Cat(
             id = null,
             name = "Cloths",
-            subCats = listOf(),
+            subCats = listOf("pants", "coll stuff", "maid cosplay"),
             picUrl = "https://cdn-icons-png.flaticon.com/512/1461/1461304.png"
         )
     )

@@ -33,27 +33,20 @@ class BuyerViewModel @Inject constructor(
     val thisImage = mutableStateOf(0)
     val buyOrAddToCartSheet = mutableStateOf(false)
     val loading = mutableStateOf(false)
+    val catsPopUp = mutableStateOf(false)
 
     val savedData =
         Gson().fromJson(
             runBlocking(Dispatchers.IO) {
-                repository.getSavedProductList()
+
+                    repository.getSavedProductList()
+
             }.productList, ProductsList::class.java
         )
 
     val x: MutableState<List<Product>> = mutableStateOf(savedData)
     var selectedCat = mutableStateOf(-1)
     //_____________________________functions
-    fun signOut(navController: NavHostController) {
-
-        accountService.signOut()
-
-        navController.navigate(Screens.Main.route) {
-            launchSingleTop = true
-            popUpTo(0) { inclusive = true }
-        }
-    }
-
 
     fun getCurrentProduct(s: String): Product {
         return savedData[s.toInt()]

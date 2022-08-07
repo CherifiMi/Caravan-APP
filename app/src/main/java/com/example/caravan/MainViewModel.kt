@@ -3,16 +3,20 @@ package com.example.caravan
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import com.example.caravan.data.repository.AccountService
 import com.example.caravan.data.repository.CaravanRepository
 import com.example.caravan.data.util.Result
 import com.example.caravan.domain.model.Id
 import com.example.caravan.domain.model.Product
 import com.example.caravan.domain.model.ProductsList
+import com.example.caravan.domain.navigation.Screens
 import com.example.caravan.domain.use_cases.GetProductsUseCase
 import com.example.caravan.domain.use_cases.GetUserTypeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
@@ -32,15 +36,15 @@ class MainViewModel @Inject constructor(
     var firstScreen = ""
 
     val fakeProduct = Product(
-        id = "gdf",
-        name = "gsd",
-        content = "sg",
-        initPrice = 3,
-        newPrice =3,
-        minOrder = "sg",
-        imageUrls = listOf("dsf"),
-        cat = listOf("sdf"),
-        sellerKey = "sgd"
+        id = "",
+        name = "",
+        content = "",
+        initPrice = 0,
+        newPrice = 0,
+        minOrder = "",
+        imageUrls = listOf(""),
+        cat = listOf(""),
+        sellerKey = ""
     )
 
 
@@ -59,7 +63,7 @@ class MainViewModel @Inject constructor(
                     firstScreen = usertype
                 }
             }
-        }else {
+        } else {
             firstScreen = "nonet"
         }
 
@@ -71,11 +75,21 @@ class MainViewModel @Inject constructor(
     }
 
 
+    fun signOut(navController: NavHostController) {
+
+        accountService.signOut()
+
+        navController.navigate(Screens.Main.route) {
+            launchSingleTop = true
+            popUpTo(0) { inclusive = true }
+        }
+    }
 
 
-    fun getIsUserActivated(usertype: String): Boolean{
-        when(usertype){
-            "buyer"->{
+    fun getIsUserActivated(usertype: String): Boolean {
+        when (usertype) {
+            "buyer" -> {
+
 
                 runBlocking {
                     getProductsUseCase().onEach {
@@ -84,22 +98,24 @@ class MainViewModel @Inject constructor(
                                 Log.d("TESTAPI", "loading")
                             }
                             is Result.Success -> {
-                                repository.saveProductList(it.data)
                                 Log.d("TESTAPI", it.data.toString())
+                                return@onEach
                             }
                             is Result.Error -> {
                                 Log.d("TESTAPI", it.message.toString())
                             }
 
                         }
-                    }.launchIn(viewModelScope)
+                    }.collectLatest { repository.saveProductList(it.data) }
                 }
+
+
                 // TODO: get buyer by auth key
             }
-            "seller"->{
+            "seller" -> {
                 // TODO: get seller by auth key
             }
-            else->{
+            else -> {
                 // TODO: get rep by auth key
             }
         }
@@ -107,15 +123,15 @@ class MainViewModel @Inject constructor(
         return true
     }
 
-    fun getUserType(): String{
+    fun getUserType(): String {
 
         try {
             return getUserTypeUseCase(Id(id = accountService.getUserId()))
-        }catch (e: Exception){
-           return getUserType()
+        } catch (e: Exception) {
+            return getUserType()
         }
     }
 
 
-
 }
+

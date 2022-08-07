@@ -7,8 +7,11 @@
     <string name="generic_error">Something wrong happened. Please try again.</string>
     <string name="email_error">Please insert a valid email.</string>
     <string name="empty_data">Please Fill all the fields</string>
+    <string name="FpSp">Original price should be bigger then the discounted price</string>
     <string name="cancel">Cancel</string>
     <string name="account_created">you have created a new account.</string>
+    <string name="product_created">you have created a new product.</string>
+    <string name="product_updated">you have updated the product.</string>
     <string name="already_exist">this account already exist</string>
 
     <!-- LoginScreen -->
@@ -22,7 +25,7 @@
     <string name="create_account">Create account</string>
     <string name="password_error">Your password  is not valid.</string>
     <string name="password_match_error">Passwords do not match.</string>
-    <string name="somthing_wrong">somthing went wrong</string>
+    <string name="somthing_wrong">Email or Password is not valid</string>
 
 
     <string name="lorem_ipsem">

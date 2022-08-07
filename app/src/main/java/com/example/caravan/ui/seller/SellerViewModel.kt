@@ -21,6 +21,7 @@ import com.example.caravan.data.util.Result
 import com.example.caravan.domain.model.Id
 import com.example.caravan.domain.model.Product
 import com.example.caravan.domain.navigation.Screens
+import com.example.caravan.domain.use_cases.ChangeThisProductUseCase
 import com.example.caravan.domain.use_cases.CreateNewProductUseCase
 import com.example.caravan.domain.use_cases.GetAllSellerProductsUseCase
 import com.example.caravan.domain.use_cases.UploadImageGetUrlUseCase
@@ -37,6 +38,7 @@ class SellerViewModel @Inject constructor(
     private val getAllSellerProductsUseCase: GetAllSellerProductsUseCase,
     private val accountService: AccountService,
     private val createNewProductUseCase: CreateNewProductUseCase,
+    private val changeThisProductUseCase: ChangeThisProductUseCase,
     private val uploadImageGetUrlUseCase: UploadImageGetUrlUseCase
 ) : ViewModel() {
 
@@ -44,15 +46,14 @@ class SellerViewModel @Inject constructor(
 
     //__________________________values
     val loading = mutableStateOf(true)
-    var myProducts: List<Product>? = null
-
+    var myProducts: MutableState<List<Product>?> = mutableStateOf(null)
 
 
     val name = mutableStateOf("")
     val content = mutableStateOf("")
     val cats = mutableListOf<String>()
 
-
+    val images = mutableListOf<String>()
     val image0 = mutableStateOf("")
     val image1 = mutableStateOf("")
     val image2 = mutableStateOf("")
@@ -68,14 +69,13 @@ class SellerViewModel @Inject constructor(
     val sellerKey = mutableStateOf("")
 
 
-
     //___________________________functions
     fun getSellerProducts() {
         getAllSellerProductsUseCase(Id(accountService.getUserId())).onEach {
             when (it) {
                 is Result.Success -> {
                     loading.value = false
-                    myProducts = it.data
+                    myProducts.value = it.data
                     Log.d(tag, it.data.toString())
                 }
                 is Result.Error -> {
@@ -87,38 +87,132 @@ class SellerViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun signOut(navController: NavHostController) {
-
-        accountService.signOut()
-
-        navController.navigate(Screens.Main.route) {
-            launchSingleTop = true
-            popUpTo(0) { inclusive = true }
-        }
-    }
-
     fun uploadImageGetUrl(x: MutableState<String>, uri: Uri, cn: ContentResolver) {
         uploadImageGetUrlUseCase(uri, cn, x)
+        images.clear()
+        images.addAll(listOf(image0.value, image1.value, image2.value, image3.value))
+
     }
 
-    fun CreateNewProduct() {
-        if (false
-        //all feilds are not full
-        ) {
+    fun createNewProduct(popBack: () -> Unit) {
 
+        val allFieldsAreFull = cats.size > 0 &&
+                    content.value.isNotEmpty() &&
+                    name.value.isNotEmpty() &&
+                    image0.value.isNotEmpty() &&
+                    image1.value.isNotEmpty() &&
+                    image2.value.isNotEmpty() &&
+                    image3.value.isNotEmpty() &&
+                    fPrice.value.isNotEmpty() &&
+                    sPrice.value.isNotEmpty() &&
+                    minOrder.value.isNotEmpty()
+
+
+        val isFPbiggerSP = fPrice.value >= sPrice.value
+
+        if (
+            !allFieldsAreFull
+        ) {
             SnackbarManager.showMessage(R.string.empty_data)
             return
         }
 
-        viewModelScope.launch {
-            //createNewProductUseCase(Product())
-        }
-    }
+        if (
+            !isFPbiggerSP
+        ) {
 
-    fun setCurentItemValues(id: String) {
+            SnackbarManager.showMessage(R.string.FpSp)
+            return
+        }
+
+        viewModelScope.launch {
+            val x = createNewProductUseCase(
+                Product(
+                    id = null,
+                    content = content.value,
+                    name = name.value,
+                    cat = cats,
+                    imageUrls = listOf(image0.value, image1.value, image2.value, image3.value),
+                    initPrice = fPrice.value.toInt(),
+                    minOrder = minOrder.value,
+                    newPrice = sPrice.value.toInt(),
+                    sellerKey = accountService.getUserId()
+                )
+            )
+            Log.d(tag, x.toString())
+        }
+
+        SnackbarManager.showMessage(R.string.product_created)
 
         getSellerProducts()
-        val item = myProducts?.get(id.toInt())
+
+        popBack()
+    }
+
+    fun updateProduct(popBack: () -> Unit) {
+
+        val allFieldsAreFull = cats.size > 0 &&
+                content.value.isNotEmpty() &&
+                name.value.isNotEmpty() &&
+                image0.value.isNotEmpty() &&
+                image1.value.isNotEmpty() &&
+                image2.value.isNotEmpty() &&
+                image3.value.isNotEmpty() &&
+                fPrice.value.isNotEmpty() &&
+                sPrice.value.isNotEmpty() &&
+                minOrder.value.isNotEmpty()
+
+
+        val isFPbiggerSP = fPrice.value >= sPrice.value
+
+        if (
+            !allFieldsAreFull
+        ) {
+            SnackbarManager.showMessage(R.string.empty_data)
+            return
+        }
+
+        if (
+            !isFPbiggerSP
+        ) {
+
+            SnackbarManager.showMessage(R.string.FpSp)
+            return
+        }
+
+        viewModelScope.launch {
+            val x = changeThisProductUseCase(
+                Product(
+                    id = sellerId.value,
+                    content = content.value,
+                    name = name.value,
+                    cat = cats,
+                    imageUrls = listOf(image0.value, image1.value, image2.value, image3.value),
+                    initPrice = fPrice.value.toInt(),
+                    minOrder = minOrder.value,
+                    newPrice = sPrice.value.toInt(),
+                    sellerKey = sellerKey.value
+                )
+            )
+            Log.d(tag, x.toString())
+        }
+
+        SnackbarManager.showMessage(R.string.product_updated)
+
+        getSellerProducts()
+
+        popBack()
+    }
+
+    fun setCurrentItemValues(id: String) {
+
+        if (id.toInt() == -1) {
+            return
+        }
+
+        getSellerProducts()
+
+        val item = myProducts.value?.get(id.toInt())
         if (loading.value) {
             return
         }
@@ -129,19 +223,25 @@ class SellerViewModel @Inject constructor(
             name.value = item.name
             content.value = item.content
 
-            sellerId.value = item.id
+            sellerId.value = item.id ?: ""
             sellerKey.value = item.sellerKey
+
             minOrder.value = item.minOrder
 
             item.let { if (cats.size < 4) cats.addAll(it.cat) }
 
-            image0.value = item.imageUrls[0]
-            image1.value = item.imageUrls[1]
-            image2.value = item.imageUrls[2]
-            image3.value = item.imageUrls[3]
+
+            item.let { if (images.size < 4) images.addAll(it.imageUrls) }
+            image0.value = images[0]
+            image1.value = images[1]
+            image2.value = images[2]
+            image3.value = images[3]
 
             fPrice.value = item.initPrice.toString()
             sPrice.value = item.newPrice.toString()
         }
     }
 }
+
+
+

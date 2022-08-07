@@ -21,7 +21,7 @@ import com.example.caravan.ui.errors.SomethingWrongScreen
 import com.example.caravan.ui.login.LoginScreen
 import com.example.caravan.ui.rep.RepHomeScreen
 import com.example.caravan.ui.seller.SellerHomeScreen
-import com.example.caravan.ui.seller.components.SellerEditProduct
+import com.example.caravan.ui.seller.screens.SellerEditProductScreen
 import com.example.caravan.ui.signup.screens.*
 
 
@@ -95,7 +95,7 @@ fun Navigation(
             arguments = listOf(navArgument(name = "item"){type = NavType.StringType})
         ) {
             var item = it.arguments
-            SellerEditProduct(navController = navController, cn = cn, args = item)
+            SellerEditProductScreen(navController = navController, cn = cn, args = item)
         }
 
 
