@@ -113,4 +113,15 @@ class BuyerViewModel @Inject constructor(
         catsPopUp.value = false
     }
 
+    fun search(s: String) {
+
+        x.value =
+            savedData.filter { product: Product ->
+
+                product.name.contains(s)
+            }
+
+
+    }
+
 }

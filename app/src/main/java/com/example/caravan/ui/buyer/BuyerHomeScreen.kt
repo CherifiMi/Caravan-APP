@@ -10,17 +10,21 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -148,9 +152,12 @@ fun CatsPopUp(viewModel: BuyerViewModel) {
 }
 
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun OurProductsWithSearch(viewModel: BuyerViewModel) {
     var search by remember { mutableStateOf("") }
+    val keyboardController = LocalSoftwareKeyboardController.current
+
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -162,6 +169,7 @@ fun OurProductsWithSearch(viewModel: BuyerViewModel) {
     ) {
         TextField(
             modifier = Modifier.scale(scaleY = 0.9F, scaleX = 1F),
+            textStyle = Typography.h3,
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = lightbox,
                 focusedIndicatorColor = Color.Transparent,
@@ -175,17 +183,30 @@ fun OurProductsWithSearch(viewModel: BuyerViewModel) {
             placeholder = {
                 Text(
                     text = "Search Products",
+                    style = Typography.h3,
                     color = Color.LightGray
                 )
             },
             leadingIcon = {
+
                 Icon(
-                    modifier = Modifier.clickable { },
+
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(25.dp))
+                        .clickable { viewModel.search(search) }
+                        .padding(8.dp),
                     imageVector = Icons.Filled.Search,
                     contentDescription = "",
                     tint = lightblack
                 )
+
             },
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    viewModel.search(search)
+                    keyboardController?.hide()
+                }
+            )
         )
         Spacer(modifier = Modifier.width(5.dp))
         Card(
@@ -300,7 +321,7 @@ fun ProductCategory(viewModel: BuyerViewModel) {
 @Composable
 fun ProductGrid(viewModel: BuyerViewModel, navController: NavHostController) {
 
-    if (viewModel.x.value.size>0){
+    if (viewModel.x.value.size > 0) {
         LazyVerticalGrid(
             cells = GridCells.Fixed(2),
             verticalArrangement = Arrangement.Top,
@@ -313,9 +334,8 @@ fun ProductGrid(viewModel: BuyerViewModel, navController: NavHostController) {
                 }
             }
         }
-    }
-    else{
-        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+    } else {
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Text(
                 text = "there is no data",
                 style = Typography.h1,

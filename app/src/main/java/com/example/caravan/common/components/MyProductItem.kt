@@ -101,24 +101,26 @@ fun MyProductItem(item: Product, cart: Boolean = false, function: () -> Unit) {
                 }
                 Spacer(modifier = Modifier.padding(8.dp))
             }
-            Box(
-                Modifier
-                    .padding(8.dp)
-                    .wrapContentWidth()
-                    .background(shape = RoundedCornerShape(5.dp), color = PinkRed)
-            ) {
-                val disP = 100 - ((item.newPrice.toFloat() / item.initPrice.toFloat()) * 100)
-                Text(
-                    text = "${disP.toInt()}%",
-                    modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp),
-                    style =
-                    TextStyle(
-                        color = Color.White,
-                        fontFamily = Montserrat,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 11.sp
+            if (item.newPrice!=item.initPrice){
+                Box(
+                    Modifier
+                        .padding(8.dp)
+                        .wrapContentWidth()
+                        .background(shape = RoundedCornerShape(5.dp), color = PinkRed)
+                ) {
+                    val disP = 100 - ((item.newPrice.toFloat() / item.initPrice.toFloat()) * 100)
+                    Text(
+                        text = "${disP.toInt()}%",
+                        modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp),
+                        style =
+                        TextStyle(
+                            color = Color.White,
+                            fontFamily = Montserrat,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 11.sp
+                        )
                     )
-                )
+                }
             }
         }
 
