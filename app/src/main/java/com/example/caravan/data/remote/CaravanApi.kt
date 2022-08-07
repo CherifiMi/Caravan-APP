@@ -33,6 +33,6 @@ interface CaravanApi {
     @PUT("product")
     suspend fun changeThisProduct(@Body product: Product): ResponseBody
 
-    @DELETE("product")
+    @POST("product/delete")
     suspend fun deleteThisProduct(@Body id: Id): ResponseBody
 }

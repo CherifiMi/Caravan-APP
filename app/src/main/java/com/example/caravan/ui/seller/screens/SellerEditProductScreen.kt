@@ -6,17 +6,20 @@ import android.os.Bundle
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.caravan.R
 import com.example.caravan.common.components.MyButton
 import com.example.caravan.common.components.MyTextField
 import com.example.caravan.theme.Typography
@@ -38,15 +41,42 @@ fun SellerEditProductScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(title = {
-                Text(
+            TopAppBar(
+                elevation = 2.dp,
+            ) {
+                Row(
                     modifier = Modifier.fillMaxWidth(),
-                    text = "caravan",
-                    style = Typography.h1,
-                    textAlign = TextAlign.Center,
-                    color = Color.White
-                )
-            })
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+
+                        Spacer(modifier = Modifier.padding(8.dp))
+
+                        Text(
+                            text = "caravan",
+                            style = Typography.h1,
+                            textAlign = TextAlign.Start,
+                            color = Color.White
+                        )
+                    }
+
+                    if (itemId.toInt()!=-1){
+                        IconButton(onClick = { viewModel.deleteThisProduct(navController) }) {
+                            Icon(
+                                modifier = Modifier.padding(12.dp),
+                                painter = painterResource(id = R.drawable.delete),
+                                contentDescription = ""
+                            )
+                        }
+                    }
+
+                }
+            }
         }
     ) {
 
@@ -70,6 +100,7 @@ fun SellerEditProductScreen(
             MyTextField(state = viewModel.name, s = "Product name")
             MyTextField(state = viewModel.content, s = "Product Description")
             MyTextField(state = viewModel.minOrder, s = "Minimum Order Amount", isNum = true)
+            MyTextField(state = viewModel.inv, s = "Product Amount in Inventory", isNum = true)
             MyTextField(state = viewModel.fPrice, s = "Original Price",  isNum = true)
             MyTextField(state = viewModel.sPrice, s = "Discounted Price",  isNum = true)
 
@@ -88,7 +119,7 @@ fun SellerEditProductScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.padding(32.dp))
+            Spacer(modifier = Modifier.padding(100.dp))
         }
     }
 

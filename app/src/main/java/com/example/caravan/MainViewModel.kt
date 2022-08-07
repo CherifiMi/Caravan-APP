@@ -35,17 +35,7 @@ class MainViewModel @Inject constructor(
     val there_is_net = true
     var firstScreen = ""
 
-    val fakeProduct = Product(
-        id = "",
-        name = "",
-        content = "",
-        initPrice = 0,
-        newPrice = 0,
-        minOrder = "",
-        imageUrls = listOf(""),
-        cat = listOf(""),
-        sellerKey = ""
-    )
+
 
 
     //___________________________functions

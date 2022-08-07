@@ -23,7 +23,9 @@ data class Product(
     @SerializedName("newPrice")
     val newPrice: Int,
     @SerializedName("sellerKey")
-    val sellerKey: String
+    val sellerKey: String,
+    @SerializedName("amountInInv")
+    val amountInInv: Int,
 )
 
 class ProductsList : ArrayList<Product>()

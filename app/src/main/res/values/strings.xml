@@ -12,6 +12,7 @@
     <string name="account_created">you have created a new account.</string>
     <string name="product_created">you have created a new product.</string>
     <string name="product_updated">you have updated the product.</string>
+    <string name="product_deleted">you have deleted a product.</string>
     <string name="already_exist">this account already exist</string>
 
     <!-- LoginScreen -->

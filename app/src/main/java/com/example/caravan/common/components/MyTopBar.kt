@@ -66,19 +66,17 @@ fun MyTopBar(
                     color = Color.White
                 )
             }
-        }
+            if (isCartV) {
 
+                IconButton(onClick = { function() }) {
+                    Icon(
+                        modifier = Modifier.padding(12.dp),
+                        painter = painterResource(id = R.drawable.cart_emp),
+                        contentDescription = ""
+                    )
+                }
 
-        if (isCartV) {
-
-            IconButton(onClick = { function() }) {
-                Icon(
-                    modifier = Modifier.padding(12.dp),
-                    painter = painterResource(id = R.drawable.cart_emp),
-                    contentDescription = ""
-                )
             }
-
         }
     }
 

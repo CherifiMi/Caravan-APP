@@ -4,10 +4,6 @@ import android.content.ContentResolver
 import android.net.Uri
 import android.os.Build
 import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -20,12 +16,9 @@ import com.example.caravan.data.repository.AccountService
 import com.example.caravan.data.util.Result
 import com.example.caravan.domain.model.Id
 import com.example.caravan.domain.model.Product
-import com.example.caravan.domain.navigation.Screens
-import com.example.caravan.domain.use_cases.ChangeThisProductUseCase
-import com.example.caravan.domain.use_cases.CreateNewProductUseCase
-import com.example.caravan.domain.use_cases.GetAllSellerProductsUseCase
-import com.example.caravan.domain.use_cases.UploadImageGetUrlUseCase
+import com.example.caravan.domain.use_cases.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -39,7 +32,8 @@ class SellerViewModel @Inject constructor(
     private val accountService: AccountService,
     private val createNewProductUseCase: CreateNewProductUseCase,
     private val changeThisProductUseCase: ChangeThisProductUseCase,
-    private val uploadImageGetUrlUseCase: UploadImageGetUrlUseCase
+    private val uploadImageGetUrlUseCase: UploadImageGetUrlUseCase,
+    private val deleteThisProductUseCase: DeleteThisProductUseCase
 ) : ViewModel() {
 
     val tag = "SELLER_TEST"
@@ -62,10 +56,11 @@ class SellerViewModel @Inject constructor(
 
     val fPrice = mutableStateOf("")
     val sPrice = mutableStateOf("")
+    val inv = mutableStateOf("")
 
     val minOrder = mutableStateOf("")
 
-    val sellerId = mutableStateOf("")
+    val id = mutableStateOf("")
     val sellerKey = mutableStateOf("")
 
 
@@ -105,6 +100,7 @@ class SellerViewModel @Inject constructor(
                     image3.value.isNotEmpty() &&
                     fPrice.value.isNotEmpty() &&
                     sPrice.value.isNotEmpty() &&
+                    inv.value.isNotEmpty() &&
                     minOrder.value.isNotEmpty()
 
 
@@ -136,7 +132,8 @@ class SellerViewModel @Inject constructor(
                     initPrice = fPrice.value.toInt(),
                     minOrder = minOrder.value,
                     newPrice = sPrice.value.toInt(),
-                    sellerKey = accountService.getUserId()
+                    sellerKey = accountService.getUserId(),
+                    amountInInv = inv.value.toInt()
                 )
             )
             Log.d(tag, x.toString())
@@ -160,6 +157,7 @@ class SellerViewModel @Inject constructor(
                 image3.value.isNotEmpty() &&
                 fPrice.value.isNotEmpty() &&
                 sPrice.value.isNotEmpty() &&
+                inv.value.isNotEmpty() &&
                 minOrder.value.isNotEmpty()
 
 
@@ -183,7 +181,7 @@ class SellerViewModel @Inject constructor(
         viewModelScope.launch {
             val x = changeThisProductUseCase(
                 Product(
-                    id = sellerId.value,
+                    id = id.value,
                     content = content.value,
                     name = name.value,
                     cat = cats,
@@ -191,7 +189,8 @@ class SellerViewModel @Inject constructor(
                     initPrice = fPrice.value.toInt(),
                     minOrder = minOrder.value,
                     newPrice = sPrice.value.toInt(),
-                    sellerKey = sellerKey.value
+                    sellerKey = sellerKey.value,
+                    amountInInv = inv.value.toInt()
                 )
             )
             Log.d(tag, x.toString())
@@ -220,10 +219,11 @@ class SellerViewModel @Inject constructor(
 
 
         if (item != null) {
+
             name.value = item.name
             content.value = item.content
 
-            sellerId.value = item.id ?: ""
+            this.id.value = item.id ?: ""
             sellerKey.value = item.sellerKey
 
             minOrder.value = item.minOrder
@@ -240,6 +240,17 @@ class SellerViewModel @Inject constructor(
             fPrice.value = item.initPrice.toString()
             sPrice.value = item.newPrice.toString()
         }
+    }
+
+    fun deleteThisProduct(navController: NavHostController?) {
+
+        viewModelScope.launch (Dispatchers.IO){
+            deleteThisProductUseCase(Id(id = id.value))
+            SnackbarManager.showMessage(R.string.product_deleted)
+        }
+
+        navController?.popBackStack()
+
     }
 }
 

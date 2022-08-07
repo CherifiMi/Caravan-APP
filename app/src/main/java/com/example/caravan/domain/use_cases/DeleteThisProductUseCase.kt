@@ -6,7 +6,7 @@ import com.example.caravan.domain.model.Product
 import okhttp3.ResponseBody
 import javax.inject.Inject
 
-class DeleteThisProduct @Inject constructor(
+class DeleteThisProductUseCase @Inject constructor(
     private val repository: CaravanRepository
 ) {
     suspend operator fun invoke(id: Id): ResponseBody {
