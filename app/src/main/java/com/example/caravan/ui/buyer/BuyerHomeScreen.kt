@@ -37,6 +37,8 @@ import com.example.caravan.common.components.MyTopBar
 import com.example.caravan.domain.model.mokeCats
 import com.example.caravan.domain.navigation.Screens
 import com.example.caravan.theme.*
+import com.example.caravan.ui.SideMenu
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 @Composable
@@ -51,13 +53,33 @@ fun BuyerHomeScreen(
 
     Box(modifier = Modifier.fillMaxSize()) {
 
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            MyTopBar(isCartV = true, navController = navController) { viewModel.changeMyList() }
-            OurProductsWithSearch(viewModel)
-            Spacer(modifier = Modifier.padding(10.dp))
-            ProductCategory(viewModel)
-            Spacer(modifier = Modifier.padding(10.dp))
-            ProductGrid(viewModel, navController)
+        val state = rememberScaffoldState()
+        val scope = rememberCoroutineScope()
+
+        Scaffold(
+            topBar = {
+                MyTopBar(
+                    isCartV = true,
+                    navController = navController,
+                    function = { viewModel.changeMyList() },
+                    humClicked = {
+                        scope.launch {
+                            state.drawerState.open()
+                        }
+                    }
+                )
+            },
+            drawerContent = { SideMenu() },
+            scaffoldState = state
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
+                OurProductsWithSearch(viewModel)
+                Spacer(modifier = Modifier.padding(10.dp))
+                ProductCategory(viewModel)
+                Spacer(modifier = Modifier.padding(10.dp))
+                ProductGrid(viewModel, navController)
+            }
         }
 
         CatsPopUp(viewModel)

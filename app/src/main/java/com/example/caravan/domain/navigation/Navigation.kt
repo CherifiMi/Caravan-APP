@@ -22,6 +22,8 @@ import com.example.caravan.ui.login.LoginScreen
 import com.example.caravan.ui.rep.RepHomeScreen
 import com.example.caravan.ui.seller.SellerHomeScreen
 import com.example.caravan.ui.seller.screens.SellerEditProductScreen
+import com.example.caravan.ui.seller.screens.SellerOrdersScreen
+import com.example.caravan.ui.seller.screens.SellerProductsScreen
 import com.example.caravan.ui.signup.screens.*
 
 
@@ -88,7 +90,7 @@ fun Navigation(
 
 
         composable(route = Screens.HomeSeller.route) {
-            SellerHomeScreen(navController = navController)
+            SellerHomeScreen(mainNavController = navController)
         }
         composable(
             route = Screens.ProductSeller.route,

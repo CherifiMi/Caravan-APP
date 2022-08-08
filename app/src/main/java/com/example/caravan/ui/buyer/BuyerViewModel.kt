@@ -1,6 +1,7 @@
 package com.example.caravan.ui.buyer
 
 import android.util.Log
+import androidx.compose.material.DrawerState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -19,6 +20,7 @@ import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
@@ -47,6 +49,8 @@ class BuyerViewModel @Inject constructor(
     val x: MutableState<List<Product>> = mutableStateOf(savedData)
     var selectedCat = mutableStateOf(-1)
     //_____________________________functions
+
+
 
     fun getCurrentProduct(s: String): Product {
         return savedData[s.toInt()]

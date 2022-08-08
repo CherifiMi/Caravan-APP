@@ -23,6 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.caravan.MainViewModel
 import com.example.caravan.R
+import com.example.caravan.gAppState
 import com.example.caravan.theme.Typography
 
 
@@ -31,6 +32,7 @@ fun MyTopBar(
     navController: NavHostController,
     viewModel: MainViewModel = hiltViewModel(),
     isCartV: Boolean = false,
+    humClicked: () -> Unit = {},
     function: () -> Unit = {}
 ) {
 
@@ -51,7 +53,7 @@ fun MyTopBar(
 
                 IconButton(
                     onClick = {
-                        viewModel.signOut(navController)
+                        humClicked()
                     }
                 ) {
                     Icon(

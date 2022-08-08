@@ -1,9 +1,11 @@
 package com.example.caravan
 
 import android.util.Log
+import androidx.compose.material.DrawerState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
+import com.example.caravan.common.CaravanAppState
 import com.example.caravan.data.repository.AccountService
 import com.example.caravan.data.repository.CaravanRepository
 import com.example.caravan.data.util.Result
@@ -14,6 +16,7 @@ import com.example.caravan.domain.navigation.Screens
 import com.example.caravan.domain.use_cases.GetProductsUseCase
 import com.example.caravan.domain.use_cases.GetUserTypeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -35,12 +38,11 @@ class MainViewModel @Inject constructor(
     val there_is_net = true
     var firstScreen = ""
 
-
-
-
     //___________________________functions
-    fun onSplashScreen() {
 
+
+
+    fun onSplashScreen() {
         if (there_is_net) {
             if (!accountService.hasUser()) {
                 firstScreen = "login"

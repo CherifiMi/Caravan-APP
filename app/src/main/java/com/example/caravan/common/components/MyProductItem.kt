@@ -52,7 +52,7 @@ fun MyProductItem(item: Product, cart: Boolean = false, function: () -> Unit) {
                     contentScale = ContentScale.Crop
                 )
                 Text(
-                    text = item.name + "Lorem Ipsum, giving information on its origins, as well as a random Lipsum",
+                    text = item.name ,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     style = TextStyle(
@@ -71,7 +71,7 @@ fun MyProductItem(item: Product, cart: Boolean = false, function: () -> Unit) {
                 ) {
                     Column() {
                         Text(
-                            text = "SR " + item.newPrice.toString() + ",00",
+                            text = "SR " + item.newPrice.toFloat().toString(),
                             style =
                             TextStyle(
                                 fontFamily = Montserrat,
@@ -79,8 +79,10 @@ fun MyProductItem(item: Product, cart: Boolean = false, function: () -> Unit) {
                                 fontSize = 13.sp
                             ),
                         )
+
                         Text(
-                            text = "SR " + item.initPrice.toString() + ",00",
+                            modifier = Modifier.alpha(if (item.newPrice!=item.initPrice) 1f else 0f),
+                            text = "SR " + item.initPrice.toFloat().toString() ,
                             style =
                             TextStyle(
                                 fontFamily = Montserrat,

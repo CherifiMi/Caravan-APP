@@ -18,7 +18,10 @@ sealed class Screens(val route: String) {
     }
 
 
+    object ProductsListSeller: Screens(route = "order_seller_screen")
+    object OrdersSeller: Screens(route = "product_list_seller_screen")
     object HomeSeller: Screens(route = "home_seller_screen")
+
     object ProductSeller: Screens(route = "product_seller_screen/{item}"){
         fun passItem(item: String): String{
             return "product_seller_screen/$item"

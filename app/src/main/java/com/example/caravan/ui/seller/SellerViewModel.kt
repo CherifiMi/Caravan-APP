@@ -146,10 +146,6 @@ class SellerViewModel @Inject constructor(
         val allFieldsAreFull = cats.size > 0 &&
                 content.value.isNotEmpty() &&
                 name.value.isNotEmpty() &&
-                image0.value.isNotEmpty() &&
-                image1.value.isNotEmpty() &&
-                image2.value.isNotEmpty() &&
-                image3.value.isNotEmpty() &&
                 fPrice.value.isNotEmpty() &&
                 sPrice.value.isNotEmpty() &&
                 inv.value.isNotEmpty() &&
@@ -234,6 +230,8 @@ class SellerViewModel @Inject constructor(
 
             fPrice.value = item.initPrice.toString()
             sPrice.value = item.newPrice.toString()
+
+            inv.value = item.amountInInv.toString()
         }
     }
 
@@ -245,6 +243,20 @@ class SellerViewModel @Inject constructor(
         }
 
         navController?.popBackStack()
+
+    }
+
+    fun getInvCount(): MutableState<Int> {
+
+        var inv = mutableStateOf(0)
+
+        for (i in myProducts.value!!){
+
+            inv.value += i.amountInInv
+
+        }
+
+        return inv
 
     }
 }

@@ -19,93 +19,71 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.amplifyframework.core.Amplify
+import com.example.caravan.R
 import com.example.caravan.common.components.MyProductItem
 import com.example.caravan.common.components.MyTopBar
+import com.example.caravan.domain.model.BottomNavItem
+import com.example.caravan.domain.navigation.Navigation
 import com.example.caravan.domain.navigation.Screens
 import com.example.caravan.theme.PinkRed
 import com.example.caravan.theme.Typography
+import com.example.caravan.ui.seller.components.BottomNavigationBar
+import com.example.caravan.ui.seller.screens.SellerOrdersScreen
+import com.example.caravan.ui.seller.screens.SellerProductsScreen
 import com.google.gson.Gson
 
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun SellerHomeScreen(
-    navController: NavHostController,
+    mainNavController: NavHostController,
     viewModel: SellerViewModel = hiltViewModel()
 ) {
 
+    val navController = rememberNavController()
+
     Scaffold(
         topBar =
-        { MyTopBar(navController) },
-        floatingActionButton =
-        {
-            FloatingActionButton(
-                modifier = Modifier.padding(16.dp),
-                backgroundColor = PinkRed,
-                onClick = {
-                    navController.navigate(Screens.ProductSeller.passItem(item = (-1).toString()))
-                }
-            ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = null, tint = Color.White)
+        { MyTopBar(mainNavController) },
+        bottomBar = {
+            BottomNavigationBar(
+                items = listOf(
+                    BottomNavItem(
+                        name = "My Orders",
+                        route = Screens.OrdersSeller.route,
+                        icon = painterResource(id = R.drawable.order),
+                    ),
+                    BottomNavItem(
+                        name = "My Products",
+                        route = Screens.ProductsListSeller.route,
+                        icon = painterResource(id = R.drawable.bag),
+                    )
+                ),
+                navController = navController,
+            ){
+                navController.navigate(it.route)
             }
         }
     ) {
-        Column() {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(
-                    modifier = Modifier.alpha(if (!viewModel.loading.value) 0f else 1f),
-                    text = "is loading",
-                    style = Typography.h1,
-                    textAlign = TextAlign.Center
-                )
 
-                if (!viewModel.loading.value) {
-                    if (viewModel.myProducts.value.isNullOrEmpty()) {
-
-                        Text(
-                            text = "there is no data",
-                            style = Typography.h1,
-                            textAlign = TextAlign.Center
-                        )
-
-                    } else {
-                        ProductsListScreen(viewModel, navController)
-                    }
-                }
-
-
+        NavHost(
+            navController,
+            startDestination = Screens.OrdersSeller.route
+        ) {
+            composable(route = Screens.OrdersSeller.route) {
+                SellerOrdersScreen(navController = mainNavController)
+            }
+            composable(route = Screens.ProductsListSeller.route) {
+                SellerProductsScreen(navController = mainNavController)
             }
         }
-    }
 
-    viewModel.getSellerProducts()
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun ProductsListScreen(viewModel: SellerViewModel, navController: NavHostController) {
-
-
-    LazyVerticalGrid(
-        cells = GridCells.Fixed(2),
-        verticalArrangement = Arrangement.Top,
-        contentPadding = PaddingValues(10.dp)
-    ) {
-
-        item (span = { GridItemSpan(2) }){
-            Text(
-                modifier = Modifier.padding(16.dp),
-                text = "You have ${viewModel.myProducts.value?.size} product",
-                style = Typography.h1
-            )
-        }
-
-        itemsIndexed(items = viewModel.myProducts.value ?: listOf()) { index, item ->
-            MyProductItem(item) {
-                navController.navigate(Screens.ProductSeller.passItem(item = index.toString()))
-            }
-        }
     }
 }
+
+
+
