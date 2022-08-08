@@ -92,31 +92,26 @@ class SellerViewModel @Inject constructor(
     fun createNewProduct(popBack: () -> Unit) {
 
         val allFieldsAreFull = cats.size > 0 &&
-                    content.value.isNotEmpty() &&
-                    name.value.isNotEmpty() &&
-                    image0.value.isNotEmpty() &&
-                    image1.value.isNotEmpty() &&
-                    image2.value.isNotEmpty() &&
-                    image3.value.isNotEmpty() &&
-                    fPrice.value.isNotEmpty() &&
-                    sPrice.value.isNotEmpty() &&
-                    inv.value.isNotEmpty() &&
-                    minOrder.value.isNotEmpty()
+                content.value.isNotEmpty() &&
+                name.value.isNotEmpty() &&
+                image0.value.isNotEmpty() &&
+                image1.value.isNotEmpty() &&
+                image2.value.isNotEmpty() &&
+                image3.value.isNotEmpty() &&
+                fPrice.value.isNotEmpty() &&
+                sPrice.value.isNotEmpty() &&
+                inv.value.isNotEmpty() &&
+                minOrder.value.isNotEmpty()
 
 
         val isFPbiggerSP = fPrice.value >= sPrice.value
 
-        if (
-            !allFieldsAreFull
-        ) {
+        if (!allFieldsAreFull) {
             SnackbarManager.showMessage(R.string.empty_data)
             return
         }
 
-        if (
-            !isFPbiggerSP
-        ) {
-
+        if (!isFPbiggerSP) {
             SnackbarManager.showMessage(R.string.FpSp)
             return
         }
@@ -244,7 +239,7 @@ class SellerViewModel @Inject constructor(
 
     fun deleteThisProduct(navController: NavHostController?) {
 
-        viewModelScope.launch (Dispatchers.IO){
+        viewModelScope.launch(Dispatchers.IO) {
             deleteThisProductUseCase(Id(id = id.value))
             SnackbarManager.showMessage(R.string.product_deleted)
         }

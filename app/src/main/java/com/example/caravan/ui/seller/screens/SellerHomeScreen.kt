@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.amplifyframework.core.Amplify
 import com.example.caravan.common.components.MyProductItem
 import com.example.caravan.common.components.MyTopBar
 import com.example.caravan.domain.navigation.Screens
