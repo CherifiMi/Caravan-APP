@@ -1,6 +1,7 @@
 package com.example.caravan.ui.buyer
 
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -9,6 +10,9 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -24,7 +28,6 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -37,10 +40,11 @@ import com.example.caravan.common.components.MyTopBar
 import com.example.caravan.domain.model.mokeCats
 import com.example.caravan.domain.navigation.Screens
 import com.example.caravan.theme.*
-import com.example.caravan.ui.SideMenu
+import com.example.caravan.common.components.SideMenu
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun BuyerHomeScreen(
     navController: NavHostController,
@@ -69,11 +73,12 @@ fun BuyerHomeScreen(
                     }
                 )
             },
-            drawerContent = { SideMenu() },
+            drawerContent = { SideMenu(navController) },
             scaffoldState = state
         ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 OurProductsWithSearch(viewModel)
                 Spacer(modifier = Modifier.padding(10.dp))
                 ProductCategory(viewModel)
@@ -339,13 +344,12 @@ fun ProductCategory(viewModel: BuyerViewModel) {
 }
 
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ProductGrid(viewModel: BuyerViewModel, navController: NavHostController) {
 
     if (viewModel.x.value.size > 0) {
         LazyVerticalGrid(
-            cells = GridCells.Fixed(2),
+            columns = GridCells.Fixed(2),
             verticalArrangement = Arrangement.Top,
             contentPadding = PaddingValues(8.dp)
         ) {

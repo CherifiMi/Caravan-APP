@@ -1,5 +1,6 @@
 package com.example.caravan.domain.use_cases
 
+import android.app.Application
 import android.content.ContentResolver
 import android.net.Uri
 import android.os.Build
@@ -15,8 +16,10 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 
 
+
 @RequiresApi(Build.VERSION_CODES.O)
 class UploadImageGetUrlUseCase @Inject constructor() {
+
 
 
     private fun getRandomKey(): String {

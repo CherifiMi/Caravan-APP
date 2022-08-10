@@ -110,4 +110,7 @@ dependencies {
     def amplify_version = "1.31.3"
     implementation "com.amplifyframework:aws-storage-s3:$amplify_version"
     implementation "com.amplifyframework:aws-auth-cognito:$amplify_version"
+
+    //Stripe
+    implementation 'com.stripe:stripe-android:20.8.0'
 }

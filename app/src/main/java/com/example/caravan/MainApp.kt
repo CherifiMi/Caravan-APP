@@ -21,9 +21,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.caravan.common.CaravanAppState
 import com.example.caravan.common.snackbar.SnackbarManager
 import com.example.caravan.domain.navigation.Navigation
-import com.example.caravan.ui.SideMenu
 import kotlinx.coroutines.CoroutineScope
-import okhttp3.internal.assertThreadDoesntHoldLock
 
 lateinit var gAppState: CaravanAppState
 

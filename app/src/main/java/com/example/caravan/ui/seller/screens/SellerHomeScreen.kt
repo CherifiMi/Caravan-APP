@@ -10,6 +10,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -26,6 +27,7 @@ import com.amplifyframework.core.Amplify
 import com.example.caravan.R
 import com.example.caravan.common.components.MyProductItem
 import com.example.caravan.common.components.MyTopBar
+import com.example.caravan.common.components.SideMenu
 import com.example.caravan.domain.model.BottomNavItem
 import com.example.caravan.domain.navigation.Navigation
 import com.example.caravan.domain.navigation.Screens
@@ -35,9 +37,10 @@ import com.example.caravan.ui.seller.components.BottomNavigationBar
 import com.example.caravan.ui.seller.screens.SellerOrdersScreen
 import com.example.caravan.ui.seller.screens.SellerProductsScreen
 import com.google.gson.Gson
+import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
-@SuppressLint("StateFlowValueCalledInComposition")
+@SuppressLint("StateFlowValueCalledInComposition", "UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SellerHomeScreen(
     mainNavController: NavHostController,
@@ -46,9 +49,23 @@ fun SellerHomeScreen(
 
     val navController = rememberNavController()
 
+    val state = rememberScaffoldState()
+    val scope = rememberCoroutineScope()
+
     Scaffold(
         topBar =
-        { MyTopBar(mainNavController) },
+        {
+            MyTopBar(
+                navController = navController,
+                humClicked = {
+                    scope.launch {
+                        state.drawerState.open()
+                    }
+                }
+            )
+        },
+        drawerContent = { SideMenu(navController) },
+        scaffoldState = state,
         bottomBar = {
             BottomNavigationBar(
                 items = listOf(
