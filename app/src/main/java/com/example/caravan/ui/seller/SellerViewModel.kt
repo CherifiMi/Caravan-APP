@@ -128,7 +128,8 @@ class SellerViewModel @Inject constructor(
                     minOrder = minOrder.value,
                     newPrice = sPrice.value.toInt(),
                     sellerKey = accountService.getUserId(),
-                    amountInInv = inv.value.toInt()
+                    amountInInv = inv.value.toInt(),
+                    sellerStripe = ""
                 )
             )
             Log.d(tag, x.toString())
@@ -181,7 +182,8 @@ class SellerViewModel @Inject constructor(
                     minOrder = minOrder.value,
                     newPrice = sPrice.value.toInt(),
                     sellerKey = sellerKey.value,
-                    amountInInv = inv.value.toInt()
+                    amountInInv = inv.value.toInt(),
+                    sellerStripe = ""
                 )
             )
             Log.d(tag, x.toString())
@@ -250,7 +252,7 @@ class SellerViewModel @Inject constructor(
 
         var inv = mutableStateOf(0)
 
-        for (i in myProducts.value!!){
+        for (i in myProducts.value!!) {
 
             inv.value += i.amountInInv
 

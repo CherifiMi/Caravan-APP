@@ -1,5 +1,7 @@
 package com.example.caravan.ui.signup.screens
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -15,8 +17,10 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
+import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.caravan.common.components.MyButton
@@ -74,10 +78,15 @@ fun InfoSellerScreen(
                 viewModel.CreateNewUser(2, navController)
             }
 
+            viewModel.url.value.let {
+                if (it.isNotEmpty()){
+                    val uriHandler = LocalUriHandler.current
+                    uriHandler.openUri(it)
+                }
+            }
+
             Spacer(modifier = Modifier.height(280.dp))
         }
-
-
     }
 }
 
@@ -92,7 +101,7 @@ fun SelletTypeSelecter(viewModel: SignUpViewModel) {
         "Distributor",
         "Trader"
     )
-    var textfieldSize by remember { mutableStateOf(Size.Zero)}
+    var textfieldSize by remember { mutableStateOf(Size.Zero) }
 
     val icon = if (viewModel.expanded.value)
         Icons.Filled.ArrowDropUp
@@ -104,6 +113,7 @@ fun SelletTypeSelecter(viewModel: SignUpViewModel) {
 
         OutlinedTextField(
             enabled = false,
+            textStyle = Typography.h3,
             value = viewModel.selectedText.value,
             onValueChange = {
                 viewModel.selectedText.value = it
@@ -113,10 +123,11 @@ fun SelletTypeSelecter(viewModel: SignUpViewModel) {
                 disabledBorderColor = Color(0xFF6F6F6F),
                 disabledTextColor = Color.Black,
 
-            ),
+                ),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp).padding(bottom = 16.dp)
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 16.dp)
                 .onGloballyPositioned { coordinates ->
                     //This value is used to assign to the DropDown the same width
                     textfieldSize = coordinates.size.toSize()
@@ -129,15 +140,17 @@ fun SelletTypeSelecter(viewModel: SignUpViewModel) {
                     interactionSource = remember { MutableInteractionSource() },
                     indication = null
 
-                ){
+                ) {
                     viewModel.expanded.value = !viewModel.expanded.value
                 },
             label = {
                 Text("Seller Type")
-                    },
+            },
             trailingIcon = {
-                Icon(imageVector = icon,"contentDescription",
-                    modifier = Modifier.clickable { viewModel.expanded.value = !viewModel.expanded.value })
+                Icon(imageVector = icon, "contentDescription",
+                    modifier = Modifier.clickable {
+                        viewModel.expanded.value = !viewModel.expanded.value
+                    })
             }
         )
 
@@ -145,13 +158,13 @@ fun SelletTypeSelecter(viewModel: SignUpViewModel) {
             expanded = viewModel.expanded.value,
             onDismissRequest = { viewModel.expanded.value = false },
             modifier = Modifier
-                .width(with(LocalDensity.current){textfieldSize.width.toDp()})
+                .width(with(LocalDensity.current) { textfieldSize.width.toDp() })
         ) {
             suggestions.forEach { label ->
                 DropdownMenuItem(onClick = {
                     viewModel.selectedText.value = label
                 }) {
-                    Text(text = label)
+                    Text(text = label, style = Typography.h3)
                 }
             }
         }

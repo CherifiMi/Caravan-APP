@@ -1,14 +1,11 @@
 package com.example.caravan.data.repository
 
-import android.net.Uri
-import android.util.Log
-import com.amplifyframework.core.Amplify
 import com.example.caravan.data.local.CaravanDao
 import com.example.caravan.data.remote.CaravanApi
 import com.example.caravan.domain.model.*
 import com.google.gson.Gson
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import okhttp3.ResponseBody
 import javax.inject.Inject
 
@@ -26,6 +23,10 @@ class CaravanRepository @Inject constructor(
 
     suspend fun postNewSeller(seller: Seller): ResponseBody{
         return  caravanApi.postNewSeller(seller)
+    }
+
+    suspend fun getSellerByKey(id: Id): ResponseBody{
+        return caravanApi.getSellerByKey(id)
     }
 
     suspend fun postNewRep(rep: Rep): ResponseBody{
@@ -61,5 +62,13 @@ class CaravanRepository @Inject constructor(
         return dao.getAllProducts()
     }
 
+
+    suspend fun saveUser(user: String){
+        dao.deleteUser()
+        dao.saveUser(UserEntity(user = user))
+    }
+    suspend fun getSavedUser(): UserEntity {
+        return dao.getUser()
+    }
 
 }

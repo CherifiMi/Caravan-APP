@@ -1,6 +1,9 @@
 package com.example.caravan.ui.signup
 
+import android.util.Log
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
@@ -40,6 +43,9 @@ class SignUpViewModel @Inject constructor(
     var brand_name = mutableStateOf("")
     var address = mutableStateOf("")
     var phone = mutableStateOf("")
+
+    var url = mutableStateOf("")
+
 
     fun getUserId(): String {
         return accountService.getUserId()
@@ -104,19 +110,26 @@ class SignUpViewModel @Inject constructor(
                                 phone = phone.value
                             )
                         )
-                        2 -> postNewSellerUseCase(
-                            Seller(
-                                autheId = accountService.getUserId(),
-                                brand = brand_name.value,
-                                id = null,
-                                isActive = false,
-                                ordersId = null,
-                                owner = "${first_name.value} ${last_name.value}",
-                                phone = phone.value,
-                                productsId = null,
-                                type = selectedText.value
+                        2 -> {
+
+                            val res = postNewSellerUseCase(
+                                Seller(
+                                    autheId = accountService.getUserId(),
+                                    brand = brand_name.value,
+                                    id = null,
+                                    isActive = false,
+                                    ordersId = null,
+                                    owner = "${first_name.value} ${last_name.value}",
+                                    phone = phone.value,
+                                    productsId = null,
+                                    type = selectedText.value,
+                                    stripeId = ""
+                                )
                             )
-                        )
+
+                            url.value = res.string().replace("\"", "")
+
+                        }
 
                         3 -> postNewRepUseCase(
                             Rep(

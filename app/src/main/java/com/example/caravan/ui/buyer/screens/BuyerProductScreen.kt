@@ -1,5 +1,6 @@
-package com.example.caravan.ui.buyer
+package com.example.caravan.ui.buyer.screens
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearOutSlowInEasing
@@ -34,6 +35,7 @@ import com.example.caravan.R
 import com.example.caravan.common.components.MyButton
 import com.example.caravan.domain.model.Product
 import com.example.caravan.theme.*
+import com.example.caravan.ui.buyer.BuyerViewModel
 
 
 @Composable
@@ -134,6 +136,7 @@ fun TopLayer(currantItem: Product, viewModel: BuyerViewModel, navController: Nav
     }
 }
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun BottomLayer(currantItem: Product, viewModel: BuyerViewModel, navController: NavHostController) {
 

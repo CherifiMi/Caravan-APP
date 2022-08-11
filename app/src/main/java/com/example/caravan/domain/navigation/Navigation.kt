@@ -14,16 +14,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.caravan.MainApp
 import com.example.caravan.MainViewModel
-import com.example.caravan.ui.buyer.BuyerHomeScreen
-import com.example.caravan.ui.buyer.BuyerProductScreen
+import com.example.caravan.ui.buyer.screens.BuyerHomeScreen
+import com.example.caravan.ui.buyer.screens.BuyerProductScreen
 import com.example.caravan.ui.errors.NoNetScreen
 import com.example.caravan.ui.errors.SomethingWrongScreen
 import com.example.caravan.ui.login.LoginScreen
 import com.example.caravan.ui.rep.RepHomeScreen
 import com.example.caravan.ui.seller.SellerHomeScreen
 import com.example.caravan.ui.seller.screens.SellerEditProductScreen
-import com.example.caravan.ui.seller.screens.SellerOrdersScreen
-import com.example.caravan.ui.seller.screens.SellerProductsScreen
 import com.example.caravan.ui.signup.screens.*
 
 

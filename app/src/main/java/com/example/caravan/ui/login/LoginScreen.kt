@@ -72,7 +72,7 @@ fun LoginScreen(
 
             }
 
-            Image(
+            /*Image(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxWidth()
@@ -86,7 +86,7 @@ fun LoginScreen(
                 text = "Continue with Google",
                 text_color = Color.White,
                 btn_color = GoogleBlue,
-            ){ viewModel.getuser()}
+            ){ viewModel.getuser()}*/
 
         }
 

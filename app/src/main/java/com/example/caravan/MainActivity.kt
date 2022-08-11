@@ -58,8 +58,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                //test()
-                MainApp(viewModel, contentResolver)
+                    MainApp(viewModel, contentResolver)
                 }
             }
         }
@@ -70,17 +69,6 @@ class MainActivity : ComponentActivity() {
             applicationContext,
             "pk_test_51KkDEgCpXNrjS0vATGw0tV5pind5LMe49nAqDe41T3brgZc7J9bv7MQAopciLojJZFuKY4wUWUCAf2GVLoBXdLyw00LjLJRdni"
         )
-    }
-
-
-    fun test(){
-        val weakActivity = WeakReference<Activity>(this)
-
-        weakActivity.get()?.let {
-            val builder = CustomTabsIntent.Builder()
-            val customTabsIntent = builder.build()
-            customTabsIntent.launchUrl(it, Uri.parse("https://www.youtube.com/watch?v=pzq9sQ8j-nk"))
-        }
     }
 
     private fun configAWS() {

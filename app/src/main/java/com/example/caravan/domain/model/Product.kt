@@ -24,6 +24,8 @@ data class Product(
     val newPrice: Int,
     @SerializedName("sellerKey")
     val sellerKey: String,
+    @SerializedName("sellerStripe")
+    val sellerStripe: String,
     @SerializedName("amountInInv")
     val amountInInv: Int,
 )

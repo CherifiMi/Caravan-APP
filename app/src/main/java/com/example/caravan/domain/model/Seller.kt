@@ -21,5 +21,9 @@ data class Seller(
     @SerializedName("productsId")
     val productsId: List<String>?,
     @SerializedName("type")
-    val type: String
+    val type: String,
+    @SerializedName("stripeId")
+    val stripeId: String,
 )
+
+class SellerList : ArrayList<Seller>()

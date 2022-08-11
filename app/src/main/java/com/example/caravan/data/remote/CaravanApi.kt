@@ -14,6 +14,11 @@ interface CaravanApi {
     @POST("sellers")
     suspend fun postNewSeller(@Body buyer: Seller): ResponseBody
 
+
+    @POST("sellers/auth")
+    suspend fun getSellerByKey(@Body id: Id): ResponseBody
+
+
     @POST("reps")
     suspend fun postNewRep(@Body buyer: Rep): ResponseBody
 
