@@ -37,3 +37,10 @@ data class ProductEntity(
     @PrimaryKey val id: Int? = null,
     val productList: String
 )
+
+@Entity
+data class ProductItemEntity(
+    @PrimaryKey val id: Int? = null,
+    val product: String,
+    val amount: Int
+)

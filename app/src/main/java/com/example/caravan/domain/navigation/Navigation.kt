@@ -23,6 +23,7 @@ import com.example.caravan.ui.rep.RepHomeScreen
 import com.example.caravan.ui.seller.SellerHomeScreen
 import com.example.caravan.ui.seller.screens.SellerEditProductScreen
 import com.example.caravan.ui.signup.screens.*
+import com.stripe.android.payments.paymentlauncher.PaymentLauncher
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -34,6 +35,7 @@ fun Navigation(
     navController: NavHostController,
     viewModel: MainViewModel,
     cn: ContentResolver,
+    paymentLauncher: PaymentLauncher,
 ) {
 
     NavHost(
@@ -51,7 +53,7 @@ fun Navigation(
     ) {
 
         composable(route = Screens.Main.route) {
-            MainApp(viewModel, cn)
+            MainApp(viewModel, cn, paymentLauncher)
         }
 
         composable(route = Screens.Login.route) {
@@ -83,7 +85,7 @@ fun Navigation(
             arguments = listOf(navArgument(name = "index"){type = NavType.StringType})
         ) {
             var index = it.arguments
-            BuyerProductScreen(navController = navController, args = index)
+            BuyerProductScreen(navController = navController, args = index, paymentLauncher = paymentLauncher)
         }
 
 

@@ -13,15 +13,19 @@ import androidx.navigation.NavHostController
 import com.example.caravan.R
 import com.example.caravan.common.snackbar.SnackbarManager
 import com.example.caravan.data.repository.AccountService
+import com.example.caravan.data.repository.CaravanRepository
 import com.example.caravan.data.util.Result
-import com.example.caravan.domain.model.Id
-import com.example.caravan.domain.model.Product
+import com.example.caravan.domain.model.*
 import com.example.caravan.domain.use_cases.*
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 
@@ -30,10 +34,14 @@ import javax.inject.Inject
 class SellerViewModel @Inject constructor(
     private val getAllSellerProductsUseCase: GetAllSellerProductsUseCase,
     private val accountService: AccountService,
+    private val repository: CaravanRepository,
     private val createNewProductUseCase: CreateNewProductUseCase,
     private val changeThisProductUseCase: ChangeThisProductUseCase,
     private val uploadImageGetUrlUseCase: UploadImageGetUrlUseCase,
-    private val deleteThisProductUseCase: DeleteThisProductUseCase
+    private val deleteThisProductUseCase: DeleteThisProductUseCase,
+    private val getBuyerByKeyUseCase: GetBuyerByKeyUseCase,
+    private val deleteThisOrder: DeleteThisOrder,
+    private val getMyOrdersUseCase: GetMyOrdersUseCase
 ) : ViewModel() {
 
     val tag = "SELLER_TEST"
@@ -62,9 +70,80 @@ class SellerViewModel @Inject constructor(
 
     val id = mutableStateOf("")
     val sellerKey = mutableStateOf("")
+    var myOrders: MutableState<OrderList?> = mutableStateOf(null)
+
+    val savedSeller =
+        Gson().fromJson(
+            runBlocking(Dispatchers.IO) { repository.getSavedUser() }.user,
+            SellerList::class.java
+        )[0]
 
 
     //___________________________functions
+    fun getMyOrders() {
+        viewModelScope.launch {
+            getMyOrdersUseCase(Id(id = accountService.getUserId())).onEach {
+                when (it) {
+                    is Result.Loading -> {
+                        Log.d("ORDERTEST", "loading")
+                    }
+                    is Result.Success -> {
+                        try {
+                            myOrders.value =
+                                Gson().fromJson(it.data?.string(), OrderList::class.java)
+
+                        } catch (e: Exception) {
+                            Log.e("ORDERTEST", "ORDERTEST: ", e)
+
+                        }
+                    }
+                    is Result.Error -> {
+                        Log.d("ORDERTEST", it.message.toString())
+                    }
+
+                }
+            }.collectLatest {
+
+                Log.d("ORDERTEST", "last is " + myOrders.value.toString())
+
+            }
+        }
+    }
+
+    fun deleteOrderByKey(key: String){
+        viewModelScope.launch {
+            async { deleteThisOrder(Id(id = key)) }.await()
+            getMyOrders()
+        }
+    }
+    fun getBuyerByKey(key: String): Buyer? = runBlocking(Dispatchers.IO) {
+
+        var buyer: Buyer? = null
+
+        async {
+            getBuyerByKeyUseCase(Id(id = key)).collectLatest { respone ->
+                respone.data?.string()?.let {
+                    buyer = Gson().fromJson(it, BuyersList::class.java)[0]
+
+                }
+            }
+        }.await()
+
+        Log.d("ORDERTEST", buyer.toString())
+        buyer
+
+        /*Buyer(
+            id="62f5f902fa628b68cf6a0909",
+            address="hi",
+            autheId="Kr12AIYSuKcjbcYm6VJPcHWnNw33",
+            brand="yyh",
+            isActive=true,
+            owner="ttt gu",
+            phone= "695"
+        )*/
+    }
+
+
     fun getSellerProducts() {
         getAllSellerProductsUseCase(Id(accountService.getUserId())).onEach {
             when (it) {
@@ -129,7 +208,7 @@ class SellerViewModel @Inject constructor(
                     newPrice = sPrice.value.toInt(),
                     sellerKey = accountService.getUserId(),
                     amountInInv = inv.value.toInt(),
-                    sellerStripe = ""
+                    sellerStripe = savedSeller.stripeId
                 )
             )
             Log.d(tag, x.toString())
@@ -152,9 +231,6 @@ class SellerViewModel @Inject constructor(
                 inv.value.isNotEmpty() &&
                 minOrder.value.isNotEmpty()
 
-
-        val isFPbiggerSP = fPrice.value >= sPrice.value
-
         if (
             !allFieldsAreFull
         ) {
@@ -162,13 +238,13 @@ class SellerViewModel @Inject constructor(
             return
         }
 
-        if (
-            !isFPbiggerSP
-        ) {
+        val isFPbiggerSP = fPrice.value >= sPrice.value
 
+        if (!isFPbiggerSP) {
             SnackbarManager.showMessage(R.string.FpSp)
             return
         }
+
 
         viewModelScope.launch {
             val x = changeThisProductUseCase(
@@ -183,7 +259,7 @@ class SellerViewModel @Inject constructor(
                     newPrice = sPrice.value.toInt(),
                     sellerKey = sellerKey.value,
                     amountInInv = inv.value.toInt(),
-                    sellerStripe = ""
+                    sellerStripe = savedSeller.stripeId
                 )
             )
             Log.d(tag, x.toString())

@@ -2,13 +2,11 @@ package com.example.caravan.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.example.caravan.domain.model.ProductEntity
-import com.example.caravan.domain.model.ProductsList
-import com.example.caravan.domain.model.UserEntity
+import com.example.caravan.domain.model.*
 
 @Database(
-    entities = [ProductEntity::class, UserEntity::class],
-    version = 2
+    entities = [ProductEntity::class, UserEntity::class, CatsEntity::class, ProductItemEntity::class],
+    version = 4
 )
 abstract class CaravanDB: RoomDatabase() {
 

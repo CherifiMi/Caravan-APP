@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -355,9 +356,9 @@ fun ProductGrid(viewModel: BuyerViewModel, navController: NavHostController) {
             contentPadding = PaddingValues(8.dp)
         ) {
 
-            itemsIndexed(items = viewModel.x.value) { index, item ->
+            items(items = viewModel.x.value) { item ->
                 MyProductItem(item, true) {
-                    navController.navigate(Screens.ProductBuyer.passItem(index = index.toString()))
+                    navController.navigate(Screens.ProductBuyer.passItem(index = item.id?: ""))
                 }
             }
         }

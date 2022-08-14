@@ -19,9 +19,7 @@ import com.example.caravan.data.repository.CaravanRepository
 import com.example.caravan.data.util.Result
 import com.example.caravan.domain.model.*
 import com.example.caravan.domain.navigation.Screens
-import com.example.caravan.domain.use_cases.GetProductsUseCase
-import com.example.caravan.domain.use_cases.GetSellerByKeyUseCase
-import com.example.caravan.domain.use_cases.GetUserTypeUseCase
+import com.example.caravan.domain.use_cases.*
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -37,7 +35,9 @@ class MainViewModel @Inject constructor(
     private val getProductsUseCase: GetProductsUseCase,
     private val getUserTypeUseCase: GetUserTypeUseCase,
     private val getSellerByKeyUseCase: GetSellerByKeyUseCase,
+    private val getBuyerByKeyUseCase: GetBuyerByKeyUseCase,
     private val accountService: AccountService,
+    private val getCatsUseCase: GetCatsUseCase,
     private val repository: CaravanRepository
 ) : ViewModel() {
 
@@ -60,6 +60,7 @@ class MainViewModel @Inject constructor(
                 if (!getIsUserActivated(usertype)) {
                     firstScreen = "wait"
                 } else {
+                    getCats()
                     firstScreen = usertype
                 }
             }
@@ -71,6 +72,17 @@ class MainViewModel @Inject constructor(
 
         _spalsh.value = false
 
+
+    }
+
+    private fun getCats() {
+
+        viewModelScope.launch (Dispatchers.IO){
+
+            getCatsUseCase().collectLatest { response->
+                response.data?.string()?.let { repository.saveCats(it) }
+            }
+        }
 
     }
 
@@ -108,25 +120,47 @@ class MainViewModel @Inject constructor(
                 }
 
 
-                // TODO: get buyer by auth key
+                val job: Boolean = runBlocking {
+                    async {
+                        getBuyerByKeyUseCase(Id(id = accountService.getUserId())).collectLatest { respone ->
+                            respone.data?.string()?.let {
+                                Log.d("Mito",it)
+                                repository.saveUser(it)
+                            }
+                        }
+                    }.await()
+
+                    val buyer =
+                        Gson().fromJson(
+                            repository.getSavedUser().user,
+                            BuyersList::class.java
+                        )[0]
+                     buyer.isActive
+
+                }
+
+                return job
             }
             "seller" -> {
 
                 val job: Boolean = runBlocking {
-                    var ret = false
                     async {
                         getSellerByKeyUseCase(Id(id = accountService.getUserId())).collectLatest { respone ->
-                            respone.data?.string()?.let { repository.saveUser(it) }
-                            val seller =
-                                Gson().fromJson(
-                                    repository.getSavedUser().user,
-                                    SellerList::class.java
-                                )[0]
-                            ret = seller.isActive
+                            respone.data?.string()?.let {
+                                Log.d("Mito",it)
+                                repository.saveUser(it)
+                            }
                         }
                     }.await()
 
-                    ret
+                    val seller =
+                        Gson().fromJson(
+                            repository.getSavedUser().user,
+                            SellerList::class.java
+                        )[0]
+                    seller.isActive
+
+                    true
                 }
 
                 return job

@@ -40,4 +40,22 @@ interface CaravanApi {
 
     @POST("product/delete")
     suspend fun deleteThisProduct(@Body id: Id): ResponseBody
+
+    @GET("cats")
+    suspend fun getCats(): ResponseBody
+
+    @POST("buyers/auth")
+    suspend fun getBuyerByKey(@Body id: Id): ResponseBody
+
+    @POST("payment")
+    suspend fun paymentIntent(@Body requestBody: RequestBody): ResponseBody
+
+    @POST("orders/make")
+    suspend fun makeOrder(@Body order: Order)
+
+    @POST("orders/delete")
+    suspend fun deleteOrder(@Body id: Id)
+
+    @POST("orders/my")
+    suspend fun myOrder(@Body id: Id): ResponseBody
 }

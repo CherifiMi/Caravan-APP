@@ -35,7 +35,7 @@ import com.example.caravan.ui.seller.SellerViewModel
 import com.google.gson.Gson
 
 @RequiresApi(Build.VERSION_CODES.O)
-@SuppressLint("StateFlowValueCalledInComposition")
+@SuppressLint("StateFlowValueCalledInComposition", "UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SellerProductsScreen(
     navController: NavHostController,
@@ -86,7 +86,6 @@ fun SellerProductsScreen(
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ProductsListScreen(viewModel: SellerViewModel, navController: NavHostController) {
 

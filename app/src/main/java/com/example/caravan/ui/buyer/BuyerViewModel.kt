@@ -1,22 +1,21 @@
 package com.example.caravan.ui.buyer
 
+
 import android.util.Log
-import androidx.compose.material.DrawerState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavHostController
 import com.example.caravan.data.repository.AccountService
 import com.example.caravan.data.repository.CaravanRepository
 import com.example.caravan.data.util.Result
-import com.example.caravan.domain.model.Product
-import com.example.caravan.domain.model.ProductEntity
-import com.example.caravan.domain.model.ProductsList
-import com.example.caravan.domain.model.mokeCats
-import com.example.caravan.domain.navigation.Screens
+import com.example.caravan.domain.model.*
 import com.example.caravan.domain.use_cases.GetProductsUseCase
+import com.example.caravan.domain.use_cases.MakeOrderUseCase
 import com.google.gson.Gson
+import com.stripe.android.model.ConfirmPaymentIntentParams
+import com.stripe.android.model.PaymentMethodCreateParams
+import com.stripe.android.payments.paymentlauncher.PaymentLauncher
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -24,10 +23,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
+
 @HiltViewModel
 class BuyerViewModel @Inject constructor(
     private val getProductsUseCase: GetProductsUseCase,
     private val repository: CaravanRepository,
+    private val makeOrderUseCase: MakeOrderUseCase,
     private val accountService: AccountService
 ) : ViewModel() {
 
@@ -37,23 +38,85 @@ class BuyerViewModel @Inject constructor(
     val loading = mutableStateOf(false)
     val catsPopUp = mutableStateOf(false)
 
+    val amountToBuy = mutableStateOf("")
+
     val savedData =
-        Gson().fromJson(
-            runBlocking(Dispatchers.IO) {
-
-                repository.getSavedProductList()
-
-            }.productList, ProductsList::class.java
-        )
+        try {
+            Gson().fromJson(
+                runBlocking(Dispatchers.IO) { repository.getSavedProductList() }.productList,
+                ProductsList::class.java
+            )
+        } catch (e: Exception) {
+            listOf<Product>()
+        }
 
     val x: MutableState<List<Product>> = mutableStateOf(savedData)
     var selectedCat = mutableStateOf(-1)
     //_____________________________functions
 
+    fun saveOrder(product: Product, amount: Int) {
+        viewModelScope.launch {
+            repository.saveItem(product, amount)
+        }
+    }
 
+    fun BuyProduct(linked: String, paymentLauncher: PaymentLauncher, price: Int, amount: Int) {
+
+        val paymentIntent = runBlocking {
+            repository.paymentIntent(
+                linked = linked,
+                amount = price * amount,
+                cur = "inr"
+            )
+        }.replace("\"", "")
+
+        Log.d("Mito", "yoo: $paymentIntent")
+
+        val card =
+            PaymentMethodCreateParams.create(
+                PaymentMethodCreateParams.Card.Builder()
+                    .setNumber("4242424242424242")
+                    .setExpiryMonth(1)
+                    .setExpiryYear(2025)
+                    .setCvc("123")
+                    .build()
+            )
+
+        card.let { params ->
+            val confirmPaymentIntentParams =
+                ConfirmPaymentIntentParams.createWithPaymentMethodCreateParams(
+                    paymentMethodCreateParams = params,
+                    clientSecret = paymentIntent
+                )
+            paymentLauncher.confirm(confirmPaymentIntentParams)
+        }
+    }
+
+    fun makeOrder() {
+        Log.d("ORDERTEST", "order")
+        viewModelScope.launch {
+
+            val currantItem = repository.getSavedItem().product
+            val currantAmount = repository.getSavedItem().amount
+
+            makeOrderUseCase(
+                Order(
+                    id = null,
+                    seller = currantItem.sellerKey,
+                    buyer = accountService.getUserId(),
+                    amount = currantAmount,
+                    productId = currantItem.name
+                )
+            )
+        }
+    }
 
     fun getCurrentProduct(s: String): Product {
-        return savedData[s.toInt()]
+        val currantItem = savedData.filter {
+            it.id == s
+        }[0]
+
+        return currantItem
     }
 
     fun resetUserList() {
@@ -129,3 +192,4 @@ class BuyerViewModel @Inject constructor(
     }
 
 }
+

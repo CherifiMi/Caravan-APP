@@ -1,9 +1,7 @@
 package com.example.caravan.data.local
 
 import androidx.room.*
-import com.example.caravan.domain.model.ProductEntity
-import com.example.caravan.domain.model.ProductsList
-import com.example.caravan.domain.model.UserEntity
+import com.example.caravan.domain.model.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -27,4 +25,25 @@ interface CaravanDao {
 
     @Query("DELETE FROM UserEntity")
     suspend fun deleteUser()
+
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveCats(cats: CatsEntity)
+
+    @Query("SELECT * FROM CatsEntity")
+    suspend fun getCats(): CatsEntity
+
+    @Query("DELETE FROM CatsEntity")
+    suspend fun deleteCats()
+
+
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveItem(cats: ProductItemEntity)
+
+    @Query("SELECT * FROM ProductItemEntity")
+    suspend fun getItem(): ProductItemEntity
+
+    @Query("DELETE FROM ProductItemEntity")
+    suspend fun deleteItem()
 }

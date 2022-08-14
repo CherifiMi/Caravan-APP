@@ -14,6 +14,7 @@
     <string name="product_updated">you have updated the product.</string>
     <string name="product_deleted">you have deleted a product.</string>
     <string name="already_exist">this account already exist</string>
+    <string name="no_pay">couldn\'t make this payment</string>
 
     <!-- LoginScreen -->
     <string name="sign_in">Sign in</string>

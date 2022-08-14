@@ -1,8 +1,6 @@
 package com.example.caravan
 
 
-import android.app.Activity
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -10,28 +8,47 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
-import androidx.browser.customtabs.CustomTabsIntent
+import androidx.annotation.StringRes
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ExperimentalMotionApi
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.amplifyframework.AmplifyException
 import com.amplifyframework.auth.cognito.AWSCognitoAuthPlugin
 import com.amplifyframework.core.Amplify
 import com.amplifyframework.storage.s3.AWSS3StoragePlugin
+import com.example.caravan.common.snackbar.SnackbarManager
+import com.example.caravan.domain.model.mokeCats
 import com.example.caravan.theme.CaravanTheme
+import com.example.caravan.ui.buyer.BuyerViewModel
+import com.google.gson.Gson
 import com.stripe.android.PaymentConfiguration
+import com.stripe.android.model.Address
+import com.stripe.android.model.ConfirmPaymentIntentParams
+import com.stripe.android.model.PaymentMethodCreateParams
+import com.stripe.android.payments.paymentlauncher.PaymentLauncher
+import com.stripe.android.payments.paymentlauncher.PaymentResult
 import dagger.hilt.android.AndroidEntryPoint
-import java.lang.ref.WeakReference
+
+val canOrder = mutableStateOf(false)
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity: ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
+    lateinit var buyerViewModel: BuyerViewModel
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -52,13 +69,23 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+        val paymentConfiguration = PaymentConfiguration.getInstance(applicationContext)
+
+        val paymentLauncher = PaymentLauncher.Companion.create(
+            this,
+            paymentConfiguration.publishableKey,
+            paymentConfiguration.stripeAccountId,
+            ::onPaymentResult
+        )
         setContent {
+            buyerViewModel = hiltViewModel()
             CaravanTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    MainApp(viewModel, contentResolver)
+                    Log.d("Mito", Gson().toJson(mokeCats))
+                    MainApp(viewModel, contentResolver, paymentLauncher)
                 }
             }
         }
@@ -67,7 +94,7 @@ class MainActivity : ComponentActivity() {
     private fun configStripe() {
         PaymentConfiguration.init(
             applicationContext,
-            "pk_test_51KkDEgCpXNrjS0vATGw0tV5pind5LMe49nAqDe41T3brgZc7J9bv7MQAopciLojJZFuKY4wUWUCAf2GVLoBXdLyw00LjLJRdni"
+            "pk_test_51LWUO5SACQklfQRYruy9W29tWhUQ1gjBpke7xQEH6uoZ7Q1CcGlSzQyPBl6u9aMY4yWqlQJLXgMCbVCgszADY9VV00o6ORtDAr"
         )
     }
 
@@ -83,5 +110,20 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private fun onPaymentResult(paymentResult: PaymentResult) {
+
+        when (paymentResult) {
+            is PaymentResult.Completed -> {
+                buyerViewModel.makeOrder()
+            }
+            is PaymentResult.Canceled -> {
+                SnackbarManager.showMessage(R.string.no_pay)
+            }
+            is PaymentResult.Failed -> {
+                "Failed: " + paymentResult.throwable.message
+                SnackbarManager.showMessage(R.string.no_pay)
+            }
+        }
+    }
 }
 

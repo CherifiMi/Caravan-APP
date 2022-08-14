@@ -1,5 +1,8 @@
 package com.example.caravan.domain.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
 data class Cat(
     val id: String?,
     val name: String,
@@ -8,6 +11,13 @@ data class Cat(
 )
 
 data class CatList(val catList: List<Cat>)
+
+@Entity
+data class CatsEntity(
+    @PrimaryKey val id: Int? = null,
+    val cat: String
+)
+
 
 val mokeCats = CatList(
     listOf(

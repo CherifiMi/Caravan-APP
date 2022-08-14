@@ -11,6 +11,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.caravan.theme.PinkRed
@@ -42,6 +43,7 @@ fun MyButton(
         Text(
             modifier = Modifier.padding(vertical = 4.dp),
             text = text,
+            textAlign = TextAlign.Center,
             style = Typography.h3,
             color = text_color
         )

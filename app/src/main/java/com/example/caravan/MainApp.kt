@@ -14,7 +14,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ExperimentalMotionApi
 import androidx.navigation.NavHostController
@@ -22,6 +21,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.caravan.common.CaravanAppState
 import com.example.caravan.common.snackbar.SnackbarManager
 import com.example.caravan.domain.navigation.Navigation
+import com.stripe.android.payments.paymentlauncher.PaymentLauncher
 import kotlinx.coroutines.CoroutineScope
 
 lateinit var gAppState: CaravanAppState
@@ -31,7 +31,7 @@ lateinit var gAppState: CaravanAppState
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable
-fun MainApp(viewModel: MainViewModel, cn: ContentResolver) {
+fun MainApp(viewModel: MainViewModel, cn: ContentResolver, paymentLauncher: PaymentLauncher) {
     lateinit var navController: NavHostController
     val appState = rememberAppState()
     gAppState = appState
@@ -51,7 +51,7 @@ fun MainApp(viewModel: MainViewModel, cn: ContentResolver) {
         scaffoldState = appState.scaffoldState
     ){
         navController = rememberNavController()
-        Navigation(navController, viewModel, cn)
+        Navigation(navController, viewModel, cn, paymentLauncher)
     }
 }
 

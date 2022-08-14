@@ -2,47 +2,41 @@ package com.example.caravan.ui.buyer.screens
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.LinearOutSlowInEasing
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideIn
-import androidx.compose.animation.slideOut
 import androidx.compose.foundation.*
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.caravan.R
-import com.example.caravan.common.components.MyButton
 import com.example.caravan.domain.model.Product
 import com.example.caravan.theme.*
 import com.example.caravan.ui.buyer.BuyerViewModel
+import com.example.caravan.ui.buyer.components.BuyProductPopUp
+import com.stripe.android.payments.paymentlauncher.PaymentLauncher
 
 
 @Composable
 fun BuyerProductScreen(
     navController: NavHostController,
     args: Bundle?,
-    viewModel: BuyerViewModel = hiltViewModel()
+    viewModel: BuyerViewModel = hiltViewModel(),
+    paymentLauncher: PaymentLauncher
 ) {
 
     val currantItem = viewModel.getCurrentProduct(args?.getString("index") ?: "")
@@ -51,89 +45,10 @@ fun BuyerProductScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         BottomLayer(currantItem, viewModel, navController)
-        TopLayer(currantItem, viewModel, navController)
+        BuyProductPopUp(currantItem, viewModel, navController, paymentLauncher)
     }
 
 
-}
-
-@Composable
-fun TopLayer(currantItem: Product, viewModel: BuyerViewModel, navController: NavHostController) {
-
-
-    AnimatedVisibility(
-        modifier = Modifier.fillMaxSize(),
-        visible = viewModel.buyOrAddToCartSheet.value,
-        enter = slideIn(
-            initialOffset = { fullSize ->
-                IntOffset(0, fullSize.width / 2)
-            },
-            animationSpec = tween(durationMillis = 300, easing = LinearOutSlowInEasing)
-
-        ),
-        exit = slideOut(
-            targetOffset = { fullSize ->
-                IntOffset(0, fullSize.width / 2)
-            },
-            animationSpec = tween(durationMillis = 300)
-        ) + fadeOut()
-    ) {
-
-        Column(
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            Box(
-                Modifier
-                    .weight(6f)
-                    .fillMaxWidth()
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null
-                    ) { viewModel.buyOrAddToCartSheet.value = false }
-            )
-
-            Card(
-                elevation = 10.dp,
-                backgroundColor = Color.White,
-                shape = RoundedCornerShape(25.dp, 25.dp, 0.dp, 0.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(2f)
-            ) {
-                Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.Bottom) {
-                    
-                    Row(Modifier.fillMaxWidth()) {
-                        Box(modifier = Modifier.weight(1f)){
-                            MyButton(
-                                text = "Buy Now",
-                                text_color = Color.White,
-                                btn_color = PinkRed,
-                                end = 8.dp
-                            ) {
-
-                            }
-                        }
-
-                        Box(modifier = Modifier.weight(1f)){
-
-                            MyButton(
-                                text = "Add to Cart",
-                                has_border = true,
-                                btn_color = Color.White,
-                                text_color = PinkRed,
-                                start = 8.dp
-                            ) {
-
-                            }
-                        }
-                    }
-                    Spacer(modifier = Modifier.padding(16.dp))
-                }
-
-            }
-        }
-
-    }
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -202,13 +117,26 @@ fun BottomLayer(currantItem: Product, viewModel: BuyerViewModel, navController: 
 
             Text(
                 modifier = Modifier.padding(horizontal = 16.dp),
-                text = currantItem.name + "Best Of Lalo Compilation | Better Call Saul\n",
+                text = currantItem.name ,
                 style = TextStyle(
                     fontFamily = Montserrat,
                     fontWeight = FontWeight.Normal,
                     fontSize = 24.sp
                 )
             )
+
+            Spacer(modifier = Modifier.padding(8.dp))
+
+            LazyRow(){
+                item {
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
+                items(items = currantItem.cat){ item ->
+                    SubCatCard(item)
+                }
+            }
+
+            Spacer(modifier = Modifier.padding(8.dp))
 
             Row(
                 modifier = Modifier
@@ -226,7 +154,7 @@ fun BottomLayer(currantItem: Product, viewModel: BuyerViewModel, navController: 
                     )
                 )
                 Text(
-                    text = currantItem.newPrice.toString() + ",00",
+                    text = (currantItem.newPrice/100f).toString() ,
                     style = TextStyle(
                         fontFamily = Montserrat,
                         fontWeight = FontWeight.SemiBold,
@@ -236,7 +164,7 @@ fun BottomLayer(currantItem: Product, viewModel: BuyerViewModel, navController: 
 
                 Spacer(modifier = Modifier.padding(horizontal = 8.dp))
                 Text(
-                    text = "RS " + currantItem.initPrice.toString(),
+                    text = "RS " + (currantItem.initPrice/100f).toString(),
                     textDecoration = TextDecoration.LineThrough,
                     style = Typography.h3,
                     color = LightGrey
@@ -247,7 +175,7 @@ fun BottomLayer(currantItem: Product, viewModel: BuyerViewModel, navController: 
 
             Text(
                 modifier = Modifier.padding(16.dp),
-                text = currantItem.content + stringResource(R.string.lorem_ipsem),
+                text = currantItem.content ,
                 style = TextStyle(
                     fontFamily = Montserrat,
                     fontWeight = FontWeight.Medium,
@@ -288,4 +216,27 @@ fun ImagePickerCard(url: String, i: Int, viewModel: BuyerViewModel) {
     }
 
     Spacer(modifier = Modifier.padding(2.dp))
+}
+
+
+@Composable
+fun SubCatCard(item: String) {
+
+
+    Spacer(modifier = Modifier.width(8.dp))
+
+    Card(
+        shape = RoundedCornerShape(10.dp),
+        modifier = Modifier
+            .wrapContentHeight()
+            .clip(RoundedCornerShape(10.dp)),
+        border = BorderStroke(2.dp, PinkRed )
+    ) {
+        Text(
+            modifier = Modifier.padding(16.dp, 8.dp),
+            text = item,
+            style = Typography.h4
+        )
+    }
+
 }
