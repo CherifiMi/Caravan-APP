@@ -15,9 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -30,6 +28,8 @@ import com.amplifyframework.auth.cognito.AWSCognitoAuthPlugin
 import com.amplifyframework.core.Amplify
 import com.amplifyframework.storage.s3.AWSS3StoragePlugin
 import com.example.caravan.common.snackbar.SnackbarManager
+import com.example.caravan.domain.ConnectivityObserver
+import com.example.caravan.domain.NetworkConnectivityObserver
 import com.example.caravan.domain.model.mokeCats
 import com.example.caravan.theme.CaravanTheme
 import com.example.caravan.ui.buyer.BuyerViewModel
@@ -49,7 +49,7 @@ class MainActivity: ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
     lateinit var buyerViewModel: BuyerViewModel
-
+    lateinit var connectivityObserver: ConnectivityObserver
 
     @RequiresApi(Build.VERSION_CODES.O)
     @ExperimentalMotionApi
@@ -58,6 +58,7 @@ class MainActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        connectivityObserver = NetworkConnectivityObserver(applicationContext)
 
         configAWS()
 
@@ -78,6 +79,10 @@ class MainActivity: ComponentActivity() {
             ::onPaymentResult
         )
         setContent {
+
+            val netStatus by connectivityObserver.observe().collectAsState(initial = ConnectivityObserver.Status.Unavailable)
+            viewModel.there_is_net.value = netStatus == ConnectivityObserver.Status.Available
+
             buyerViewModel = hiltViewModel()
             CaravanTheme {
                 Surface(

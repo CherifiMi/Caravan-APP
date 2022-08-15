@@ -45,13 +45,13 @@ class MainViewModel @Inject constructor(
     private val _spalsh = MutableStateFlow(true)
     val spalsh = _spalsh.asStateFlow()
 
-    val there_is_net = true
+    val there_is_net = mutableStateOf(true)
     var firstScreen = ""
 
     //___________________________functions
 
     fun onSplashScreen() {
-        if (there_is_net) {
+        if (there_is_net.value) {
             if (!accountService.hasUser()) {
                 firstScreen = "login"
             } else {
@@ -68,18 +68,14 @@ class MainViewModel @Inject constructor(
             firstScreen = "nonet"
         }
 
-
-
         _spalsh.value = false
-
-
     }
 
     private fun getCats() {
 
-        viewModelScope.launch (Dispatchers.IO){
+        viewModelScope.launch(Dispatchers.IO) {
 
-            getCatsUseCase().collectLatest { response->
+            getCatsUseCase().collectLatest { response ->
                 response.data?.string()?.let { repository.saveCats(it) }
             }
         }
@@ -124,7 +120,7 @@ class MainViewModel @Inject constructor(
                     async {
                         getBuyerByKeyUseCase(Id(id = accountService.getUserId())).collectLatest { respone ->
                             respone.data?.string()?.let {
-                                Log.d("Mito",it)
+                                Log.d("Mito", it)
                                 repository.saveUser(it)
                             }
                         }
@@ -135,7 +131,7 @@ class MainViewModel @Inject constructor(
                             repository.getSavedUser().user,
                             BuyersList::class.java
                         )[0]
-                     buyer.isActive
+                    buyer.isActive
 
                 }
 
@@ -147,7 +143,7 @@ class MainViewModel @Inject constructor(
                     async {
                         getSellerByKeyUseCase(Id(id = accountService.getUserId())).collectLatest { respone ->
                             respone.data?.string()?.let {
-                                Log.d("Mito",it)
+                                Log.d("Mito", it)
                                 repository.saveUser(it)
                             }
                         }

@@ -1,5 +1,6 @@
 package com.example.caravan.ui.seller.screens
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -13,7 +14,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -36,7 +39,7 @@ fun SellerOrdersScreen(
 
     viewModel.getMyOrders()
 
-    if (viewModel.myOrders.value.isNullOrEmpty()) {
+    if (viewModel.myOrders.value == null) {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Text(
                 text = "...",
@@ -44,7 +47,17 @@ fun SellerOrdersScreen(
                 textAlign = TextAlign.Center
             )
         }
-    } else {
+    }
+    else if (viewModel.myOrders.value!!.isEmpty()){
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text(
+                text = "You have 0 Orders",
+                style = Typography.h1,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+    else {
 
         LazyColumn(Modifier.fillMaxSize()) {
             items(items = viewModel.myOrders.value?.toList()?.reversed() ?: listOf()) { item ->
@@ -80,6 +93,7 @@ fun OrderCard(item: Order, viewModel: SellerViewModel) {
             .wrapContentHeight(),
         horizontalAlignment = Alignment.Start
     ) {
+        val brr = LocalHapticFeedback.current
         Card(
             shape = RoundedCornerShape(15.dp),
             border = BorderStroke(2.dp, PinkRed),
@@ -87,7 +101,9 @@ fun OrderCard(item: Order, viewModel: SellerViewModel) {
                 .pointerInput(Unit){
                     detectTapGestures(
                         onLongPress = {
+                            Log.d("onLongPress", "onLongPress")
                             viewModel.deleteOrderByKey(item.id!!)
+                            brr.performHapticFeedback(HapticFeedbackType.LongPress)
                         }
                     )
                 }
