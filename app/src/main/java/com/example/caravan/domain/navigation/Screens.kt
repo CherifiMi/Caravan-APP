@@ -38,4 +38,8 @@ sealed class Screens(val route: String) {
 
     object Main: Screens(route = "main_screen")
 
+
+    object MySellers: Screens(route = "rep_my_sellers")
+    object MyBuyers: Screens(route = "rep_my_buyers")
+
 }

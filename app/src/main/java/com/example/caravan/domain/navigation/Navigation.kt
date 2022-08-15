@@ -102,7 +102,7 @@ fun Navigation(
 
 
         composable(route = Screens.HomeRep.route) {
-            RepHomeScreen(navController = navController)
+            RepHomeScreen(mainNavController = navController)
         }
 
         composable(route = Screens.SWError.route) {

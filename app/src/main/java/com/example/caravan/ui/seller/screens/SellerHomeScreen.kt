@@ -57,7 +57,7 @@ fun SellerHomeScreen(
         topBar =
         {
             MyTopBar(
-                navController = navController,
+                navController = mainNavController,
                 humClicked = {
                     scope.launch {
                         state.drawerState.open()

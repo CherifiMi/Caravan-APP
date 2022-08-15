@@ -1,23 +1,69 @@
 package com.example.caravan.ui.rep
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Text
+import android.annotation.SuppressLint
+import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.example.caravan.theme.Typography
-import com.example.caravan.ui.signup.SignUpViewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.caravan.R
+import com.example.caravan.common.components.MyTopBar
+import com.example.caravan.domain.model.BottomNavItem
+import com.example.caravan.domain.navigation.Screens
+import com.example.caravan.ui.seller.SellerViewModel
+import com.example.caravan.ui.seller.components.BottomNavigationBar
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun RepHomeScreen(
-    navController: NavHostController,
-    viewModel: SignUpViewModel = hiltViewModel()
+    mainNavController: NavHostController?,
+    viewModel: SellerViewModel = hiltViewModel(),
 ) {
-    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(text = "Rep with id: ${viewModel.getUserId()}", style = Typography.h1, textAlign = TextAlign.Center)
+
+    val repNavController = rememberNavController()
+
+    Scaffold(
+        topBar = {
+            MyTopBar(
+                navController = mainNavController!!,
+            )
+        },
+        bottomBar = {
+            BottomNavigationBar(
+                items = listOf(
+                    BottomNavItem(
+                        name = "My Sellers",
+                        route = Screens.MySellers.route,
+                        icon = painterResource(id = R.drawable.my_sellers),
+                    ),
+                    BottomNavItem(
+                        name = "My Buyers",
+                        route = Screens.MyBuyers.route,
+                        icon = painterResource(id = R.drawable.my_buyers),
+                    )
+                ),
+                navController = repNavController,
+            ){
+                repNavController.navigate(it.route)
+            }
+        }
+    ) {
+
+        NavHost(
+            repNavController,
+            startDestination = Screens.MySellers.route
+        ) {
+            composable(route = Screens.MySellers.route) {
+                MySellersScreen(navController = mainNavController!!)
+            }
+            composable(route = Screens.MyBuyers.route) {
+                MyBuyersScreen(navController = mainNavController!!)
+            }
+        }
+
     }
 }
