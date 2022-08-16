@@ -83,6 +83,7 @@ class MainActivity: ComponentActivity() {
             val netStatus by connectivityObserver.observe().collectAsState(initial = ConnectivityObserver.Status.Unavailable)
             viewModel.there_is_net.value = netStatus == ConnectivityObserver.Status.Available
 
+            Log.d("MitoNet", netStatus.name)
             buyerViewModel = hiltViewModel()
             CaravanTheme {
                 Surface(

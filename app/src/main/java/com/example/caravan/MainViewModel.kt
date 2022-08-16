@@ -166,7 +166,7 @@ class MainViewModel @Inject constructor(
             }
         }
 
-        return false
+        return true
     }
 
     fun getUserType(): String {

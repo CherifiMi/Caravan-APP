@@ -136,8 +136,8 @@ class SignUpViewModel @Inject constructor(
                                 autheId = accountService.getUserId(),
                                 id = null,
                                 isActive = false,
-                                myBuyers = null,
-                                mySellers = null,
+                                myBuyers = emptyList(),
+                                mySellers = emptyList(),
                                 name = "${first_name.value} ${last_name.value}",
                                 phone = phone.value,
                             )

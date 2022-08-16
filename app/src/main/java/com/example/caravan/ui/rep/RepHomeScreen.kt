@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -14,14 +13,13 @@ import com.example.caravan.R
 import com.example.caravan.common.components.MyTopBar
 import com.example.caravan.domain.model.BottomNavItem
 import com.example.caravan.domain.navigation.Screens
-import com.example.caravan.ui.seller.SellerViewModel
 import com.example.caravan.ui.seller.components.BottomNavigationBar
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun RepHomeScreen(
     mainNavController: NavHostController?,
-    viewModel: SellerViewModel = hiltViewModel(),
+    viewModel: RepViewModel = hiltViewModel(),
 ) {
 
     val repNavController = rememberNavController()
@@ -58,12 +56,11 @@ fun RepHomeScreen(
             startDestination = Screens.MySellers.route
         ) {
             composable(route = Screens.MySellers.route) {
-                MySellersScreen(navController = mainNavController!!)
+                MySellersScreen(navController = mainNavController!!, viewModel = viewModel)
             }
             composable(route = Screens.MyBuyers.route) {
-                MyBuyersScreen(navController = mainNavController!!)
+                MyBuyersScreen(navController = mainNavController!!, viewModel = viewModel)
             }
         }
-
     }
 }
