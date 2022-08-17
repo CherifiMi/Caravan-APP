@@ -38,7 +38,6 @@ import coil.compose.AsyncImage
 import com.example.caravan.R
 import com.example.caravan.common.components.MyProductItem
 import com.example.caravan.common.components.MyTopBar
-import com.example.caravan.domain.model.mokeCats
 import com.example.caravan.domain.navigation.Screens
 import com.example.caravan.theme.*
 import com.example.caravan.common.components.SideMenu
@@ -132,7 +131,7 @@ fun CatsPopUp(viewModel: BuyerViewModel) {
                         )
                     }
 
-                    items(mokeCats.catList) { item ->
+                    items(viewModel.myCats) { item ->
 
                         Text(
                             modifier = Modifier.padding(start = 16.dp, bottom = 4.dp),
@@ -266,7 +265,7 @@ fun OurProductsWithSearch(viewModel: BuyerViewModel) {
 
 @Composable
 fun ProductCategory(viewModel: BuyerViewModel) {
-    val itemList = mokeCats.catList
+    val itemList = viewModel.myCats
 
     Row(
         modifier = Modifier

@@ -2,54 +2,24 @@ package com.example.caravan.domain.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.caravan.data.repository.CaravanRepository
+import com.google.gson.annotations.SerializedName
 
 data class Cat(
+    @SerializedName("id")
     val id: String?,
+    @SerializedName("name")
     val name: String,
-    val subCats: List<String>,
-    val picUrl: String
+    @SerializedName("picUrl")
+    val picUrl: String,
+    @SerializedName("subCats")
+    val subCats: List<String>
 )
 
-data class CatList(val catList: List<Cat>)
+class CatList : ArrayList<Cat>()
 
 @Entity
 data class CatsEntity(
     @PrimaryKey val id: Int? = null,
     val cat: String
-)
-
-
-val mokeCats = CatList(
-    listOf(
-        Cat(
-            id = null,
-            name = "Games",
-            subCats = listOf("mito", "phone", "mito2"),
-            picUrl = "https://cdn-icons-png.flaticon.com/512/5260/5260498.png"
-        ),
-        Cat(
-            id = null,
-            name = "Home",
-            subCats = listOf("ew", "qe", "hilllad"),
-            picUrl = "https://cdn-icons-png.flaticon.com/512/1299/1299961.png"
-        ),
-        Cat(
-            id = null,
-            name = "Electronics",
-            subCats = listOf("rc", "js", "c#") ,
-            picUrl = "https://cdn-icons-png.flaticon.com/512/4752/4752790.png"
-        ),
-        Cat(
-            id = null,
-            name = "Books",
-            subCats = listOf("manga", "anime"),
-            picUrl = "https://cdn-icons-png.flaticon.com/512/3296/3296160.png"
-        ),
-        Cat(
-            id = null,
-            name = "Cloths",
-            subCats = listOf("pants", "coll stuff", "maid cosplay"),
-            picUrl = "https://cdn-icons-png.flaticon.com/512/1461/1461304.png"
-        )
-    )
 )

@@ -1,5 +1,6 @@
 package com.example.caravan.data.repository
 
+import android.util.Log
 import com.example.caravan.data.local.CaravanDao
 import com.example.caravan.data.remote.CaravanApi
 import com.example.caravan.domain.model.*
@@ -60,7 +61,7 @@ class CaravanRepository @Inject constructor(
         return  caravanApi.deleteThisProduct(id)
     }
 
-    suspend fun getCats(): ResponseBody{
+    suspend fun getCats(): ResponseBody {
         return caravanApi.getCats()
     }
 
@@ -110,8 +111,16 @@ class CaravanRepository @Inject constructor(
         dao.deleteCats()
         dao.saveCats(CatsEntity(cat = cats))
     }
-    suspend fun getSavedCats(): CatsEntity {
-        return dao.getCats()
+    suspend fun getSavedCats(): List<Cat> {
+
+        val catjson = dao.getCats().cat
+        Log.d("MITOTEST", catjson)
+        return try {
+            Gson().fromJson(catjson, CatList::class.java)
+        }catch (e:Exception){
+            Log.d("MITOTEST", e.toString())
+            emptyList<Cat>()
+        }
     }
 
 

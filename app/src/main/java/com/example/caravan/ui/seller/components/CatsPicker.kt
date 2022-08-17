@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.example.caravan.domain.model.Cat
-import com.example.caravan.domain.model.mokeCats
 import com.example.caravan.theme.LightGrey
 import com.example.caravan.theme.PinkRed
 import com.example.caravan.theme.Typography
@@ -38,7 +37,7 @@ fun CatsPicker(viewModel: SellerViewModel) {
         )
 
 
-        for (i in mokeCats.catList){
+        for (i in viewModel.myCats){
             CatItem(i, viewModel)
         }
 

@@ -8,18 +8,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
-import androidx.annotation.StringRes
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ExperimentalMotionApi
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -30,14 +27,9 @@ import com.amplifyframework.storage.s3.AWSS3StoragePlugin
 import com.example.caravan.common.snackbar.SnackbarManager
 import com.example.caravan.domain.ConnectivityObserver
 import com.example.caravan.domain.NetworkConnectivityObserver
-import com.example.caravan.domain.model.mokeCats
 import com.example.caravan.theme.CaravanTheme
 import com.example.caravan.ui.buyer.BuyerViewModel
-import com.google.gson.Gson
 import com.stripe.android.PaymentConfiguration
-import com.stripe.android.model.Address
-import com.stripe.android.model.ConfirmPaymentIntentParams
-import com.stripe.android.model.PaymentMethodCreateParams
 import com.stripe.android.payments.paymentlauncher.PaymentLauncher
 import com.stripe.android.payments.paymentlauncher.PaymentResult
 import dagger.hilt.android.AndroidEntryPoint
@@ -90,7 +82,6 @@ class MainActivity: ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Log.d("Mito", Gson().toJson(mokeCats))
                     MainApp(viewModel, contentResolver, paymentLauncher)
                 }
             }

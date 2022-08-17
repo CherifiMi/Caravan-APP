@@ -74,7 +74,7 @@ class MainViewModel @Inject constructor(
 
     private fun getCats() {
 
-        viewModelScope.launch(Dispatchers.IO) {
+        runBlocking (Dispatchers.IO) {
 
             getCatsUseCase().collectLatest { response ->
                 response.data?.string()?.let { repository.saveCats(it) }

@@ -44,6 +44,10 @@ class SellerViewModel @Inject constructor(
     private val getMyOrdersUseCase: GetMyOrdersUseCase
 ) : ViewModel() {
 
+    val myCats = runBlocking {
+        repository.getSavedCats()
+    }
+
     val tag = "SELLER_TEST"
 
     //__________________________values

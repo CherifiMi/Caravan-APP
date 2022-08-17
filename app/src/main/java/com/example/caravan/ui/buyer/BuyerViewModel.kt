@@ -54,6 +54,10 @@ class BuyerViewModel @Inject constructor(
     var selectedCat = mutableStateOf(-1)
 
     var buyerId = accountService.getUserId()
+
+    val myCats = runBlocking {
+        repository.getSavedCats()
+    }
     //_____________________________functions
 
     fun saveOrder(product: Product, amount: Int) {
@@ -154,7 +158,7 @@ class BuyerViewModel @Inject constructor(
         x.value =
             savedData.filter { product: Product ->
                 var b = false
-                for (i in mokeCats.catList[selectedCat.value].subCats) {
+                for (i in myCats[selectedCat.value].subCats) {
                     if (product.cat.contains(i)) {
                         b = true
                         break
