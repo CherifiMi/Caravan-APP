@@ -8,16 +8,12 @@ import retrofit2.http.*
 
 interface CaravanApi {
 
+
     @POST("buyers")
     suspend fun postNewBuyer(@Body buyer: Buyer): ResponseBody
 
     @POST("sellers")
     suspend fun postNewSeller(@Body buyer: Seller): ResponseBody
-
-
-    @POST("sellers/auth")
-    suspend fun getSellerByKey(@Body id: Id): ResponseBody
-
 
     @POST("reps")
     suspend fun postNewRep(@Body buyer: Rep): ResponseBody
@@ -26,6 +22,19 @@ interface CaravanApi {
     suspend fun getUserType(@Body id: Id): UserType
 
 
+    //_____________________________________________________________________________
+    @POST("sellers/auth")
+    suspend fun getSellerByKey(@Body id: Id): ResponseBody
+
+    @POST("buyers/auth")
+    suspend fun getBuyerByKey(@Body id: Id): ResponseBody
+
+    @POST("reps/auth")
+    suspend fun getRepByKey(@Body id: Id): ResponseBody
+
+
+
+    //_____________________________________________________________________________
     @POST("product/all")
     suspend fun getAllSellerProducts(@Body id: Id): ProductsList
 
@@ -41,15 +50,20 @@ interface CaravanApi {
     @POST("product/delete")
     suspend fun deleteThisProduct(@Body id: Id): ResponseBody
 
+
+    //_____________________________________________________________________________
     @GET("cats")
     suspend fun getCats(): ResponseBody
 
-    @POST("buyers/auth")
-    suspend fun getBuyerByKey(@Body id: Id): ResponseBody
 
+
+    //_____________________________________________________________________________
     @POST("payment")
     suspend fun paymentIntent(@Body requestBody: RequestBody): ResponseBody
 
+
+
+    //_____________________________________________________________________________
     @POST("orders/make")
     suspend fun makeOrder(@Body order: Order)
 

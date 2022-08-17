@@ -19,3 +19,5 @@ data class Rep(
     @SerializedName("phone")
     val phone: String
 )
+
+class RepList : ArrayList<Rep>()

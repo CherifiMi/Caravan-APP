@@ -36,6 +36,7 @@ class MainViewModel @Inject constructor(
     private val getUserTypeUseCase: GetUserTypeUseCase,
     private val getSellerByKeyUseCase: GetSellerByKeyUseCase,
     private val getBuyerByKeyUseCase: GetBuyerByKeyUseCase,
+    private val getRepByKeyUseCase: GetRepByKeyUseCase,
     private val accountService: AccountService,
     private val getCatsUseCase: GetCatsUseCase,
     private val repository: CaravanRepository
@@ -154,19 +155,38 @@ class MainViewModel @Inject constructor(
                             repository.getSavedUser().user,
                             SellerList::class.java
                         )[0]
+
                     seller.isActive
 
-                    true
                 }
 
                 return job
             }
             else -> {
-                // TODO: get rep by auth key
+                val job: Boolean = runBlocking {
+                    async {
+                        getRepByKeyUseCase(Id(id = accountService.getUserId())).collectLatest { respone ->
+                            respone.data?.string()?.let {
+                                Log.d("Mito", it)
+                                repository.saveUser(it)
+                            }
+                        }
+                    }.await()
+
+                    val rep =
+                        Gson().fromJson(
+                            repository.getSavedUser().user,
+                            RepList::class.java
+                        )[0]
+                    rep.isActive
+
+                }
+
+                return job
             }
         }
 
-        return true
+        return false
     }
 
     fun getUserType(): String {

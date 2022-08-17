@@ -1,5 +1,6 @@
 package com.example.caravan.ui.seller.screens
 
+import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.os.Build
 import android.os.Bundle
@@ -28,6 +29,7 @@ import com.example.caravan.ui.seller.components.CatsPicker
 import com.example.caravan.ui.seller.components.PicsPicker
 
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SellerEditProductScreen(

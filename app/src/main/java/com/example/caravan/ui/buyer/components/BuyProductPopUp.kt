@@ -163,7 +163,7 @@ fun BuyProductPopUp(
                                 end = 8.dp
                             ) {
                                 viewModel.saveOrder(currantItem, viewModel.amountToBuy.value.toInt())
-                                viewModel.BuyProduct(linked = currantItem.sellerStripe, paymentLauncher, price = currantItem.newPrice, amount = viewModel.amountToBuy.value.toInt())
+                                viewModel.buyProduct(linked = currantItem.sellerStripe, paymentLauncher, price = currantItem.newPrice, amount = viewModel.amountToBuy.value.toInt())
                                 navController.navigate(Screens.HomeBuyer.route)
                             }
                         }

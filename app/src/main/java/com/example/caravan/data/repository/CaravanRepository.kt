@@ -33,6 +33,11 @@ class CaravanRepository @Inject constructor(
         return caravanApi.getBuyerByKey(id)
     }
 
+    suspend fun getRepByKey(id: Id): ResponseBody{
+        return caravanApi.getRepByKey(id)
+    }
+
+
     suspend fun postNewRep(rep: Rep): ResponseBody{
         return  caravanApi.postNewRep(rep)
     }

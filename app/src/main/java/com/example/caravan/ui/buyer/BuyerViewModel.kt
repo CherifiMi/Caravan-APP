@@ -52,6 +52,8 @@ class BuyerViewModel @Inject constructor(
 
     val x: MutableState<List<Product>> = mutableStateOf(savedData)
     var selectedCat = mutableStateOf(-1)
+
+    var buyerId = accountService.getUserId()
     //_____________________________functions
 
     fun saveOrder(product: Product, amount: Int) {
@@ -60,7 +62,7 @@ class BuyerViewModel @Inject constructor(
         }
     }
 
-    fun BuyProduct(linked: String, paymentLauncher: PaymentLauncher, price: Int, amount: Int) {
+    fun buyProduct(linked: String, paymentLauncher: PaymentLauncher, price: Int, amount: Int) {
 
         val paymentIntent = runBlocking {
             repository.paymentIntent(
@@ -103,7 +105,7 @@ class BuyerViewModel @Inject constructor(
                 Order(
                     id = null,
                     seller = currantItem.sellerKey,
-                    buyer = accountService.getUserId(),
+                    buyer = buyerId,
                     amount = currantAmount,
                     productId = currantItem.name
                 )
@@ -181,13 +183,10 @@ class BuyerViewModel @Inject constructor(
     }
 
     fun search(s: String) {
-
         x.value =
             savedData.filter { product: Product ->
-
                 product.name.contains(s)
             }
-
 
     }
 

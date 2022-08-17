@@ -78,11 +78,11 @@ class SellerViewModel @Inject constructor(
             SellerList::class.java
         )[0]
 
-
+    var sellerId = accountService.getUserId()
     //___________________________functions
     fun getMyOrders() {
         viewModelScope.launch {
-            getMyOrdersUseCase(Id(id = accountService.getUserId())).onEach {
+            getMyOrdersUseCase(Id(id = sellerId)).onEach {
                 when (it) {
                     is Result.Loading -> {
                         Log.d("ORDERTEST", "loading")
@@ -132,20 +132,11 @@ class SellerViewModel @Inject constructor(
         Log.d("ORDERTEST", buyer.toString())
         buyer
 
-        /*Buyer(
-            id="62f5f902fa628b68cf6a0909",
-            address="hi",
-            autheId="Kr12AIYSuKcjbcYm6VJPcHWnNw33",
-            brand="yyh",
-            isActive=true,
-            owner="ttt gu",
-            phone= "695"
-        )*/
     }
 
 
     fun getSellerProducts() {
-        getAllSellerProductsUseCase(Id(accountService.getUserId())).onEach {
+        getAllSellerProductsUseCase(Id(sellerId)).onEach {
             when (it) {
                 is Result.Success -> {
                     loading.value = false
@@ -206,7 +197,7 @@ class SellerViewModel @Inject constructor(
                     initPrice = fPrice.value.toInt(),
                     minOrder = minOrder.value,
                     newPrice = sPrice.value.toInt(),
-                    sellerKey = accountService.getUserId(),
+                    sellerKey = sellerId,
                     amountInInv = inv.value.toInt(),
                     sellerStripe = savedSeller.stripeId
                 )
@@ -257,7 +248,7 @@ class SellerViewModel @Inject constructor(
                     initPrice = fPrice.value.toInt(),
                     minOrder = minOrder.value,
                     newPrice = sPrice.value.toInt(),
-                    sellerKey = sellerKey.value,
+                    sellerKey = sellerId,
                     amountInInv = inv.value.toInt(),
                     sellerStripe = savedSeller.stripeId
                 )
