@@ -36,7 +36,7 @@ class LoginViewModel @Inject constructor(
 
         accountService.signOut()
 
-        navController.navigate(Screens.Main.route) {
+        navController.navigate(Screens.Main.passItem("")) {
             launchSingleTop = true
             popUpTo(0) { inclusive = true }
         }
@@ -60,7 +60,7 @@ class LoginViewModel @Inject constructor(
                         var x = async { linkWithEmail() }
                         x.await()
                         launch(Dispatchers.Main) {
-                            navController.navigate(Screens.Main.route) {
+                            navController.navigate(Screens.Main.passItem("")) {
                                 launchSingleTop = true
                                 popUpTo(0) { inclusive = true }
                             }

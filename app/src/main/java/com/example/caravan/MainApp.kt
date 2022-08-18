@@ -3,6 +3,7 @@ package com.example.caravan
 import android.content.ContentResolver
 import android.content.res.Resources
 import android.os.Build
+import android.os.Bundle
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.padding
@@ -31,12 +32,17 @@ lateinit var gAppState: CaravanAppState
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable
-fun MainApp(viewModel: MainViewModel, cn: ContentResolver, paymentLauncher: PaymentLauncher) {
+fun MainApp(
+    viewModel: MainViewModel,
+    cn: ContentResolver,
+    paymentLauncher: PaymentLauncher,
+    args: Bundle?
+) {
     lateinit var navController: NavHostController
     val appState = rememberAppState()
     gAppState = appState
 
-    var userId = "1pLu1fuaynVcAMnp32EhFuh14cY2"
+    var userId = args?.getString("userId") ?: ""
 
     // TODO: nav to this from rep, if got new id use it, else use acc serveses
     if(userId.isNullOrEmpty()) {

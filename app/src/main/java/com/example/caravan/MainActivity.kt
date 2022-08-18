@@ -82,7 +82,7 @@ class MainActivity: ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    MainApp(viewModel, contentResolver, paymentLauncher)
+                    MainApp(viewModel, contentResolver, paymentLauncher, args = null)
                 }
             }
         }

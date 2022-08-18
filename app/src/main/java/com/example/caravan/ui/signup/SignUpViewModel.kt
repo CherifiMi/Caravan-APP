@@ -146,7 +146,7 @@ class SignUpViewModel @Inject constructor(
 
                     SnackbarManager.showMessage(AppText.account_created)
 
-                    navController.navigate(Screens.Main.route) {
+                    navController.navigate(Screens.Main.passItem("")) {
                         launchSingleTop = true
                         popUpTo(0) { inclusive = true }
                     }

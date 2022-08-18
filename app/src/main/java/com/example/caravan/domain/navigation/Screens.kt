@@ -36,10 +36,15 @@ sealed class Screens(val route: String) {
     object NoNetError: Screens(route = "no_net_screen")
     object SWError: Screens(route = "all_error_screen")
 
-    object Main: Screens(route = "main_screen")
+    object Main: Screens(route = "main_screen/{userId}"){
+        fun passItem(userId: String): String{
+            return "main_screen/$userId"
+        }
+}
 
 
-    object MySellers: Screens(route = "rep_my_sellers")
+
+object MySellers: Screens(route = "rep_my_sellers")
     object MyBuyers: Screens(route = "rep_my_buyers")
 
 }

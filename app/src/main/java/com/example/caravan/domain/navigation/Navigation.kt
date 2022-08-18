@@ -53,8 +53,12 @@ fun Navigation(
         }
     ) {
 
-        composable(route = Screens.Main.route) {
-            MainApp(viewModel, cn, paymentLauncher)
+        composable(
+            route = Screens.Main.route,
+            arguments = listOf(navArgument(name = "userId"){type = NavType.StringType})
+        ) {
+            var userId = it.arguments
+            MainApp(viewModel, cn, paymentLauncher, args = userId)
         }
 
         composable(route = Screens.Login.route) {
