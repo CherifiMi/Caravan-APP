@@ -36,6 +36,7 @@ fun Navigation(
     viewModel: MainViewModel,
     cn: ContentResolver,
     paymentLauncher: PaymentLauncher,
+    userId: String,
 ) {
 
     NavHost(
@@ -78,7 +79,7 @@ fun Navigation(
 
 
         composable(route = Screens.HomeBuyer.route) {
-            BuyerHomeScreen(navController = navController)
+            BuyerHomeScreen(navController = navController,userId = userId)
         }
         composable(
             route = Screens.ProductBuyer.route,
@@ -90,14 +91,14 @@ fun Navigation(
 
 
         composable(route = Screens.HomeSeller.route) {
-            SellerHomeScreen(mainNavController = navController)
+            SellerHomeScreen(mainNavController = navController,userId = userId)
         }
         composable(
             route = Screens.ProductSeller.route,
             arguments = listOf(navArgument(name = "item"){type = NavType.StringType})
         ) {
             var item = it.arguments
-            SellerEditProductScreen(navController = navController, cn = cn, args = item)
+            SellerEditProductScreen(navController = navController, cn = cn, args = item, userId = userId)
         }
 
 

@@ -36,10 +36,11 @@ fun SellerEditProductScreen(
     navController: NavHostController?,
     viewModel: SellerViewModel = hiltViewModel(),
     cn: ContentResolver,
-    args: Bundle?
+    args: Bundle?,
+    userId: String
 ) {
     val itemId = args?.getString("item") ?: ""
-    viewModel.setCurrentItemValues(itemId)
+    viewModel.setCurrentItemValues(itemId, userId)
 
     Scaffold(
         topBar = {
@@ -111,11 +112,11 @@ fun SellerEditProductScreen(
             MyButton(text = if (itemId.toInt()!=-1)"Update Product" else "Create a New Product") {
 
                 if (itemId.toInt()==-1){
-                    viewModel.createNewProduct(){
+                    viewModel.createNewProduct(userId){
                         navController?.popBackStack()
                     }
                 }else{
-                    viewModel.updateProduct(){
+                    viewModel.updateProduct(userId){
                         navController?.popBackStack()
                     }
                 }

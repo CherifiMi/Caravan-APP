@@ -49,7 +49,8 @@ import kotlinx.coroutines.runBlocking
 @Composable
 fun BuyerHomeScreen(
     navController: NavHostController,
-    viewModel: BuyerViewModel = hiltViewModel()
+    viewModel: BuyerViewModel = hiltViewModel(),
+    userId: String
 ) {
 
     runBlocking {

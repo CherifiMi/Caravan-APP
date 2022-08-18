@@ -37,10 +37,12 @@ class MainViewModel @Inject constructor(
     private val getSellerByKeyUseCase: GetSellerByKeyUseCase,
     private val getBuyerByKeyUseCase: GetBuyerByKeyUseCase,
     private val getRepByKeyUseCase: GetRepByKeyUseCase,
-    private val accountService: AccountService,
+    private val ac: AccountService,
     private val getCatsUseCase: GetCatsUseCase,
     private val repository: CaravanRepository
 ) : ViewModel() {
+
+    val fireId = ac.getUserId()
 
     //__________________________values
     private val _spalsh = MutableStateFlow(true)
@@ -51,14 +53,14 @@ class MainViewModel @Inject constructor(
 
     //___________________________functions
 
-    fun onSplashScreen() {
+    fun onSplashScreen(userId: String) {
         if (there_is_net.value) {
-            if (!accountService.hasUser()) {
+            if (!ac.hasUser()) {
                 firstScreen = "login"
             } else {
-                val usertype = getUserType()
+                val usertype = getUserType(userId)
                 Log.d("TESTAPI", usertype)
-                if (!getIsUserActivated(usertype)) {
+                if (!getIsUserActivated(usertype, userId)) {
                     firstScreen = "wait"
                 } else {
                     getCats()
@@ -86,7 +88,7 @@ class MainViewModel @Inject constructor(
 
     fun signOut(navController: NavHostController) {
 
-        accountService.signOut()
+        ac.signOut()
 
         navController.navigate(Screens.Main.route) {
             launchSingleTop = true
@@ -95,7 +97,7 @@ class MainViewModel @Inject constructor(
     }
 
 
-    fun getIsUserActivated(usertype: String): Boolean {
+    fun getIsUserActivated(usertype: String, userId: String): Boolean {
         when (usertype) {
             "buyer" -> {
                 runBlocking {
@@ -119,7 +121,7 @@ class MainViewModel @Inject constructor(
 
                 val job: Boolean = runBlocking {
                     async {
-                        getBuyerByKeyUseCase(Id(id = accountService.getUserId())).collectLatest { respone ->
+                        getBuyerByKeyUseCase(Id(id = userId)).collectLatest { respone ->
                             respone.data?.string()?.let {
                                 Log.d("Mito", it)
                                 repository.saveUser(it)
@@ -142,7 +144,7 @@ class MainViewModel @Inject constructor(
 
                 val job: Boolean = runBlocking {
                     async {
-                        getSellerByKeyUseCase(Id(id = accountService.getUserId())).collectLatest { respone ->
+                        getSellerByKeyUseCase(Id(id = userId)).collectLatest { respone ->
                             respone.data?.string()?.let {
                                 Log.d("Mito", it)
                                 repository.saveUser(it)
@@ -165,7 +167,7 @@ class MainViewModel @Inject constructor(
             else -> {
                 val job: Boolean = runBlocking {
                     async {
-                        getRepByKeyUseCase(Id(id = accountService.getUserId())).collectLatest { respone ->
+                        getRepByKeyUseCase(Id(id = userId)).collectLatest { respone ->
                             respone.data?.string()?.let {
                                 Log.d("Mito", it)
                                 repository.saveUser(it)
@@ -189,12 +191,12 @@ class MainViewModel @Inject constructor(
         return false
     }
 
-    fun getUserType(): String {
+    fun getUserType(userId: String): String {
 
         try {
-            return getUserTypeUseCase(Id(id = accountService.getUserId()))
+            return getUserTypeUseCase(Id(id = userId))
         } catch (e: Exception) {
-            return getUserType()
+            return getUserType(userId)
         }
     }
 

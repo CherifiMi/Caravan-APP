@@ -36,7 +36,15 @@ fun MainApp(viewModel: MainViewModel, cn: ContentResolver, paymentLauncher: Paym
     val appState = rememberAppState()
     gAppState = appState
 
-    viewModel.onSplashScreen()
+    var userId = "1pLu1fuaynVcAMnp32EhFuh14cY2"
+
+    // TODO: nav to this from rep, if got new id use it, else use acc serveses
+    if(userId.isNullOrEmpty()) {
+        userId = viewModel.fireId
+    }
+
+    viewModel.onSplashScreen(userId)
+
 
     Scaffold(
         snackbarHost = {
@@ -51,7 +59,7 @@ fun MainApp(viewModel: MainViewModel, cn: ContentResolver, paymentLauncher: Paym
         scaffoldState = appState.scaffoldState
     ){
         navController = rememberNavController()
-        Navigation(navController, viewModel, cn, paymentLauncher)
+        Navigation(navController, viewModel, cn, paymentLauncher, userId)
     }
 }
 

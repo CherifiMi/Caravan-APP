@@ -10,6 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
+import com.example.caravan.MainViewModel
 import com.example.caravan.R
 import com.example.caravan.common.snackbar.SnackbarManager
 import com.example.caravan.data.repository.AccountService
@@ -33,7 +34,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SellerViewModel @Inject constructor(
     private val getAllSellerProductsUseCase: GetAllSellerProductsUseCase,
-    private val accountService: AccountService,
+    //private val accountService: AccountService,
     private val repository: CaravanRepository,
     private val createNewProductUseCase: CreateNewProductUseCase,
     private val changeThisProductUseCase: ChangeThisProductUseCase,
@@ -41,7 +42,8 @@ class SellerViewModel @Inject constructor(
     private val deleteThisProductUseCase: DeleteThisProductUseCase,
     private val getBuyerByKeyUseCase: GetBuyerByKeyUseCase,
     private val deleteThisOrder: DeleteThisOrder,
-    private val getMyOrdersUseCase: GetMyOrdersUseCase
+    private val getMyOrdersUseCase: GetMyOrdersUseCase,
+    //private val mainViewModel: MainViewModel
 ) : ViewModel() {
 
     val myCats = runBlocking {
@@ -82,9 +84,9 @@ class SellerViewModel @Inject constructor(
             SellerList::class.java
         )[0]
 
-    var sellerId = accountService.getUserId()
+    //var sellerId = "" //mainViewModel.userId
     //___________________________functions
-    fun getMyOrders() {
+    fun getMyOrders(sellerId: String) {
         viewModelScope.launch {
             getMyOrdersUseCase(Id(id = sellerId)).onEach {
                 when (it) {
@@ -114,12 +116,13 @@ class SellerViewModel @Inject constructor(
         }
     }
 
-    fun deleteOrderByKey(key: String){
+    fun deleteOrderByKey(key: String, sellerId: String){
         viewModelScope.launch {
             async { deleteThisOrder(Id(id = key)) }.await()
-            getMyOrders()
+            getMyOrders(sellerId)
         }
     }
+
     fun getBuyerByKey(key: String): Buyer? = runBlocking(Dispatchers.IO) {
 
         var buyer: Buyer? = null
@@ -138,8 +141,7 @@ class SellerViewModel @Inject constructor(
 
     }
 
-
-    fun getSellerProducts() {
+    fun getSellerProducts(sellerId: String) {
         getAllSellerProductsUseCase(Id(sellerId)).onEach {
             when (it) {
                 is Result.Success -> {
@@ -163,7 +165,7 @@ class SellerViewModel @Inject constructor(
 
     }
 
-    fun createNewProduct(popBack: () -> Unit) {
+    fun createNewProduct(sellerId: String, popBack: () -> Unit) {
 
         val allFieldsAreFull = cats.size > 0 &&
                 content.value.isNotEmpty() &&
@@ -211,12 +213,12 @@ class SellerViewModel @Inject constructor(
 
         SnackbarManager.showMessage(R.string.product_created)
 
-        getSellerProducts()
+        getSellerProducts(sellerId)
 
         popBack()
     }
 
-    fun updateProduct(popBack: () -> Unit) {
+    fun updateProduct(sellerId: String, popBack: () -> Unit) {
 
         val allFieldsAreFull = cats.size > 0 &&
                 content.value.isNotEmpty() &&
@@ -262,18 +264,18 @@ class SellerViewModel @Inject constructor(
 
         SnackbarManager.showMessage(R.string.product_updated)
 
-        getSellerProducts()
+        getSellerProducts(sellerId)
 
         popBack()
     }
 
-    fun setCurrentItemValues(id: String) {
+    fun setCurrentItemValues(id: String, sellerId: String) {
 
         if (id.toInt() == -1) {
             return
         }
 
-        getSellerProducts()
+        getSellerProducts(sellerId = sellerId)
 
         val item = myProducts.value?.get(id.toInt())
         if (loading.value) {

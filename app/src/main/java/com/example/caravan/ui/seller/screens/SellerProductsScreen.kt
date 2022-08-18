@@ -39,7 +39,8 @@ import com.google.gson.Gson
 @Composable
 fun SellerProductsScreen(
     navController: NavHostController,
-    viewModel: SellerViewModel = hiltViewModel()
+    viewModel: SellerViewModel = hiltViewModel(),
+    userId: String
 ) {
 
     Scaffold(
@@ -82,7 +83,7 @@ fun SellerProductsScreen(
         }
     }
 
-    viewModel.getSellerProducts()
+    viewModel.getSellerProducts(userId)
 }
 
 @RequiresApi(Build.VERSION_CODES.O)

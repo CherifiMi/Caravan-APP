@@ -6,6 +6,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.caravan.MainViewModel
 import com.example.caravan.data.repository.AccountService
 import com.example.caravan.data.repository.CaravanRepository
 import com.example.caravan.data.util.Result
@@ -29,7 +30,8 @@ class BuyerViewModel @Inject constructor(
     private val getProductsUseCase: GetProductsUseCase,
     private val repository: CaravanRepository,
     private val makeOrderUseCase: MakeOrderUseCase,
-    private val accountService: AccountService
+    //private val accountService: AccountService,
+    //private val mainViewModel: MainViewModel
 ) : ViewModel() {
 
     //_____________________________value
@@ -53,7 +55,7 @@ class BuyerViewModel @Inject constructor(
     val x: MutableState<List<Product>> = mutableStateOf(savedData)
     var selectedCat = mutableStateOf(-1)
 
-    var buyerId = accountService.getUserId()
+    var buyerId = ""//mainViewModel.userId //accountService.getUserId()
 
     val myCats = runBlocking {
         repository.getSavedCats()

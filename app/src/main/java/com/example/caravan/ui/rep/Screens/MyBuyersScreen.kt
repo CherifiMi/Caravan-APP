@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.caravan.domain.navigation.Screens
 import com.example.caravan.ui.rep.RepViewModel
 import com.example.caravan.ui.rep.components.MyUserRepItem
 
@@ -20,6 +21,8 @@ fun MyBuyersScreen(navController: NavHostController, viewModel: RepViewModel) {
     ) {
         items(viewModel.repMyBuyers.value){item ->
             MyUserRepItem(name = item!!.owner, brand = item.brand){
+
+                navController.navigate(Screens.Main.route)
 
             }
         }

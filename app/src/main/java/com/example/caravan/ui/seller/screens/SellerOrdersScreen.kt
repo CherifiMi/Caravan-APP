@@ -29,15 +29,17 @@ import com.example.caravan.theme.Montserrat
 import com.example.caravan.theme.PinkRed
 import com.example.caravan.theme.Typography
 import com.example.caravan.ui.seller.SellerViewModel
+import okhttp3.internal.userAgent
 
 
 @Composable
 fun SellerOrdersScreen(
     viewModel: SellerViewModel = hiltViewModel(),
-    navController: NavHostController
+    navController: NavHostController,
+    userId: String
 ) {
 
-    viewModel.getMyOrders()
+    viewModel.getMyOrders(userId)
 
     if (viewModel.myOrders.value == null) {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -61,7 +63,7 @@ fun SellerOrdersScreen(
 
         LazyColumn(Modifier.fillMaxSize()) {
             items(items = viewModel.myOrders.value?.toList()?.reversed() ?: listOf()) { item ->
-                OrderCard(item, viewModel)
+                OrderCard(item, viewModel, userId)
             }
 
             item {
@@ -74,7 +76,7 @@ fun SellerOrdersScreen(
 }
 
 @Composable
-fun OrderCard(item: Order, viewModel: SellerViewModel) {
+fun OrderCard(item: Order, viewModel: SellerViewModel, userId: String) {
 
     val boldS = TextStyle(
         fontFamily = Montserrat,
@@ -102,7 +104,7 @@ fun OrderCard(item: Order, viewModel: SellerViewModel) {
                     detectTapGestures(
                         onLongPress = {
                             Log.d("onLongPress", "onLongPress")
-                            viewModel.deleteOrderByKey(item.id!!)
+                            viewModel.deleteOrderByKey(item.id!!, userId)
                             brr.performHapticFeedback(HapticFeedbackType.LongPress)
                         }
                     )
