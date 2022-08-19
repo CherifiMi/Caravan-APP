@@ -22,7 +22,7 @@ fun MyBuyersScreen(navController: NavHostController, viewModel: RepViewModel) {
         items(viewModel.repMyBuyers.value){item ->
             MyUserRepItem(name = item!!.owner, brand = item.brand){
 
-                navController.navigate(Screens.Main.route)
+                navController.navigate(Screens.Main.passItem(item.autheId))
 
             }
         }
