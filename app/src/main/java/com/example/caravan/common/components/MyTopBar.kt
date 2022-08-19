@@ -1,9 +1,6 @@
 package com.example.caravan.common.components
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -72,7 +69,7 @@ fun MyTopBar(
 
                 IconButton(onClick = { function() }) {
                     Icon(
-                        modifier = Modifier.padding(12.dp),
+                        modifier = Modifier.padding(12.dp).size(30.dp),
                         painter = painterResource(id = R.drawable.cart_emp),
                         contentDescription = ""
                     )

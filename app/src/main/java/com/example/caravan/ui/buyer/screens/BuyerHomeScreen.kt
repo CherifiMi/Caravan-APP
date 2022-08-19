@@ -67,7 +67,7 @@ fun BuyerHomeScreen(
                 MyTopBar(
                     isCartV = true,
                     navController = navController,
-                    function = { viewModel.changeMyList() },
+                    function = { navController.navigate(Screens.CartBuyer.route) },
                     humClicked = {
                         scope.launch {
                             state.drawerState.open()

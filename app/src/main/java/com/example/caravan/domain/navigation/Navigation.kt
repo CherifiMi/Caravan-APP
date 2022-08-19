@@ -16,6 +16,7 @@ import com.example.caravan.MainApp
 import com.example.caravan.MainViewModel
 import com.example.caravan.ui.buyer.screens.BuyerHomeScreen
 import com.example.caravan.ui.buyer.screens.BuyerProductScreen
+import com.example.caravan.ui.buyer.screens.CartScreen
 import com.example.caravan.ui.errors.NoNetScreen
 import com.example.caravan.ui.errors.SomethingWrongScreen
 import com.example.caravan.ui.login.LoginScreen
@@ -84,6 +85,9 @@ fun Navigation(
 
         composable(route = Screens.HomeBuyer.route) {
             BuyerHomeScreen(navController = navController,userId = userId)
+        }
+        composable(route = Screens.CartBuyer.route) {
+            CartScreen(navController = navController, userId = userId)
         }
         composable(
             route = Screens.ProductBuyer.route,

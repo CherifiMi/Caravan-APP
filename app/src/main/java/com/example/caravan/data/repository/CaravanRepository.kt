@@ -13,34 +13,34 @@ import javax.inject.Inject
 class CaravanRepository @Inject constructor(
     private val caravanApi: CaravanApi,
     private val dao: CaravanDao
-    ){
-    suspend fun getProducts(): ProductsList{
+) {
+    suspend fun getProducts(): ProductsList {
         return caravanApi.getProducts()
     }
 
-    suspend fun postNewBuyer(buyer: Buyer): ResponseBody{
-        return  caravanApi.postNewBuyer(buyer)
+    suspend fun postNewBuyer(buyer: Buyer): ResponseBody {
+        return caravanApi.postNewBuyer(buyer)
     }
 
-    suspend fun postNewSeller(seller: Seller): ResponseBody{
-        return  caravanApi.postNewSeller(seller)
+    suspend fun postNewSeller(seller: Seller): ResponseBody {
+        return caravanApi.postNewSeller(seller)
     }
 
-    suspend fun getSellerByKey(id: Id): ResponseBody{
+    suspend fun getSellerByKey(id: Id): ResponseBody {
         return caravanApi.getSellerByKey(id)
     }
 
-    suspend fun getBuyerByKey(id: Id): ResponseBody{
+    suspend fun getBuyerByKey(id: Id): ResponseBody {
         return caravanApi.getBuyerByKey(id)
     }
 
-    suspend fun getRepByKey(id: Id): ResponseBody{
+    suspend fun getRepByKey(id: Id): ResponseBody {
         return caravanApi.getRepByKey(id)
     }
 
 
-    suspend fun postNewRep(rep: Rep): ResponseBody{
-        return  caravanApi.postNewRep(rep)
+    suspend fun postNewRep(rep: Rep): ResponseBody {
+        return caravanApi.postNewRep(rep)
     }
 
     suspend fun getUserType(id: Id): UserType {
@@ -51,14 +51,16 @@ class CaravanRepository @Inject constructor(
         return caravanApi.getAllSellerProducts(id)
     }
 
-    suspend fun createNewProduct(product: Product): ResponseBody{
-        return  caravanApi.createNewProduct(product)
+    suspend fun createNewProduct(product: Product): ResponseBody {
+        return caravanApi.createNewProduct(product)
     }
-    suspend fun changeThisProduct(product: Product): ResponseBody{
-        return  caravanApi.changeThisProduct(product)
+
+    suspend fun changeThisProduct(product: Product): ResponseBody {
+        return caravanApi.changeThisProduct(product)
     }
-    suspend fun deleteThisProduct(id: Id): ResponseBody{
-        return  caravanApi.deleteThisProduct(id)
+
+    suspend fun deleteThisProduct(id: Id): ResponseBody {
+        return caravanApi.deleteThisProduct(id)
     }
 
     suspend fun getCats(): ResponseBody {
@@ -76,59 +78,68 @@ class CaravanRepository @Inject constructor(
         return caravanApi.paymentIntent(requestBody).string()
     }
 
-    suspend fun deleteOrder(id: Id){
-        return  caravanApi.deleteOrder(id)
+    suspend fun deleteOrder(id: Id) {
+        return caravanApi.deleteOrder(id)
     }
-    suspend fun makeOrder(order: Order){
-        return  caravanApi.makeOrder(order)
+
+    suspend fun makeOrder(order: Order) {
+        return caravanApi.makeOrder(order)
     }
+
     suspend fun myOrder(id: Id): ResponseBody {
-        return  caravanApi.myOrder(id)
+        return caravanApi.myOrder(id)
     }
     //_________________________db
 
-    suspend fun saveProductList(productsList: ProductsList?){
+    suspend fun saveProductList(productsList: ProductsList?) {
         dao.deleteAll()
         val gson = Gson().toJson(productsList)
         dao.saveAllProducts(ProductEntity(productList = gson))
     }
+
     suspend fun getSavedProductList(): ProductEntity {
         return dao.getAllProducts()
     }
 
 
-    suspend fun saveUser(user: String){
+    suspend fun saveUser(user: String) {
         dao.deleteUser()
         dao.saveUser(UserEntity(user = user))
     }
+
     suspend fun getSavedUser(): UserEntity {
         return dao.getUser()
     }
 
 
-
-    suspend fun saveCats(cats: String){
+    suspend fun saveCats(cats: String) {
         dao.deleteCats()
         dao.saveCats(CatsEntity(cat = cats))
     }
+
     suspend fun getSavedCats(): List<Cat> {
 
-        val catjson = dao.getCats().cat
-        Log.d("MITOTEST", catjson)
+        val catjson =try {
+
+            dao.getCats().cat
+        } catch (e:Exception){
+            null
+        }
+
         return try {
             Gson().fromJson(catjson, CatList::class.java)
-        }catch (e:Exception){
+        } catch (e: Exception) {
             Log.d("MITOTEST", e.toString())
             emptyList<Cat>()
         }
     }
 
 
-
-    suspend fun saveItem(product: Product, am: Int){
+    suspend fun saveItem(product: Product, am: Int) {
         dao.deleteItem()
         dao.saveItem(ProductItemEntity(product = Gson().toJson(product), amount = am))
     }
+
     suspend fun getSavedItem(): OrderItem {
         return OrderItem(
             amount = dao.getItem().amount,
