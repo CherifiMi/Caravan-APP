@@ -118,7 +118,7 @@ fun Navigation(
             SomethingWrongScreen(navController = navController)
         }
         composable(route = Screens.NoNetError.route) {
-            NoNetScreen(navController = navController)
+            NoNetScreen()
         }
     }
 

@@ -42,10 +42,10 @@ fun MainApp(
     val appState = rememberAppState()
     gAppState = appState
 
-    var userId = args?.getString("userId") ?: ""
+    var userId = args?.getString("userId") ?: "x"
 
     // TODO: nav to this from rep, if got new id use it, else use acc serveses
-    if(userId.isNullOrEmpty()) {
+    if(userId.isNullOrEmpty()||userId=="x") {
         userId = viewModel.fireId
     }
 

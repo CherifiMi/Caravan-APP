@@ -18,22 +18,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.caravan.R
 import com.example.caravan.common.components.MyButton
 import com.example.caravan.domain.model.OrderItem
+import com.example.caravan.domain.model.SavedCartOrder
 import com.example.caravan.theme.Montserrat
 import com.example.caravan.theme.PinkRed
 import com.example.caravan.theme.Typography
+import com.example.caravan.ui.buyer.BuyerViewModel
+import com.example.caravan.ui.errors.NoNetScreen
 
-data class SavedCartOrder(
-    val id: String?,
-    val name: String,
-    val price: Int,
-    val amount: Int,
-    val firstPicUrl: String
-)
 
 val items = listOf(
     SavedCartOrder(
@@ -41,27 +38,41 @@ val items = listOf(
         name = "myoeowae erw e",
         price = 2000,
         amount = 12,
-        firstPicUrl = "https://images.frandroid.com/wp-content/uploads/2022/03/nothing-phone1-kv-1920x1080-1.jpg"
+        firstPicUrl = "https://images.frandroid.com/wp-content/uploads/2022/03/nothing-phone1-kv-1920x1080-1.jpg",
+        sellerId = "",
+        buyerId = "",
+        productId = ""
     ),
     SavedCartOrder(
         id = null,
         name = "myoeowae erw e",
         price = 2000,
         amount = 12,
-        firstPicUrl = "https://images.frandroid.com/wp-content/uploads/2022/03/nothing-phone1-kv-1920x1080-1.jpg"
+        firstPicUrl = "https://images.frandroid.com/wp-content/uploads/2022/03/nothing-phone1-kv-1920x1080-1.jpg",
+        sellerId = "",
+        buyerId = "",
+        productId = ""
     ),
     SavedCartOrder(
         id = null,
         name = "myoeowae erw e",
         price = 2000,
         amount = 12,
-        firstPicUrl = "https://images.frandroid.com/wp-content/uploads/2022/03/nothing-phone1-kv-1920x1080-1.jpg"
+        firstPicUrl = "https://images.frandroid.com/wp-content/uploads/2022/03/nothing-phone1-kv-1920x1080-1.jpg",
+        sellerId = "",
+        buyerId = "",
+        productId = ""
     )
 
 )
 
 @Composable
-fun CartScreen(navController: NavHostController?, userId: String) {
+fun CartScreen(
+    navController: NavHostController?,
+    userId: String,
+    viewModel: BuyerViewModel = hiltViewModel()
+) {
+    val savedItems = viewModel.getAllSavedCardOrders()
 
     Column(Modifier.fillMaxSize()) {
         TopAppBar(
@@ -78,39 +89,46 @@ fun CartScreen(navController: NavHostController?, userId: String) {
                 color = Color.White
             )
         }
-        Column(
-            Modifier
-                .fillMaxSize()
-                .background(Color.White)
-                .padding(16.dp), verticalArrangement = Arrangement.SpaceBetween
-        ) {
 
-            //orders
-            LazyColumn(
-                Modifier
-                    .fillMaxWidth()
-                    .weight(9f)
-            ) {
-                items(items = items) { item ->
-                    CartOrderItem(item = item)
-                }
-            }
-
-
-            //buy
+        if (savedItems.isNullOrEmpty()) {
+            NoNetScreen()
+        } else {
             Column(
                 Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
+                    .fillMaxSize()
+                    .background(Color.White)
+                    .padding(16.dp), verticalArrangement = Arrangement.SpaceBetween
             ) {
-                MyButton(text = "Buy Now") {
 
+                //orders
+                LazyColumn(
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(9f)
+                ) {
+                    items(items = savedItems) { item ->
+                        CartOrderItem(item = item)
+                    }
                 }
-            }
 
+
+                //buy
+                Column(
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                ) {
+                    MyButton(text = "Buy Now") {
+
+                    }
+                }
+
+            }
         }
     }
 }
+
+
 
 @Composable
 fun CartOrderItem(item: SavedCartOrder) {
@@ -123,7 +141,11 @@ fun CartOrderItem(item: SavedCartOrder) {
             modifier = Modifier.size(64.dp),
             shape = RoundedCornerShape(15.dp)
         ) {
-            AsyncImage(model = item.firstPicUrl, contentDescription = null, contentScale = ContentScale.Crop)
+            AsyncImage(
+                model = item.firstPicUrl,
+                contentDescription = null,
+                contentScale = ContentScale.Crop
+            )
         }
 
         Spacer(modifier = Modifier.padding(8.dp))
@@ -161,43 +183,43 @@ fun CartOrderItem(item: SavedCartOrder) {
                 )
 
                 Text(
-                    text = (item.price/100f).toString(),
+                    text = (item.price / 100f).toString(),
                     style = bStyle,
                 )
                 Text(
-                    text =" RS ",
+                    text = " RS ",
                     style = pStyle,
                 )
 
                 Text(
-                    text =  " x ",
+                    text = " x ",
                     style = bStyle,
                 )
 
                 Text(
-                    text =  item.amount.toString(),
+                    text = item.amount.toString(),
                     style = bStyle,
                 )
 
                 Text(
-                    text =" Piece ",
+                    text = " Piece ",
                     style = pStyle,
                 )
 
 
                 Text(
-                    text =" = ",
+                    text = " = ",
                     style = pStyle,
                 )
 
                 Text(
-                    text =  (item.amount*(item.price/100f)).toString(),
+                    text = (item.amount * (item.price / 100f)).toString(),
                     style = bStyle,
                 )
 
 
                 Text(
-                    text =" RS ",
+                    text = " RS ",
                     style = pStyle,
                 )
             }

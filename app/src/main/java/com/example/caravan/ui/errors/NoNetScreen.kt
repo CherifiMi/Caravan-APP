@@ -23,14 +23,8 @@ import com.example.caravan.theme.Typography
 import kotlinx.coroutines.delay
 
 @Composable
-fun NoNetScreen(navController: NavHostController,) {
+fun NoNetScreen() {
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        /*Text(
-            text = "No Internet Connection.",
-            style = Typography.h1,
-            textAlign = TextAlign.Center
-        )*/
-
         LoadingAnimation2()
     }
 }

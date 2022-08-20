@@ -19,19 +19,17 @@ import com.stripe.android.model.PaymentMethodCreateParams
 import com.stripe.android.payments.paymentlauncher.PaymentLauncher
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
-
 
 @HiltViewModel
 class BuyerViewModel @Inject constructor(
     private val getProductsUseCase: GetProductsUseCase,
     private val repository: CaravanRepository,
     private val makeOrderUseCase: MakeOrderUseCase,
-    //private val accountService: AccountService,
-    //private val mainViewModel: MainViewModel
 ) : ViewModel() {
 
     //_____________________________value
@@ -61,6 +59,31 @@ class BuyerViewModel @Inject constructor(
         repository.getSavedCats()
     }
     //_____________________________functions
+
+    fun getAllSavedCardOrders(): List<SavedCartOrder> {
+
+        return runBlocking<List<SavedCartOrder>>{
+
+            async {
+                saveOrderToCart(SavedCartOrder(id = 10, name = "yoo", amount = 22, price = 2222, sellerId = "", buyerId = "", firstPicUrl = "", productId = ""))
+                saveOrderToCart(SavedCartOrder(id = 22, name = "yoo", amount = 22, price = 2222, sellerId = "", buyerId = "", firstPicUrl = "", productId = ""))
+                saveOrderToCart(SavedCartOrder(id = 21, name = "yoo", amount = 22, price = 2222, sellerId = "", buyerId = "", firstPicUrl = "", productId = ""))
+            }.await()
+
+            try {
+                repository.getAllCartOrder()
+            }catch (e:Exception){
+                emptyList()
+            }
+        }
+
+    }
+
+    fun saveOrderToCart(order: SavedCartOrder){
+        viewModelScope.launch {
+            repository.addCartOrder(order)
+        }
+    }
 
     fun saveOrder(product: Product, amount: Int) {
         viewModelScope.launch {
@@ -197,4 +220,5 @@ class BuyerViewModel @Inject constructor(
     }
 
 }
+
 

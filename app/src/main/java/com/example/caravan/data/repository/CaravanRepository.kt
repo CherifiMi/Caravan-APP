@@ -147,4 +147,16 @@ class CaravanRepository @Inject constructor(
         )
     }
 
+    suspend fun getAllCartOrder(): List<SavedCartOrder> {
+        return dao.getAllCartOrder()
+    }
+
+    suspend fun deleteAllCartOrders(){
+        dao.deleteAllCartOrder()
+    }
+
+    suspend fun addCartOrder(order: SavedCartOrder){
+        dao.addCartOrder(order = order)
+    }
+
 }

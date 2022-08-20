@@ -54,29 +54,37 @@ class MainViewModel @Inject constructor(
     //___________________________functions
 
     fun onSplashScreen(userId: String) {
-        if (there_is_net.value) {
-            if (!ac.hasUser()) {
-                firstScreen = "login"
-            } else {
-                val usertype = getUserType(userId)
-                Log.d("TESTAPI", usertype)
-                if (!getIsUserActivated(usertype, userId)) {
-                    firstScreen = "wait"
+        runBlocking(Dispatchers.Main) {
+            async {
+
+                if (there_is_net.value) {
+                    if (!ac.hasUser()) {
+                        firstScreen = "login"
+                    } else {
+                        val usertype = getUserType(userId)
+                        Log.d("TESTAPI", usertype)
+                        if (!getIsUserActivated(usertype, userId)) {
+                            firstScreen = "wait"
+                        } else {
+                            getCats()
+                            firstScreen = usertype
+                        }
+                    }
                 } else {
-                    getCats()
-                    firstScreen = usertype
+                    firstScreen = "nonet"
                 }
-            }
-        } else {
-            firstScreen = "nonet"
+
+            }.await()
+
+            _spalsh.value = false
+
         }
 
-        _spalsh.value = false
     }
 
     private fun getCats() {
 
-        runBlocking (Dispatchers.IO) {
+        runBlocking(Dispatchers.IO) {
 
             getCatsUseCase().collectLatest { response ->
                 response.data?.string()?.let { repository.saveCats(it) }
