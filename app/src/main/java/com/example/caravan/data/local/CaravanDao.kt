@@ -46,4 +46,19 @@ interface CaravanDao {
 
     @Query("DELETE FROM ProductItemEntity")
     suspend fun deleteItem()
+
+
+    //cart stuff
+    /* * delete all*/
+    @Query("DELETE FROM SavedCartOrder")
+    suspend fun deleteAllCartOrder()
+
+    /* * get all*/
+    @Query("SELECT * FROM SavedCartOrder")
+    suspend fun getAllCartOrder(): List<SavedCartOrder>
+
+    /* * add one*/
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addCartOrder(order: SavedCartOrder)
+
 }

@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import com.example.caravan.domain.model.*
 
 @Database(
-    entities = [ProductEntity::class, UserEntity::class, CatsEntity::class, ProductItemEntity::class],
+    entities = [ProductEntity::class, UserEntity::class, CatsEntity::class, ProductItemEntity::class, SavedCartOrder::class],
     version = 4
 )
 abstract class CaravanDB: RoomDatabase() {
