@@ -54,37 +54,29 @@ class MainViewModel @Inject constructor(
     //___________________________functions
 
     fun onSplashScreen(userId: String) {
-        runBlocking(Dispatchers.Main) {
-            async {
-
-                if (there_is_net.value) {
-                    if (!ac.hasUser()) {
-                        firstScreen = "login"
-                    } else {
-                        val usertype = getUserType(userId)
-                        Log.d("TESTAPI", usertype)
-                        if (!getIsUserActivated(usertype, userId)) {
-                            firstScreen = "wait"
-                        } else {
-                            getCats()
-                            firstScreen = usertype
-                        }
-                    }
+        if (there_is_net.value) {
+            if (!ac.hasUser()) {
+                firstScreen = "login"
+            } else {
+                val usertype = getUserType(userId)
+                Log.d("TESTAPI", usertype)
+                if (!getIsUserActivated(usertype, userId)) {
+                    firstScreen = "wait"
                 } else {
-                    firstScreen = "nonet"
+                    getCats()
+                    firstScreen = usertype
                 }
-
-            }.await()
-
-            _spalsh.value = false
-
+            }
+        } else {
+            firstScreen = "nonet"
         }
 
+        _spalsh.value = false
     }
 
     private fun getCats() {
 
-        runBlocking(Dispatchers.IO) {
+        runBlocking (Dispatchers.IO) {
 
             getCatsUseCase().collectLatest { response ->
                 response.data?.string()?.let { repository.saveCats(it) }
@@ -98,7 +90,7 @@ class MainViewModel @Inject constructor(
 
         ac.signOut()
 
-        navController.navigate(Screens.Main.passItem("")) {
+        navController.navigate(Screens.Main.passItem("x")) {
             launchSingleTop = true
             popUpTo(0) { inclusive = true }
         }

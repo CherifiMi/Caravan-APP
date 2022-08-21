@@ -177,8 +177,11 @@ fun BuyProductPopUp(
                                 text_color = PinkRed,
                                 start = 8.dp
                             ) {
-                                navController.navigate(Screens.HomeBuyer.route)
-                                // TODO: send data to order bool 
+
+                                if (viewModel.isAmountValid(viewModel.amountToBuy.value, currantItem.minOrder.toInt())){
+                                    viewModel.saveOrderToCart(currantItem = currantItem, amount = viewModel.amountToBuy.value.toInt())
+                                    navController.navigate(Screens.HomeBuyer.route)
+                                }
                             }
                         }
                     }

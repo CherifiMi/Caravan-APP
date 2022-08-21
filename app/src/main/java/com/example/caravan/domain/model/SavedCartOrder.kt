@@ -5,13 +5,14 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class SavedCartOrder(
-    @PrimaryKey val id: Int?,
+    @PrimaryKey val id: Int? = null,
     val name: String,
     val price: Int,
     val amount: Int,
     val sellerId: String,
     val buyerId: String,
     val firstPicUrl: String,
-    val productId: String
+    val productId: String,
+    val sellerStripe: String
 )
 

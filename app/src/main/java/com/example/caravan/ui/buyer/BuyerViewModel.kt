@@ -7,12 +7,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.caravan.MainViewModel
+import com.example.caravan.R
+import com.example.caravan.common.snackbar.SnackbarManager
 import com.example.caravan.data.repository.AccountService
 import com.example.caravan.data.repository.CaravanRepository
 import com.example.caravan.data.util.Result
 import com.example.caravan.domain.model.*
 import com.example.caravan.domain.use_cases.GetProductsUseCase
 import com.example.caravan.domain.use_cases.MakeOrderUseCase
+import com.example.makeitso.common.snackbar.SnackbarMessage
 import com.google.gson.Gson
 import com.stripe.android.model.ConfirmPaymentIntentParams
 import com.stripe.android.model.PaymentMethodCreateParams
@@ -62,26 +65,31 @@ class BuyerViewModel @Inject constructor(
 
     fun getAllSavedCardOrders(): List<SavedCartOrder> {
 
-        return runBlocking<List<SavedCartOrder>>{
-
-            async {
-                saveOrderToCart(SavedCartOrder(id = 10, name = "yoo", amount = 22, price = 2222, sellerId = "", buyerId = "", firstPicUrl = "", productId = ""))
-                saveOrderToCart(SavedCartOrder(id = 22, name = "yoo", amount = 22, price = 2222, sellerId = "", buyerId = "", firstPicUrl = "", productId = ""))
-                saveOrderToCart(SavedCartOrder(id = 21, name = "yoo", amount = 22, price = 2222, sellerId = "", buyerId = "", firstPicUrl = "", productId = ""))
-            }.await()
-
+        return runBlocking<List<SavedCartOrder>> {
             try {
                 repository.getAllCartOrder()
-            }catch (e:Exception){
+            } catch (e: Exception) {
                 emptyList()
             }
         }
 
     }
 
-    fun saveOrderToCart(order: SavedCartOrder){
+    fun saveOrderToCart(currantItem: Product, amount: Int) {
+
+        val savedCartOrder = SavedCartOrder(
+            name = currantItem.name,
+            price = currantItem.newPrice,
+            amount = amount,
+            sellerId = currantItem.sellerKey,
+            sellerStripe = currantItem.sellerStripe,
+            buyerId = buyerId,
+            firstPicUrl = currantItem.imageUrls[0],
+            productId = currantItem.id!!
+        )
+
         viewModelScope.launch {
-            repository.addCartOrder(order)
+            repository.addCartOrder(savedCartOrder)
         }
     }
 
@@ -217,6 +225,27 @@ class BuyerViewModel @Inject constructor(
                 product.name.contains(s)
             }
 
+    }
+
+    fun isAmountValid(s: String, min: Int): Boolean {
+
+        //is not only nums
+        s.toList().forEach { s ->
+            try {
+                s.toInt()
+            }catch (e:Exception){
+                SnackbarManager.showMessage(R.string.invalid_amount)
+                return false
+            }
+        }
+
+        //lower then min amount
+        if (s.toInt()<min) {
+            SnackbarManager.showMessage(R.string.less_then_min)
+            return false
+        }
+
+        return true
     }
 
 }

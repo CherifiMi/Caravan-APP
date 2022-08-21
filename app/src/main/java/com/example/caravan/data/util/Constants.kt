@@ -23,11 +23,3 @@ id : AKIAYLRBHXOS56JMAQ73
 caravan-images
  */
 
-/*
-
-user : mito
-key : dcaNSEe0eM/gpSw1tmIGM0IuJ3YuruiE4nwYZAJo
-id : AKIAYLRBHXOSX6TK62RX
-
-caravan-images
- */

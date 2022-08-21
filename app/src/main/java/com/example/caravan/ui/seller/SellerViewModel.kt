@@ -159,9 +159,14 @@ class SellerViewModel @Inject constructor(
     }
 
     fun uploadImageGetUrl(x: MutableState<String>, uri: Uri, cn: ContentResolver) {
-        uploadImageGetUrlUseCase(uri, cn, x)
+        //uploadImageGetUrlUseCase(uri, cn, x)
+
+        x.value = "https://bilder.pcwelt.de/4350899_original.jpg"
+
         images.clear()
         images.addAll(listOf(image0.value, image1.value, image2.value, image3.value))
+
+        // TODO: fix this
 
     }
 

@@ -16,6 +16,9 @@
     <string name="already_exist">this account already exist</string>
     <string name="no_pay">couldn\'t make this payment</string>
 
+    <string name="invalid_amount">the amount you have entered is not valid</string>
+    <string name="less_then_min">you can\'t order less then the minimum order amount</string>
+
     <!-- LoginScreen -->
     <string name="sign_in">Sign in</string>
     <string name="login_details">Enter your login details</string>

@@ -18,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -33,10 +34,10 @@ import com.stripe.android.payments.paymentlauncher.PaymentLauncher
 
 @Composable
 fun BuyerProductScreen(
-    navController: NavHostController,
+    navController: NavHostController?,
     args: Bundle?,
     viewModel: BuyerViewModel = hiltViewModel(),
-    paymentLauncher: PaymentLauncher
+    paymentLauncher: PaymentLauncher?
 ) {
 
     val currantItem = viewModel.getCurrentProduct(args?.getString("index") ?: "")
@@ -44,8 +45,8 @@ fun BuyerProductScreen(
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        BottomLayer(currantItem, viewModel, navController)
-        BuyProductPopUp(currantItem, viewModel, navController, paymentLauncher)
+        BottomLayer(currantItem, viewModel, navController!!)
+        BuyProductPopUp(currantItem, viewModel, navController!!, paymentLauncher!!)
     }
 
 
