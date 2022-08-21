@@ -357,7 +357,7 @@ fun ProductGrid(viewModel: BuyerViewModel, navController: NavHostController) {
         ) {
 
             items(items = viewModel.x.value) { item ->
-                MyProductItem(item, true) {
+                MyProductItem(item!!, true) {
                     navController.navigate(Screens.ProductBuyer.passItem(index = item.id?: ""))
                 }
             }

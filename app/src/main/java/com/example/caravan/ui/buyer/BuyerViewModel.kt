@@ -53,7 +53,7 @@ class BuyerViewModel @Inject constructor(
             listOf<Product>()
         }
 
-    val x: MutableState<List<Product>> = mutableStateOf(savedData)
+    val x: MutableState<List<Product>> = mutableStateOf(savedData ?: emptyList())
     var selectedCat = mutableStateOf(-1)
 
     var buyerId = ""//mainViewModel.userId //accountService.getUserId()
@@ -227,7 +227,13 @@ class BuyerViewModel @Inject constructor(
 
     }
 
-    fun isAmountValid(s: String, min: Int): Boolean {
+    fun isAmountValid(s: String, min: Int, inv: Int): Boolean {
+
+        //is empty
+        if(s.isNullOrEmpty()){
+            SnackbarManager.showMessage(R.string.invalid_amount)
+            return false
+        }
 
         //is not only nums
         s.toList().forEach { s ->
@@ -245,6 +251,13 @@ class BuyerViewModel @Inject constructor(
             return false
         }
 
+        //have in inv
+        if (s.toInt()>inv){
+            SnackbarManager.showMessage(R.string.low_inv)
+            return false
+        }
+
+        SnackbarManager.showMessage(com.stripe.android.R.string.done)
         return true
     }
 

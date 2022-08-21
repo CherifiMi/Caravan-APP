@@ -41,7 +41,8 @@ val items = listOf(
         firstPicUrl = "https://images.frandroid.com/wp-content/uploads/2022/03/nothing-phone1-kv-1920x1080-1.jpg",
         sellerId = "",
         buyerId = "",
-        productId = ""
+        productId = "",
+        sellerStripe = ""
     ),
     SavedCartOrder(
         id = null,
@@ -51,7 +52,8 @@ val items = listOf(
         firstPicUrl = "https://images.frandroid.com/wp-content/uploads/2022/03/nothing-phone1-kv-1920x1080-1.jpg",
         sellerId = "",
         buyerId = "",
-        productId = ""
+        productId = "",
+        sellerStripe = ""
     ),
     SavedCartOrder(
         id = null,
@@ -61,7 +63,8 @@ val items = listOf(
         firstPicUrl = "https://images.frandroid.com/wp-content/uploads/2022/03/nothing-phone1-kv-1920x1080-1.jpg",
         sellerId = "",
         buyerId = "",
-        productId = ""
+        productId = "",
+        sellerStripe = ""
     )
 
 )

@@ -18,6 +18,7 @@
 
     <string name="invalid_amount">the amount you have entered is not valid</string>
     <string name="less_then_min">you can\'t order less then the minimum order amount</string>
+    <string name="low_inv">not enough in inventory</string>
 
     <!-- LoginScreen -->
     <string name="sign_in">Sign in</string>

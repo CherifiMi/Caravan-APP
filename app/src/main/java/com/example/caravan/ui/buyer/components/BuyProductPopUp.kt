@@ -43,6 +43,7 @@ fun BuyProductPopUp(
     paymentLauncher: PaymentLauncher
 ) {
 
+    viewModel.amountToBuy.value = currantItem.minOrder
 
     AnimatedVisibility(
         modifier = Modifier.fillMaxSize(),
@@ -177,8 +178,7 @@ fun BuyProductPopUp(
                                 text_color = PinkRed,
                                 start = 8.dp
                             ) {
-
-                                if (viewModel.isAmountValid(viewModel.amountToBuy.value, currantItem.minOrder.toInt())){
+                                if (viewModel.isAmountValid(viewModel.amountToBuy.value, currantItem.minOrder.toInt(), currantItem.amountInInv)){
                                     viewModel.saveOrderToCart(currantItem = currantItem, amount = viewModel.amountToBuy.value.toInt())
                                     navController.navigate(Screens.HomeBuyer.route)
                                 }
