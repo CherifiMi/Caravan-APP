@@ -83,7 +83,8 @@ class CaravanRepository @Inject constructor(
     }
 
     suspend fun makeOrder(order: Order) {
-        return caravanApi.makeOrder(order)
+        caravanApi.makeOrder(order)
+        caravanApi.makeOrderLowerInv(order)
     }
 
     suspend fun myOrder(id: Id): ResponseBody {

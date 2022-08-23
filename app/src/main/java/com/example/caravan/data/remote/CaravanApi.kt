@@ -66,6 +66,9 @@ interface CaravanApi {
     //_____________________________________________________________________________
     @POST("orders/make")
     suspend fun makeOrder(@Body order: Order)
+    @POST("orders/lowerinv")
+    suspend fun makeOrderLowerInv(@Body order: Order)
+
 
     @POST("orders/delete")
     suspend fun deleteOrder(@Body id: Id)
