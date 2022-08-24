@@ -94,7 +94,7 @@ fun Navigation(
             arguments = listOf(navArgument(name = "index"){type = NavType.StringType})
         ) {
             var index = it.arguments
-            BuyerProductScreen(navController = navController, args = index, paymentLauncher = paymentLauncher)
+            BuyerProductScreen(navController = navController, args = index, paymentLauncher = paymentLauncher, userId = userId)
         }
 
 

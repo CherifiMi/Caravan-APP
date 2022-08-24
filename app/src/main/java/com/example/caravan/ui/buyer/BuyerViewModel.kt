@@ -20,6 +20,7 @@ import com.google.gson.Gson
 import com.stripe.android.model.ConfirmPaymentIntentParams
 import com.stripe.android.model.PaymentMethodCreateParams
 import com.stripe.android.payments.paymentlauncher.PaymentLauncher
+import com.stripe.android.payments.paymentlauncher.PaymentResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -56,7 +57,6 @@ class BuyerViewModel @Inject constructor(
     val x: MutableState<List<Product>> = mutableStateOf(savedData ?: emptyList())
     var selectedCat = mutableStateOf(-1)
 
-    var buyerId = ""//mainViewModel.userId //accountService.getUserId()
 
     val myCats = runBlocking {
         repository.getSavedCats()
@@ -75,7 +75,7 @@ class BuyerViewModel @Inject constructor(
 
     }
 
-    fun saveOrderToCart(currantItem: Product, amount: Int) {
+    fun saveOrderToCart(currantItem: Product, amount: Int, buyerId: String) {
 
         val savedCartOrder = SavedCartOrder(
             name = currantItem.name,
@@ -142,9 +142,9 @@ class BuyerViewModel @Inject constructor(
                 Order(
                     id = null,
                     seller = currantItem.sellerKey,
-                    buyer = buyerId,
+                    buyer = "buyerId",
                     amount = currantAmount,
-                    productId = currantItem.name
+                    productId = currantItem.id!!
                 )
             )
         }
@@ -162,7 +162,6 @@ class BuyerViewModel @Inject constructor(
         selectedCat.value = -1
         x.value = savedData
     }
-
 
     fun getProducts() {
         Log.d("TESTAPI", "loading")
@@ -260,7 +259,6 @@ class BuyerViewModel @Inject constructor(
         SnackbarManager.showMessage(com.stripe.android.R.string.done)
         return true
     }
-
 }
 
 

@@ -40,7 +40,8 @@ fun BuyProductPopUp(
     currantItem: Product,
     viewModel: BuyerViewModel,
     navController: NavHostController,
-    paymentLauncher: PaymentLauncher
+    paymentLauncher: PaymentLauncher,
+    buyerId: String
 ) {
 
     viewModel.amountToBuy.value = currantItem.minOrder
@@ -179,7 +180,7 @@ fun BuyProductPopUp(
                                 start = 8.dp
                             ) {
                                 if (viewModel.isAmountValid(viewModel.amountToBuy.value, currantItem.minOrder.toInt(), currantItem.amountInInv)){
-                                    viewModel.saveOrderToCart(currantItem = currantItem, amount = viewModel.amountToBuy.value.toInt())
+                                    viewModel.saveOrderToCart(currantItem = currantItem, amount = viewModel.amountToBuy.value.toInt(), buyerId)
                                     navController.navigate(Screens.HomeBuyer.route)
                                 }
                             }

@@ -120,10 +120,10 @@ class CaravanRepository @Inject constructor(
 
     suspend fun getSavedCats(): List<Cat> {
 
-        val catjson =try {
+        val catjson = try {
 
             dao.getCats().cat
-        } catch (e:Exception){
+        } catch (e: Exception) {
             null
         }
 
@@ -152,11 +152,11 @@ class CaravanRepository @Inject constructor(
         return dao.getAllCartOrder()
     }
 
-    suspend fun deleteAllCartOrders(){
+    suspend fun deleteAllCartOrders() {
         dao.deleteAllCartOrder()
     }
 
-    suspend fun addCartOrder(order: SavedCartOrder){
+    suspend fun addCartOrder(order: SavedCartOrder) {
         dao.addCartOrder(order = order)
     }
 

@@ -109,13 +109,11 @@ class MainActivity: ComponentActivity() {
 
     private fun onPaymentResult(paymentResult: PaymentResult) {
 
-        buyerViewModel.makeOrder()
+        //buyerViewModel.makeOrder()
         
         when (paymentResult) {
             is PaymentResult.Completed -> {
-
-                // TODO: make order after payment completed
-            //buyerViewModel.makeOrder()
+                buyerViewModel.makeOrder()
             }
             is PaymentResult.Canceled -> {
                 SnackbarManager.showMessage(R.string.no_pay)
