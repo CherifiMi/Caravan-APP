@@ -2,8 +2,7 @@ package com.example.caravan.data.util
 
 class Constants {
     companion object{
-        const val BASE_URL = "https://caravan-ap1.herokuapp.com/v1/"
-        const val LOGCAT = "MITOLOG"
+        const val BASE_URL = "https://caravan-ktor-api.herokuapp.com//v1/"
 
         val ACCESS_ID:String = "AKIAYLRBHXOSX6TK62RX"
         val SECRET_KEY:String = "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"
