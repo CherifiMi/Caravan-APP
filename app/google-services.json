@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "1011750889077",
-    "project_id": "caravan-8ae92",
-    "storage_bucket": "caravan-8ae92.appspot.com"
+    "project_number": "701599080564",
+    "project_id": "caravan-b3bac",
+    "storage_bucket": "caravan-b3bac.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1011750889077:android:72f9130c9a1d2400ef7a3c",
+        "mobilesdk_app_id": "1:701599080564:android:013e3830b121e72cf93121",
         "android_client_info": {
           "package_name": "com.example.caravan"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1011750889077-9abbelbop4j9eakjlu0d2fdcacfciqt9.apps.googleusercontent.com",
+          "client_id": "701599080564-82l83n366bt8eaee6mgkso88nlfd13q7.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAqvA1n2hGZyvXRUm2JsCZu7VmRT2lcFm0"
+          "current_key": "AIzaSyBhaO6-8fbdSQ2wghcdeCcJ39t0_Bqm-UE"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1011750889077-9abbelbop4j9eakjlu0d2fdcacfciqt9.apps.googleusercontent.com",
+              "client_id": "701599080564-82l83n366bt8eaee6mgkso88nlfd13q7.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
