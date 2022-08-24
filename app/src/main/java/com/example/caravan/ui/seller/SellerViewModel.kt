@@ -34,16 +34,15 @@ import javax.inject.Inject
 @HiltViewModel
 class SellerViewModel @Inject constructor(
     private val getAllSellerProductsUseCase: GetAllSellerProductsUseCase,
-    //private val accountService: AccountService,
     private val repository: CaravanRepository,
     private val createNewProductUseCase: CreateNewProductUseCase,
     private val changeThisProductUseCase: ChangeThisProductUseCase,
     private val uploadImageGetUrlUseCase: UploadImageGetUrlUseCase,
+    private val accountLinkUseCase: AccountLinkUseCase,
     private val deleteThisProductUseCase: DeleteThisProductUseCase,
     private val getBuyerByKeyUseCase: GetBuyerByKeyUseCase,
     private val deleteThisOrder: DeleteThisOrder,
     private val getMyOrdersUseCase: GetMyOrdersUseCase,
-    //private val mainViewModel: MainViewModel
 ) : ViewModel() {
 
     val myCats = runBlocking {
@@ -84,7 +83,7 @@ class SellerViewModel @Inject constructor(
             SellerList::class.java
         )[0]
 
-    //var sellerId = "" //mainViewModel.userId
+    var url = mutableStateOf("")
     //___________________________functions
     fun getMyOrders(sellerId: String) {
         viewModelScope.launch {
@@ -127,16 +126,23 @@ class SellerViewModel @Inject constructor(
 
         var buyer: Buyer? = null
 
-        async {
-            getBuyerByKeyUseCase(Id(id = key)).collectLatest { respone ->
-                respone.data?.string()?.let {
-                    buyer = Gson().fromJson(it, BuyersList::class.java)[0]
+        Log.d("GETBUYERTEST", key)
 
+        async {
+            try {
+
+                getBuyerByKeyUseCase(Id(id = key)).collectLatest { respone ->
+                    respone.data?.string()?.let {
+                        buyer = Gson().fromJson(it, BuyersList::class.java)[0]
+
+                    }
                 }
+            }catch (e: Exception){
+                Log.d("GETBUYERTEST", e.message.toString())
             }
         }.await()
 
-        Log.d("ORDERTEST", buyer.toString())
+        Log.d("GETBUYERTEST", buyer.toString())
         buyer
 
     }
@@ -169,6 +175,16 @@ class SellerViewModel @Inject constructor(
         // TODO: fix this
 
     }
+
+    fun isSellerActive(): Payout{
+
+        val job = runBlocking {
+            accountLinkUseCase(Id(id = savedSeller.stripeId)).string()
+        }
+
+        return Gson().fromJson(job, Payout::class.java)
+    }
+
 
     fun createNewProduct(sellerId: String, popBack: () -> Unit) {
 

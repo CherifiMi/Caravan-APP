@@ -23,3 +23,5 @@ data class Buyer(
 
 
 class BuyersList : ArrayList<Buyer>()
+
+class Payout: ArrayList<String> ()

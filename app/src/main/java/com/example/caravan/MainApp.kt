@@ -44,13 +44,11 @@ fun MainApp(
 
     var userId = args?.getString("userId") ?: "x"
 
-    // TODO: nav to this from rep, if got new id use it, else use acc serveses
     if(userId.isNullOrEmpty()||userId=="x") {
         userId = viewModel.fireId
     }
 
     viewModel.onSplashScreen(userId)
-
 
     Scaffold(
         snackbarHost = {

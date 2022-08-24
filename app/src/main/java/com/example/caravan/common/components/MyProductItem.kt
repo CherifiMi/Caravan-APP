@@ -92,7 +92,7 @@ fun MyProductItem(item: Product, cart: Boolean = false, function: () -> Unit) {
                             textDecoration = TextDecoration.LineThrough
                         )
                     }
-                    //IconButton(onClick = { /*TODO*/ }) {
+                    //IconButton(onClick = { /**/ }) {
                     //    Icon(
                     //        modifier = Modifier.alpha(if(cart) 1f else 0f).padding(12.dp),
                     //        painter = painterResource(id = R.drawable.cart_full),

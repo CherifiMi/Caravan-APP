@@ -78,6 +78,10 @@ class CaravanRepository @Inject constructor(
         return caravanApi.paymentIntent(requestBody).string()
     }
 
+    suspend fun accountLink(id: Id): ResponseBody {
+        return caravanApi.accountLink(id)
+    }
+
     suspend fun deleteOrder(id: Id) {
         return caravanApi.deleteOrder(id)
     }

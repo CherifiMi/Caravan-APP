@@ -61,7 +61,8 @@ interface CaravanApi {
     @POST("payment")
     suspend fun paymentIntent(@Body requestBody: RequestBody): ResponseBody
 
-
+    @POST("accountLink")
+    suspend fun accountLink(@Body id: Id): ResponseBody
 
     //_____________________________________________________________________________
     @POST("orders/make")
