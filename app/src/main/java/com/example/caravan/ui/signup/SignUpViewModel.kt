@@ -88,6 +88,7 @@ class SignUpViewModel @Inject constructor(
                 if (error == null) {
                     linkWithEmail(navController)
                 } else onError(error)
+                Log.d("FIREBASETEST", error?.message.toString())
             }
         }
     }
